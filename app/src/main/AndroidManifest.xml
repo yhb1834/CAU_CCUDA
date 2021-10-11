@@ -18,7 +18,7 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +26,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".CartFragment"></activity>
+        <activity android:name=".ChatFragment"></activity>
+        <activity android:name=".CupponFragment"></activity>
+
     </application>
 
 </manifest>

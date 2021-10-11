@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+<<<<<<< HEAD
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
@@ -29,6 +30,13 @@ import com.kakao.util.exception.KakaoException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+=======
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+>>>>>>> 79b215ebf9c2a16ecde55520a980ac8cdd6deeaa
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -48,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+<<<<<<< HEAD
         btn_custom_login = (Button) findViewById(R.id.btn_custom_login);
 
         session = Session.getCurrentSession();
@@ -168,6 +177,26 @@ public class LoginActivity extends AppCompatActivity {
                     });
         }
 
+=======
+        Button login=findViewById(R.id.loginbutton);
+        Button signup=findViewById(R.id.signup);
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),SignupActivity.class);
+                startActivity(intent);
+            }
+        });
+>>>>>>> 79b215ebf9c2a16ecde55520a980ac8cdd6deeaa
     }
 
 }

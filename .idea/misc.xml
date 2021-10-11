@@ -3,12 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+<<<<<<< HEAD
         <entry key="..\:/Users/com/CAU_CCUDA/app/src/main/res/layout/activity_login.xml" value="0.1875" />
+=======
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
+>>>>>>> 79b215ebf9c2a16ecde55520a980ac8cdd6deeaa
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_signup.xml" value="0.17230847619211456" />
         <entry key="app/src/main/res/layout/bottom_nav.xml" value="0.1381340579710145" />
+        <entry key="app/src/main/res/layout/cart.xml" value="0.12590579710144928" />
+        <entry key="app/src/main/res/layout/chat.xml" value="0.12590579710144928" />
+        <entry key="app/src/main/res/layout/cuppon.xml" value="0.12590579710144928" />
         <entry key="app/src/main/res/layout/fragment_page_1.xml" value="0.1381340579710145" />
         <entry key="app/src/main/res/layout/fragment_page_2.xml" value="0.1381340579710145" />
         <entry key="app/src/main/res/layout/fragment_page_3.xml" value="0.1381340579710145" />
+        <entry key="app/src/main/res/layout/mypage.xml" value="0.335" />
         <entry key="app/src/main/res/menu/my_navigation_items.xml" value="0.22604166666666667" />
       </map>
     </option>
