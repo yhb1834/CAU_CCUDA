@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-<<<<<<< HEAD
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
@@ -30,17 +29,13 @@ import com.kakao.util.exception.KakaoException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-=======
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
->>>>>>> 79b215ebf9c2a16ecde55520a980ac8cdd6deeaa
 
 public class LoginActivity extends AppCompatActivity {
-
-    private Button btn_custom_login;
 
     // 로그인 세션
     private SessionCallback sessionCallback = new SessionCallback();
@@ -55,21 +50,32 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-<<<<<<< HEAD
-        btn_custom_login = (Button) findViewById(R.id.btn_custom_login);
+        Button login=findViewById(R.id.loginbutton);
+        Button signup=findViewById(R.id.signup);
 
         session = Session.getCurrentSession();
         session.addCallback(sessionCallback);
 
         session.getCurrentSession().checkAndImplicitOpen(); // 자동 로그인
 
-        btn_custom_login.setOnClickListener(new View.OnClickListener() {
+        login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
+                startActivity(intent);
                 session.open(AuthType.KAKAO_LOGIN_ALL, LoginActivity.this);
+
             }
         });
+
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),SignupActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -177,26 +183,7 @@ public class LoginActivity extends AppCompatActivity {
                     });
         }
 
-=======
-        Button login=findViewById(R.id.loginbutton);
-        Button signup=findViewById(R.id.signup);
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),SignupActivity.class);
-                startActivity(intent);
-            }
-        });
->>>>>>> 79b215ebf9c2a16ecde55520a980ac8cdd6deeaa
     }
 
 }
+
