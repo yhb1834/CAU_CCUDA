@@ -61,10 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
-                startActivity(intent);
                 session.open(AuthType.KAKAO_LOGIN_ALL, LoginActivity.this);
-
             }
         });
 
@@ -76,6 +73,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public void toMainActivity(){
+        final Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("id", p_id);
+        intent.putExtra("name", p_name);
+        intent.putExtra("email",p_email);
+        startActivity(intent);
+        overridePendingTransition(0,0); // 전환효과 제거
+        finish();
     }
 
     @Override
@@ -179,6 +185,7 @@ public class LoginActivity extends AppCompatActivity {
                                     // 프로필 획득 불가
                                 }
                             }
+                            toMainActivity();
                         }
                     });
         }
