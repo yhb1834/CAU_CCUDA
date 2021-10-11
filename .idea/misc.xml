@@ -8,6 +8,9 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.17230847619211456" />
         <entry key="app/src/main/res/layout/bottom_nav.xml" value="0.1381340579710145" />
+        <entry key="app/src/main/res/layout/cart.xml" value="0.12590579710144928" />
+        <entry key="app/src/main/res/layout/chat.xml" value="0.12590579710144928" />
+        <entry key="app/src/main/res/layout/cuppon.xml" value="0.12590579710144928" />
         <entry key="app/src/main/res/layout/fragment_page_1.xml" value="0.1381340579710145" />
         <entry key="app/src/main/res/layout/fragment_page_2.xml" value="0.1381340579710145" />
         <entry key="app/src/main/res/layout/fragment_page_3.xml" value="0.1381340579710145" />
