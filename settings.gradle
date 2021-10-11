@@ -4,6 +4,11 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
+        maven{
+            url "https://maven.google.com"
+        }
+        // 카카오 SDK 설정
+        maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' }
     }
 }
 rootProject.name = "ccuda"

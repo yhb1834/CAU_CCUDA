@@ -1,1 +1,4 @@
 /build
+
+/src/main/res/values/kakao_app_key.xml
+/src/main/java/com/example/ccuda/Config.java
