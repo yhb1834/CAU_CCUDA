@@ -10,6 +10,7 @@ package com.example.tosmanager;
 public class Config {
     public static final String SERVER_URL = "http://your.server.com";
 }
+```
 
 # kakao SDK
 
@@ -20,3 +21,4 @@ create `kakao_app_key.xml` on the ../res/values which contains:
 <resources>
     <string name="kakao_app_key">your kakao_native_key</string>
 </resources>
+```
