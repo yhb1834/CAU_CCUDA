@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginVertical="40dp">
+
+    </ListView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/itemFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#E9BD15"
+        android:src="@drawable/ic_baseline_add_24"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_constraintTop_toTopOf="@id/mainFab"
+        app:layout_constraintBottom_toBottomOf="@+id/mainFab"
+        app:layout_constraintStart_toStartOf="@id/mainFab"
+        app:layout_constraintEnd_toEndOf="@id/mainFab" />
+
+
+
+
+
+</LinearLayout>

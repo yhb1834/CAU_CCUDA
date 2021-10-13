@@ -3,29 +3,40 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"></ImageButton>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:orientation="horizontal"
-        android:layout_gravity="center">
+        android:layout_weight="1"
+        android:weightSum="4"
+        android:padding="10dp">
 
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_margin="10dp">
+
+        </ImageButton>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="홍길동 님! 꾸다에 오신 것을 환영합니다."
+            android:layout_height="match_parent"
+            android:text="홍길동 님!\n꾸다에 오신 것을 환영합니다."
+            android:layout_marginLeft="5dp"
+            android:layout_margin="10dp"
             android:layout_weight="1">
         </TextView>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="2"
+        android:padding="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,20 +46,58 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="내 쿠폰"></TextView>
+                android:text="내 쿠폰"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"></TextView>
 
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></Button>
+                android:layout_height="wrap_content"
+                android:text="+"></Button>
         </LinearLayout>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="200dip"
+                    android:layout_height="match_parent"
+                    android:background="#ff0000"
+                    android:gravity="center"
+                    android:text="#ff0000" />
+
+                <TextView
+                    android:layout_width="200dip"
+                    android:layout_height="match_parent"
+                    android:background="#00ff00"
+                    android:gravity="center"
+                    android:text="#00ff00" />
+
+                <TextView
+                    android:layout_width="200dip"
+                    android:layout_height="match_parent"
+                    android:background="#0000ff"
+                    android:gravity="center"
+                    android:text="#0000ff" />
+            </LinearLayout>
+
+
+        </HorizontalScrollView>
 
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="2"
+        android:padding="10dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,27 +105,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="내 쿠폰"></TextView>
+                android:text="장바구니"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"></TextView>
+
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></Button>
+                android:layout_height="wrap_content"
+                android:text="+"></Button>
+
         </LinearLayout>
-        <HorizontalScrollView
+        <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </Button>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </Button>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </Button>
-        </HorizontalScrollView>
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+
+        </ListView>
+
 
     </LinearLayout>
 
