@@ -20,6 +20,10 @@
         <entry key="app/src/main/res/layout/fragment_page_3.xml" value="0.1381340579710145" />
         <entry key="app/src/main/res/layout/mypage.xml" value="0.335" />
         <entry key="app/src/main/res/menu/my_navigation_items.xml" value="0.22604166666666667" />
+        <entry key="app/src/main/res/drawable/ic_shopping_bag_7.xml" value="0.140625" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.23645833333333333" />
+        <entry key="app/src/main/res/layout/backgroud_splash.xml" value="0.25677083333333334" />
+        <entry key="app/src/main/res/menu/my_navigation_items.xml" value="0.23788324257076748" />
       </map>
     </option>
   </component>

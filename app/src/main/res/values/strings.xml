@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name" translatable="false">ccuda</string>
+    <string name="app_name">쁠원</string>
+    <string name="introment">계정이 있으신가요?</string>
+    <string name="password">비밀번호</string>
+    <string name="emailadress">이메일 주소</string>
+    <string name="login">Login</string>
+    <string name="user_name">NickName</string>
+
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="search">검색</string>
+
+    <string name="upload_article">내가 올린 쿠폰</string>
+    <string name="settings">설정</string>
+    <string name="notify">신고하기</string>
 </resources>
