@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Button login=findViewById(R.id.loginbutton);
         Button signup=findViewById(R.id.signup);
+        Button toHome=findViewById(R.id.tohome);
 
         session = Session.getCurrentSession();
         session.addCallback(sessionCallback);
@@ -60,6 +61,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(),SignupActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        toHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(intent);
             }
         });

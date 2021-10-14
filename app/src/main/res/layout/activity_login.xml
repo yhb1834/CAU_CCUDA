@@ -104,5 +104,16 @@
         app:layout_constraintStart_toStartOf="parent">
 
     </Button>
+    <Button
+        android:id="@+id/tohome"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="home">
+
+    </Button>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
