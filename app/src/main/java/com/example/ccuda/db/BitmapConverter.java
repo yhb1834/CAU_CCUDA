@@ -1,4 +1,4 @@
-package com.example.myapplication.db;
+package com.example.ccuda.db;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

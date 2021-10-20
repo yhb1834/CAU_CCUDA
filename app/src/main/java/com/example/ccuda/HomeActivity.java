@@ -11,9 +11,22 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.example.ccuda.db.BitmapConverter;
+import com.example.ccuda.db.CouponData;
+import com.example.ccuda.db.CouponpageRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class HomeActivity extends AppCompatActivity {
+    private static final String TAG_JSON = "couponlist";
+    private ArrayList<CouponData> mArrayList = new ArrayList<>();
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private ChatFragment fragmentChat = new ChatFragment();
@@ -59,6 +72,55 @@ public class HomeActivity extends AppCompatActivity {
             }
             return true;
         }
+    }
+
+    // 판매 쿠폰 리스트 불러오기
+    protected void load_couponlist(){
+        mArrayList.clear();
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("couponlist");
+                    int length = jsonArray.length();
+
+                    for(int i=0; i<length; i++){
+                        CouponData couponData = new CouponData();
+
+                        JSONObject object = jsonArray.getJSONObject(i);
+
+                        couponData.setCoupon_id(object.getString("coupon_id"));
+                        couponData.setSeller_id(object.getString("seller_id")); // 판매자 확인용 id, UI상에서 공개 불필요
+
+                        if(object.getString("isdeal")=="1") // 거래 완료 여부
+                            couponData.setIsdeal(true);
+                        else
+                            couponData.setIsdeal(false);
+
+                        couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
+                        couponData.setSeller_name(object.getString("seller_name")); // 판매자 닉네임
+                        couponData.setSeller_score(object.getString("seller_score")); // 판매자 평점
+                        couponData.setItem_name(object.getString("item_name")); // 물품명
+                        couponData.setCategory(object.getString("category")); // 물품 카테고리
+                        couponData.setPlustype(object.getString("plustype"));
+                        couponData.setStorename(object.getString("storename"));
+                        couponData.setPrice(object.getString("price")); // 판매자가 등록한 쿠폰가격
+                        couponData.setExpiration_date(object.getString("expiration_date")); // 쿠폰 유효기간 "Y-m-d" 형식
+                        couponData.setContent(object.getString("content")); // 글 내용
+                        couponData.setImage(BitmapConverter.StringToBitmap(object.getString("image"))); // 상품 이미지 (!= 쿠폰 이미지)
+
+                        mArrayList.add(couponData);
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        CouponpageRequest couponpageRequest = new CouponpageRequest("couponlist", "", responsListener);
+        RequestQueue queue = Volley.newRequestQueue(HomeActivity.this);
+        queue.add(couponpageRequest);
     }
 
 
