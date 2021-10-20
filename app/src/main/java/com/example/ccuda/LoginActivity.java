@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.ccuda.db.LoginRequest;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -78,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("id", p_id);
         intent.putExtra("name", p_name);
-        intent.putExtra("email",p_email);
+        intent.putExtra("email",p_email); //email 사용 미동의시 null
         startActivity(intent);
         overridePendingTransition(0,0); // 전환효과 제거
         finish();
@@ -157,6 +158,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                     p_id = result.getId();
                                     p_email = kakaoAccount.getEmail();
+                                    if (p_email == null)    p_email="";
                                     p_name = profile.getNickname();
                                     Response.Listener<String> responsListener = new Response.Listener<String>() {
                                         @Override
