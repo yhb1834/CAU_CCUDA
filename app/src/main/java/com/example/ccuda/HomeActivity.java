@@ -17,6 +17,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CouponData;
 import com.example.ccuda.db.CouponpageRequest;
+import com.example.ccuda.db.UserData;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
@@ -91,7 +92,7 @@ public class HomeActivity extends AppCompatActivity {
                         JSONObject object = jsonArray.getJSONObject(i);
 
                         couponData.setCoupon_id(object.getString("coupon_id"));
-                        couponData.setSeller_id(object.getString("seller_id")); // 판매자 확인용 id, UI상에서 공개 불필요
+                        couponData.setSeller_id(object.getString("seller_id")); // 판매자 확인용 id
 
                         if(object.getString("isdeal")=="1") // 거래 완료 여부
                             couponData.setIsdeal(true);
@@ -109,6 +110,7 @@ public class HomeActivity extends AppCompatActivity {
                         couponData.setExpiration_date(object.getString("expiration_date")); // 쿠폰 유효기간 "Y-m-d" 형식
                         couponData.setContent(object.getString("content")); // 글 내용
                         couponData.setImage(BitmapConverter.StringToBitmap(object.getString("image"))); // 상품 이미지 (!= 쿠폰 이미지)
+                        couponData.setCouponimage(BitmapConverter.StringToBitmap(object.getString("original"))); // 쿠폰 이미지 (!= 상품 이미지)
 
                         mArrayList.add(couponData);
                     }
@@ -118,7 +120,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         };
-        CouponpageRequest couponpageRequest = new CouponpageRequest("couponlist", "", responsListener);
+        CouponpageRequest couponpageRequest = new CouponpageRequest("couponlist", responsListener);
         RequestQueue queue = Volley.newRequestQueue(HomeActivity.this);
         queue.add(couponpageRequest);
     }
