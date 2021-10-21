@@ -13,6 +13,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.db.LoginRequest;
+import com.example.ccuda.db.UserData;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -32,11 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     // 로그인 세션
     private SessionCallback sessionCallback = new SessionCallback();
     Session session;
-
-    // 회원 정보
-    private long p_id;
-    private String p_name;
-    private String p_email;
+    UserData userData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +74,6 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void toMainActivity(){
         final Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("id", p_id);
-        intent.putExtra("name", p_name);
-        intent.putExtra("email",p_email); //email 사용 미동의시 null
         startActivity(intent);
         overridePendingTransition(0,0); // 전환효과 제거
         finish();
@@ -156,10 +150,11 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.d("KAKAO_API", "profile image: " + profile.getProfileImageUrl());
                                     Log.d("KAKAO_API", "thumbnail image: " + profile.getThumbnailImageUrl());
 
-                                    p_id = result.getId();
-                                    p_email = kakaoAccount.getEmail();
+                                    userData = UserData.getInstance();
+                                    long p_id = result.getId();
+                                    String p_email = kakaoAccount.getEmail();
                                     if (p_email == null)    p_email="";
-                                    p_name = profile.getNickname();
+                                    String p_name = profile.getNickname();
                                     Response.Listener<String> responsListener = new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
@@ -168,6 +163,10 @@ public class LoginActivity extends AppCompatActivity {
                                                 boolean success = jsonObject.getBoolean("success");
                                                 if(success){
                                                     Log.d("success","query success");
+                                                    userData.setUserid(p_id);
+                                                    userData.setEmail(jsonObject.getString("email"));
+                                                    userData.setNicname(jsonObject.getString("name"));
+                                                    userData.setScore(Double.parseDouble(jsonObject.getString("score")));
                                                 }
                                                 else{
                                                 }
