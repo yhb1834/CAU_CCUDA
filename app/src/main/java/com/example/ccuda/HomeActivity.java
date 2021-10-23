@@ -83,7 +83,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    // 판매 쿠폰 리스트 불러오기
+    // 판매 쿠폰 리스트 db 불러오기
     protected void load_couponlist(){
         mArrayList.clear();
         Response.Listener<String> responsListener = new Response.Listener<String>() {
@@ -99,8 +99,8 @@ public class HomeActivity extends AppCompatActivity {
 
                         JSONObject object = jsonArray.getJSONObject(i);
 
-                        couponData.setCoupon_id(object.getString("coupon_id"));
-                        couponData.setSeller_id(object.getString("seller_id")); // 판매자 확인용 id
+                        couponData.setCoupon_id(Integer.parseInt(object.getString("coupon_id")));
+                        couponData.setSeller_id(Long.parseLong(object.getString("seller_id"))); // 판매자 확인용 id
 
                         if(object.getString("isdeal")=="1") // 거래 완료 여부
                             couponData.setIsdeal(true);
@@ -114,7 +114,7 @@ public class HomeActivity extends AppCompatActivity {
                         couponData.setCategory(object.getString("category")); // 물품 카테고리
                         couponData.setPlustype(object.getString("plustype"));
                         couponData.setStorename(object.getString("storename"));
-                        couponData.setPrice(object.getString("price")); // 판매자가 등록한 쿠폰가격
+                        couponData.setPrice(Integer.parseInt(object.getString("price"))); // 판매자가 등록한 쿠폰가격
                         couponData.setExpiration_date(object.getString("expiration_date")); // 쿠폰 유효기간 "Y-m-d" 형식
                         couponData.setContent(object.getString("content")); // 글 내용
                         couponData.setImage(BitmapConverter.StringToBitmap(object.getString("image"))); // 상품 이미지 (!= 쿠폰 이미지)
