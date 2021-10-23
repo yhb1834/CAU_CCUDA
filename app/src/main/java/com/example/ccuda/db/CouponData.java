@@ -3,8 +3,8 @@ package com.example.ccuda.db;
 import android.graphics.Bitmap;
 
 public class CouponData {
-    private String coupon_id;
-    private String seller_id;
+    private int coupon_id;
+    private long seller_id;
     private boolean isdeal;
     private String post_date;
     private String seller_name;
@@ -13,17 +13,17 @@ public class CouponData {
     private String category;
     private String plustype;
     private String storename;
-    private String price;
+    private int price;
     private String expiration_date;
     private String content;
     private Bitmap image;   // 물품 이미지
     private Bitmap couponimage; // 등록된 쿠폰 이미지 - 마이페이지 등에서 필요시 판매자 본인에게만 공개
 
 
-    public String getCoupon_id(){
+    public int getCoupon_id(){
         return coupon_id;
     }
-    public String getSeller_id(){
+    public long getSeller_id(){
         return seller_id;
     }
     public boolean isIsdeal(){
@@ -50,7 +50,7 @@ public class CouponData {
     public String getStorename(){
         return storename;
     }
-    public String getPrice(){ return price; }
+    public int getPrice(){ return price; }
     public String getExpiration_date(){
         return expiration_date;
     }
@@ -64,10 +64,10 @@ public class CouponData {
         return couponimage;
     }
 
-    public void setCoupon_id(String coupon_id){
+    public void setCoupon_id(int coupon_id){
         this.coupon_id = coupon_id;
     }
-    public void setSeller_id(String seller_id){
+    public void setSeller_id(long seller_id){
         this.seller_id = seller_id;
     }
     public void setIsdeal(boolean isdeal){
@@ -94,7 +94,7 @@ public class CouponData {
     public void setStorename(String storename){
         this.storename = storename;
     }
-    public void setPrice(String price){
+    public void setPrice(int price){
         this.price = price;
     }
     public void setExpiration_date(String expiration_date){
