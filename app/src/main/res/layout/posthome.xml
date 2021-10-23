@@ -1,32 +1,22 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:ignore="MissingDefaultResource">
+    android:layout_height="match_parent">
 
     <ListView
+        android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_marginHorizontal="50dp"
-        android:layout_marginVertical="40dp">
-
-    </ListView>
-
+        android:layout_height="match_parent" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/itemFab"
-        android:layout_width="349dp"
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#E9BD15"
-        android:src="@drawable/add"
-        app:borderWidth="0dp"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@+id/mainFab"
-        app:layout_constraintEnd_toEndOf="@id/mainFab"
-        app:layout_constraintStart_toStartOf="@id/mainFab"
-        app:layout_constraintTop_toTopOf="@id/mainFab"
-        tools:ignore="SpeakableTextPresentCheck" />
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/add" />
 
 
-</LinearLayout>
+</FrameLayout>

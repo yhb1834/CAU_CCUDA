@@ -1,9 +1,12 @@
 package com.example.ccuda;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,11 +37,14 @@ public class HomeActivity extends AppCompatActivity {
     private CupponFragment fragmentCuppon = new CupponFragment();
     private CartFragment fragmentCart = new CartFragment();
 
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         //FragmentTransaction transaction = fragmentManager.beginTransaction();
         //transaction.replace(R.id.frameLayout, fragmentSearch).commitAllowingStateLoss();
 
@@ -48,7 +54,9 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-
+        FrameLayout contentFrame = findViewById((R.id.innerLayout));
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.posthome, contentFrame, true);
 
     }
 
