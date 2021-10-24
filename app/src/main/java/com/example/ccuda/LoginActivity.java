@@ -13,7 +13,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.db.LoginRequest;
-import com.example.ccuda.db.UserData;
+import com.example.ccuda.data.UserData;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;

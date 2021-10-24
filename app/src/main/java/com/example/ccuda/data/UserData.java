@@ -1,4 +1,4 @@
-package com.example.ccuda.db;
+package com.example.ccuda.data;
 
 public class UserData {
     private long userid;

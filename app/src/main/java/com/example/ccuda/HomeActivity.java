@@ -4,13 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -18,9 +15,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.db.BitmapConverter;
-import com.example.ccuda.db.CouponData;
+import com.example.ccuda.data.CouponData;
 import com.example.ccuda.db.CouponpageRequest;
-import com.example.ccuda.db.UserData;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
@@ -29,7 +25,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
-    private static final String TAG_JSON = "couponlist";
     private ArrayList<CouponData> mArrayList = new ArrayList<>();
 
     private FragmentManager fragmentManager = getSupportFragmentManager();

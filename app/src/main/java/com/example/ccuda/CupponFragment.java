@@ -10,20 +10,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.ccuda.db.BitmapConverter;
-import com.example.ccuda.db.CouponData;
-import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.db.PostRequest;
-import com.example.ccuda.db.UserData;
-import com.kakao.usermgmt.response.model.User;
+import com.example.ccuda.data.UserData;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class CupponFragment extends Fragment {
@@ -38,8 +32,7 @@ public class CupponFragment extends Fragment {
     }
 
     // 판매 쿠폰 포스팅 db 저장
-    // seller_id = userData.getUserid();
-    protected void posting(long seller_id, int item_id, int price, String expiration_date,
+    protected void posting(int item_id, int price, String expiration_date,
                            String content, String coupon_image){
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
@@ -65,7 +58,7 @@ public class CupponFragment extends Fragment {
                 }
             }
         };
-        PostRequest postRequest = new PostRequest("posting", seller_id, item_id, price, expiration_date, content, coupon_image, 0, responsListener);
+        PostRequest postRequest = new PostRequest("posting", userData.getUserid(), item_id, price, expiration_date, content, coupon_image, 0, responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(postRequest);
     }
