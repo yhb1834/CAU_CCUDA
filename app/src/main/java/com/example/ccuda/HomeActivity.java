@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +39,8 @@ public class HomeActivity extends AppCompatActivity {
     private CartFragment fragmentCart = new CartFragment();
 
 
+    private ListView listView;
+    private Adapter adapter;
 
 
 
@@ -54,9 +57,22 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-        FrameLayout contentFrame = findViewById((R.id.innerLayout));
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.posthome, contentFrame, true);
+        //FrameLayout contentFrame = findViewById((R.id.innerLayout));
+        //LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //inflater.inflate(R.layout.posthome, contentFrame, false);
+
+        //changeView(0);
+
+        adapter=new Adapter();
+
+        listView=(ListView) findViewById(R.id.list);
+        listView.setAdapter(adapter);
+
+        adapter.addItem("물건1", R.drawable.add, "gs");
+        adapter.addItem("물건2", R.drawable.add, "gs");
+        adapter.addItem("물건3", R.drawable.add, "gs");
+        adapter.addItem("물건4", R.drawable.add, "gs");
+        adapter.addItem("물건5", R.drawable.add, "gs");
 
     }
 
@@ -69,14 +85,14 @@ public class HomeActivity extends AppCompatActivity {
             switch(menuItem.getItemId())
             {
                 case R.id.cuppon:
-                    transaction.replace(R.id.frameLayout, fragmentCuppon).commitAllowingStateLoss();
+                    transaction.replace(R.id.innerLayout, fragmentCuppon).commitAllowingStateLoss();
 
                     break;
                 case R.id.cart:
-                    transaction.replace(R.id.frameLayout, fragmentCart).commitAllowingStateLoss();
+                    transaction.replace(R.id.innerLayout, fragmentCart).commitAllowingStateLoss();
                     break;
                 case R.id.chat:
-                    transaction.replace(R.id.frameLayout, fragmentChat).commitAllowingStateLoss();
+                    transaction.replace(R.id.innerLayout, fragmentChat).commitAllowingStateLoss();
                     break;
             }
             return true;
@@ -133,5 +149,35 @@ public class HomeActivity extends AppCompatActivity {
         queue.add(couponpageRequest);
     }
 
+
+    private void changeView(int index) {
+        // LayoutInflater 초기화.
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        FrameLayout frame = (FrameLayout) findViewById(R.id.innerLayout) ;
+        if (frame.getChildCount() > 0) {
+            // FrameLayout에서 뷰 삭제.
+            frame.removeViewAt(0);
+        }
+
+        // XML에 작성된 레이아웃을 View 객체로 변환.
+        View view = null ;
+        switch (index) {
+            case 0 :
+                view = inflater.inflate(R.layout.posthome, frame, false) ;
+                break ;
+            case 1 :
+                view = inflater.inflate(R.layout.posthome, frame, false) ;
+                break ;
+            case 2 :
+                view = inflater.inflate(R.layout.posthome, frame, false) ;
+                break ;
+        }
+
+        // FrameLayout에 뷰 추가.
+        if (view != null) {
+            frame.addView(view) ;
+        }
+    }
 
 }
