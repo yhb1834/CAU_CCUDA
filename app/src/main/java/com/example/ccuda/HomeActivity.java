@@ -2,12 +2,14 @@ package com.example.ccuda;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,9 +20,11 @@ import androidx.fragment.app.FragmentTransaction;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.ccuda.data.UserData;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.data.CouponData;
 import com.example.ccuda.db.CouponpageRequest;
+import com.example.ccuda.db.PostRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
@@ -29,8 +33,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
-    private static final String TAG_JSON = "couponlist";
     private ArrayList<CouponData> mArrayList = new ArrayList<>();
+    UserData userData;
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private ChatFragment fragmentChat = new ChatFragment();
@@ -61,7 +65,6 @@ public class HomeActivity extends AppCompatActivity {
         //inflater.inflate(R.layout.posthome, contentFrame, false);
 
         //changeView(0);
-
         adapter=new Adapter();
 
         listView=(ListView) findViewById(R.id.list);
@@ -101,6 +104,7 @@ public class HomeActivity extends AppCompatActivity {
     // 판매 쿠폰 리스트 db 불러오기
     protected void load_couponlist(){
         mArrayList.clear();
+        userData = UserData.getInstance();
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -177,6 +181,64 @@ public class HomeActivity extends AppCompatActivity {
         if (view != null) {
             frame.addView(view) ;
         }
+    }
+
+    // 판매 쿠폰 포스팅 db 저장
+    protected void posting(int item_id, int price, String expiration_date,
+                           String content, String coupon_image){
+        userData = UserData.getInstance();
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    String success = jsonObject.getString("success");
+                    if(success=="success"){
+                        // 포스팅 성공
+                        Log.d("success","posting success");
+                        Toast.makeText(getApplicationContext(),"판매글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        if(success == "NoItem"){
+                            // 해당 물품에 대한 편의점 데이터 부존재
+                            Log.d("success","postring fail: there no item information in DB");
+                        }
+                        else if(success == "fail")
+                            Log.d("success", "query fail");
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        PostRequest postRequest = new PostRequest("posting", userData.getUserid(), item_id, price, expiration_date, content, coupon_image, 0, responsListener);
+        RequestQueue queue = Volley.newRequestQueue(HomeActivity.this);
+        queue.add(postRequest);
+    }
+
+    // 게시글 삭제 db 저장
+    protected void deletepost(int coupon_id){
+        // 작성자: seller_id, 삭제할 쿠폰: coupon_id
+        userData = UserData.getInstance();
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    String success = jsonObject.getString("success");
+                    if(success=="success"){
+                        // 포스팅 성공
+                        Log.d("success","delete success");
+                        Toast.makeText(getApplicationContext(),"해당 판매글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        PostRequest postRequest = new PostRequest("deletepost",userData.getUserid(), 0, 0, "", "", "", coupon_id, responsListener);
+        RequestQueue queue = Volley.newRequestQueue(HomeActivity.this);
+        queue.add(postRequest);
     }
 
 }
