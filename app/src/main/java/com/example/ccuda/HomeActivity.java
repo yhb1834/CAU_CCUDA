@@ -19,9 +19,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.db.BitmapConverter;
-import com.example.ccuda.db.CouponData;
+import com.example.ccuda.data.CouponData;
 import com.example.ccuda.db.CouponpageRequest;
-import com.example.ccuda.db.UserData;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
