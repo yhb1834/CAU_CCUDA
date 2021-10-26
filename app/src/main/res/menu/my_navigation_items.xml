@@ -4,8 +4,8 @@
         android:title="home"
         android:icon="@drawable/home" />
     <item android:id="@+id/cuppon"
-        android:title="cuppon"
-        android:icon="@drawable/coupon" />
+        android:title="recipe"
+        android:icon="@drawable/recipe" />
     <item android:id="@+id/cart"
         android:title="cart"
         android:icon="@drawable/cart" />
