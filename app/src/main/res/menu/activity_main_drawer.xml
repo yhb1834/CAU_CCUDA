@@ -9,6 +9,10 @@
             android:icon="@drawable/upload_article"
             android:title="@string/upload_article" />
         <item
+            android:id="@+id/get_coupon"
+            android:icon="@drawable/my_coupon"
+            android:title="@string/get_coupon" />
+        <item
             android:id="@+id/settings"
             android:icon="@drawable/settings"
             android:title="@string/settings" />

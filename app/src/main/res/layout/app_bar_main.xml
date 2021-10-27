@@ -16,20 +16,6 @@
 
     <include layout="@layout/content_main" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="16dp"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        app:backgroundTint="@color/gray"
-        app:srcCompat="@drawable/add"
-        tools:ignore="SpeakableTextPresentCheck" />
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
