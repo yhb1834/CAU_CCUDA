@@ -3,16 +3,20 @@ package com.example.ccuda;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -45,6 +49,9 @@ public class HomeActivity extends AppCompatActivity {
     private ListView listView;
     private Adapter adapter;
 
+    private ImageView ivMenu;
+    private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
 
 
     @Override
@@ -58,7 +65,19 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new ItemSelectedListener());
         //bottomNavigationView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
 
+        ivMenu=findViewById(R.id.menu);
+        drawerLayout=findViewById(R.id.drawer);
+        toolbar=findViewById(R.id.toolbar);
 
+        //액션바 변경하기(들어갈 수 있는 타입 : Toolbar type
+        setSupportActionBar(toolbar);
+
+        ivMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
 
         //FrameLayout contentFrame = findViewById((R.id.innerLayout));
         //LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -76,6 +95,9 @@ public class HomeActivity extends AppCompatActivity {
         adapter.addItem("물건4", R.drawable.add, "gs");
         adapter.addItem("물건5", R.drawable.add, "gs");
 
+    }
+
+    private void setSupportActionBar(Toolbar toolbar) {
     }
 
 

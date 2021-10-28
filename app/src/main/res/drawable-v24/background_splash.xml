@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@android:color/white" />
     <item
-        android:drawable="@drawable/ic_launcher_foreground"
+        android:drawable="@mipmap/ccuda_logo"
         android:gravity="center"
         android:layout_width="55dp"
         android:layout_height="50dp"/>

@@ -13,6 +13,7 @@
     <string name="search">검색</string>
 
     <string name="upload_article">내가 올린 쿠폰</string>
+    <string name="get_coupon">산 쿠폰 목록</string>
     <string name="settings">설정</string>
     <string name="notify">신고하기</string>
 </resources>
