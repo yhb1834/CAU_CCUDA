@@ -83,18 +83,33 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Toast toast;
             switch(menuItem.getItemId())
             {
                 case R.id.cuppon:
-                    transaction.replace(R.id.innerLayout, fragmentCuppon).commitAllowingStateLoss();
+                    fragmentManager.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.innerLayout, fragmentCuppon, null)
+                            .setReorderingAllowed(true)
+                            .addToBackStack(null)
+                            .commit();
+                    //transaction.replace(R.id.innerLayout, fragmentCuppon).commitAllowingStateLoss();
+                    toast=Toast.makeText(getApplicationContext(),"cuppon",Toast.LENGTH_SHORT);
+                    toast.show();
 
                     break;
                 case R.id.cart:
                     transaction.replace(R.id.innerLayout, fragmentCart).commitAllowingStateLoss();
+                    toast=Toast.makeText(getApplicationContext(),"cart",Toast.LENGTH_SHORT);
+                    toast.show();
+
                     break;
                 case R.id.chat:
                     transaction.replace(R.id.innerLayout, fragmentChat).commitAllowingStateLoss();
+                    toast=Toast.makeText(getApplicationContext(),"chat",Toast.LENGTH_SHORT);
+                    toast.show();
+
                     break;
             }
             return true;
