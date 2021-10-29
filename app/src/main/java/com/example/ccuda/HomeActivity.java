@@ -15,11 +15,13 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -30,6 +32,7 @@ import com.example.ccuda.data.CouponData;
 import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.db.PostRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -102,9 +105,20 @@ public class HomeActivity extends AppCompatActivity {
         ivMenu=findViewById(R.id.menu);
         drawerLayout=findViewById(R.id.drawer);
         toolbar=findViewById(R.id.toolbar);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //액션바 변경하기(들어갈 수 있는 타입 : Toolbar type
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!= null){
+            actionBar.setHomeAsUpIndicator(R.drawable.menu);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowCustomEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setHomeButtonEnabled(true);
+        }
+
 
         ivMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,21 +127,46 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item){
+                item.setChecked(true);
+                drawerLayout.closeDrawers();
+
+                int id = item.getItemId();
+                switch(id){
+                    case R.id.upload_article:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new UploadarticlesFragment()).commit();
+                        break;
+                    case R.id.get_coupon:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new GetcouponFragment()).commit();
+                        break;
+                    case R.id.settings:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new AppSettingsFragment()).commit();
+                        break;
+                    case R.id.notify:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new NotifyFragment()).commit();
+                        break;
+                }
+                return true;
+            }
+        });
         //FrameLayout contentFrame = findViewById((R.id.innerLayout));
         //LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //inflater.inflate(R.layout.posthome, contentFrame, false);
 
         //changeView(0);
-        adapter=new Adapter();
+        //adapter=new Adapter();
 
-        listView=(ListView) findViewById(R.id.list);
-        listView.setAdapter(adapter);
+        //listView=(ListView) findViewById(R.id.list);
+        //listView.setAdapter(adapter);
 
-        adapter.addItem("물건1", R.drawable.add, "gs");
-        adapter.addItem("물건2", R.drawable.add, "gs");
-        adapter.addItem("물건3", R.drawable.add, "gs");
-        adapter.addItem("물건4", R.drawable.add, "gs");
-        adapter.addItem("물건5", R.drawable.add, "gs");
+        //adapter.addItem("물건1", R.drawable.add, "gs");
+        //adapter.addItem("물건2", R.drawable.add, "gs");
+        //adapter.addItem("물건3", R.drawable.add, "gs");
+        //adapter.addItem("물건4", R.drawable.add, "gs");
+        //adapter.addItem("물건5", R.drawable.add, "gs");
 
     }
 
@@ -249,3 +288,4 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 }
+
