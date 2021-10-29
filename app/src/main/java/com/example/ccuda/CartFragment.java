@@ -34,7 +34,7 @@ public class CartFragment extends Fragment {
                              @Nullable Bundle savedInstanceState){
         context = getContext();
         userData = UserData.getInstance();
-        return inflater.inflate(R.layout.fragment_cart, container, false);
+        return inflater.inflate(R.layout.fragment1_cart, container, false);
     }
 
     // 편의점 아이템 db 불러오기
