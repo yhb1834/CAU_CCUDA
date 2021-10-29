@@ -14,14 +14,13 @@ public class SignupRequest extends StringRequest {
     final static private String URL = String.format("%s/signup.php", Config.SERVER_URL);
     private Map<String, String> parameters;
 
-    public SignupRequest(String UserEmail, String UserPwd, String PwdConfirmed,String UserName, Response.Listener<String> listener) {
+    public SignupRequest(String UserEmail, String UserPwd, String UserName, Response.Listener<String> listener) {
         super(Method.POST, URL, listener, null);
 
         parameters = new HashMap<>();
-        parameters.put("UserEmail", UserEmail);
-        parameters.put("UserPwd", UserPwd);
-        parameters.put("PwdConfirmed", PwdConfirmed);
-        parameters.put("UserName", UserName);
+        parameters.put("email", UserEmail);
+        parameters.put("pwd", UserPwd);
+        parameters.put("name", UserName);
     }
     public Map<String,String> getParams(){
         return parameters;

@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     Log.d("success","query success");
                                                     userData.setUserid(p_id);
                                                     userData.setEmail(jsonObject.getString("email"));
-                                                    userData.setNicname(jsonObject.getString("name"));
+                                                    userData.setNicname(jsonObject.getString("nicname"));
                                                     userData.setScore(Double.parseDouble(jsonObject.getString("score")));
                                                 }
                                                 else{
@@ -175,7 +175,7 @@ public class LoginActivity extends AppCompatActivity {
                                             }
                                         }
                                     };
-                                    LoginRequest loginRequest = new LoginRequest(p_id, p_email,p_name, responsListener);
+                                    LoginRequest loginRequest = new LoginRequest("kakaologin", p_id, p_email,p_name, responsListener);
                                     RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                                     queue.add(loginRequest);
 

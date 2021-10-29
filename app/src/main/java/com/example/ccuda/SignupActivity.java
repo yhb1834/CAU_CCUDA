@@ -4,6 +4,7 @@ package com.example.ccuda;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.ccuda.data.PasswordEncryption;
 import com.example.ccuda.db.SignupRequest;
 
 import org.json.JSONException;
@@ -50,19 +52,24 @@ public class SignupActivity extends AppCompatActivity {
                 //System.out.println(UserName);
                 //System.out.println(PassCk);
 
+                PasswordEncryption passwordEncryption = new PasswordEncryption();
+
+                if (!UserPwd.equals(PassCk)){
+                    Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Response.Listener<String> responseListener=new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try{
                             JSONObject jsonObject=new JSONObject(response);
                             boolean success=jsonObject.getBoolean("success");
-
                             if(success){
                                 Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
                                 Intent intent=new Intent(SignupActivity.this, LoginActivity.class);
                                 startActivity(intent);
-                           } else {
-                                Toast.makeText(getApplicationContext(), "회원가입 실패", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "이미 꾸다회원입니다.", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
@@ -73,10 +80,11 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 };
 
-                SignupRequest signupRequest=new SignupRequest(UserEmail, UserPwd, PassCk, UserName, responseListener);
+                SignupRequest signupRequest=new SignupRequest(UserEmail, passwordEncryption.encrypt(UserPwd), UserName, responseListener);
                 RequestQueue queue= Volley.newRequestQueue(SignupActivity.this);
                 queue.add(signupRequest);
             }
+
         });
     }
 

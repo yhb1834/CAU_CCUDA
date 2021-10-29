@@ -12,13 +12,14 @@ public class LoginRequest extends StringRequest {
     final static private String URL = String.format("%s/login.php", Config.SERVER_URL);
     private Map<String, String> parameters;
 
-    public LoginRequest(long id, String email, String name, Response.Listener<String> listener){
+    public LoginRequest(String option, long id, String email, String nicname, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
 
         parameters = new HashMap<>();
+        parameters.put("option", option);
         parameters.put("id", id+"");
         parameters.put("email", email);
-        parameters.put("name", name);
+        parameters.put("nicname", nicname);
     }
     @Override
     public Map<String,String> getParams(){
