@@ -40,10 +40,6 @@ public class HomeActivity extends AppCompatActivity {
     private ArrayList<CouponData> mArrayList = new ArrayList<>();
     UserData userData;
 
-    private FragmentManager fragmentManager = getSupportFragmentManager();
-    private ChatFragment fragmentChat = new ChatFragment();
-    private CupponFragment fragmentCuppon = new CupponFragment();
-    private CartFragment fragmentCart = new CartFragment();
 
 
     private ListView listView;
@@ -53,6 +49,33 @@ public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
 
+    private FragmentManager fragmentManager = getSupportFragmentManager();
+    private HomeFragment fragmentHome = new HomeFragment();
+    private RecipeFragment fragmentRecipe = new RecipeFragment();
+    private CartFragment fragmentCart = new CartFragment();
+    private ChatFragment fragmentChat = new ChatFragment();
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener(){
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item){
+            switch (item.getItemId()){
+                case R.id.home:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, fragmentHome).commit();
+                    return true;
+                case R.id.recipe:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, fragmentRecipe).commit();
+                    return true;
+                case R.id.cart:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, fragmentCart).commit();
+                    return true;
+                case R.id.chat:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, fragmentChat).commit();
+                    return true;
+            }
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -61,9 +84,20 @@ public class HomeActivity extends AppCompatActivity {
         //FragmentTransaction transaction = fragmentManager.beginTransaction();
         //transaction.replace(R.id.frameLayout, fragmentSearch).commitAllowingStateLoss();
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnItemSelectedListener(new ItemSelectedListener());
+        //BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        //bottomNavigationView.setOnItemSelectedListener(new ItemSelectedListener());
         //bottomNavigationView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
+
+        BottomNavigationView navView = findViewById((R.id.bottom_navigation));
+        navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        fragmentHome = new HomeFragment();
+        fragmentRecipe = new RecipeFragment();
+        fragmentCart = new CartFragment();
+        fragmentChat = new ChatFragment();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, fragmentHome).commit();
+
 
         ivMenu=findViewById(R.id.menu);
         drawerLayout=findViewById(R.id.drawer);
@@ -101,42 +135,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    class ItemSelectedListener implements BottomNavigationView.OnNavigationItemSelectedListener{
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            Toast toast;
-            switch(menuItem.getItemId())
-            {
-                case R.id.cuppon:
-                    fragmentManager.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.innerLayout, fragmentCuppon, null)
-                            .setReorderingAllowed(true)
-                            .addToBackStack(null)
-                            .commit();
-                    //transaction.replace(R.id.innerLayout, fragmentCuppon).commitAllowingStateLoss();
-                    toast=Toast.makeText(getApplicationContext(),"cuppon",Toast.LENGTH_SHORT);
-                    toast.show();
-
-                    break;
-                case R.id.cart:
-                    transaction.replace(R.id.innerLayout, fragmentCart).commitAllowingStateLoss();
-                    toast=Toast.makeText(getApplicationContext(),"cart",Toast.LENGTH_SHORT);
-                    toast.show();
-
-                    break;
-                case R.id.chat:
-                    transaction.replace(R.id.innerLayout, fragmentChat).commitAllowingStateLoss();
-                    toast=Toast.makeText(getApplicationContext(),"chat",Toast.LENGTH_SHORT);
-                    toast.show();
-
-                    break;
-            }
-            return true;
-        }
-    }
 
     // 판매 쿠폰 리스트 db 불러오기
     protected void load_couponlist(){
@@ -190,35 +188,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    private void changeView(int index) {
-        // LayoutInflater 초기화.
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        FrameLayout frame = (FrameLayout) findViewById(R.id.innerLayout) ;
-        if (frame.getChildCount() > 0) {
-            // FrameLayout에서 뷰 삭제.
-            frame.removeViewAt(0);
-        }
-
-        // XML에 작성된 레이아웃을 View 객체로 변환.
-        View view = null ;
-        switch (index) {
-            case 0 :
-                view = inflater.inflate(R.layout.posthome, frame, false) ;
-                break ;
-            case 1 :
-                view = inflater.inflate(R.layout.posthome, frame, false) ;
-                break ;
-            case 2 :
-                view = inflater.inflate(R.layout.posthome, frame, false) ;
-                break ;
-        }
-
-        // FrameLayout에 뷰 추가.
-        if (view != null) {
-            frame.addView(view) ;
-        }
-    }
 
     // 판매 쿠폰 포스팅 db 저장
     protected void posting(int item_id, int price, String expiration_date,

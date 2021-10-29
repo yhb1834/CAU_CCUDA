@@ -15,12 +15,10 @@ import androidx.fragment.app.Fragment;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.ccuda.data.CouponData;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.UserData;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CartRequest;
-import com.example.ccuda.db.PostRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,7 +34,7 @@ public class CartFragment extends Fragment {
                              @Nullable Bundle savedInstanceState){
         context = getContext();
         userData = UserData.getInstance();
-        return inflater.inflate(R.layout.cart, container, false);
+        return inflater.inflate(R.layout.fragment_cart, container, false);
     }
 
     // 편의점 아이템 db 불러오기
