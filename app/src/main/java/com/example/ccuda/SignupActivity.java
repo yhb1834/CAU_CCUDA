@@ -69,7 +69,7 @@ public class SignupActivity extends AppCompatActivity {
                                 Intent intent=new Intent(SignupActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             } else {
-                                Toast.makeText(getApplicationContext(), "이미 꾸다회원입니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "해당 계정은 이미 쁠원회원입니다.", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 

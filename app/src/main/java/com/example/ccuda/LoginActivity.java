@@ -154,7 +154,6 @@ public class LoginActivity extends AppCompatActivity {
                                     long p_id = result.getId();
                                     String p_email = kakaoAccount.getEmail();
                                     if (p_email == null)    p_email="";
-                                    String p_name = profile.getNickname();
                                     Response.Listener<String> responsListener = new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
@@ -175,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
                                             }
                                         }
                                     };
-                                    LoginRequest loginRequest = new LoginRequest("kakaologin", p_id, p_email,p_name, responsListener);
+                                    LoginRequest loginRequest = new LoginRequest("kakaologin", p_id, p_email,"", responsListener);
                                     RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                                     queue.add(loginRequest);
 
