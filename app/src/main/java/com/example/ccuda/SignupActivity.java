@@ -81,6 +81,8 @@ public class SignupActivity extends AppCompatActivity {
                             boolean success=jsonObject.getBoolean("success");
                             if(success){
                                 Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
+                                Intent intent=new Intent(SignupActivity.this, LoginActivity.class);
+                                startActivity(intent);
                             } else {
                                 Toast.makeText(getApplicationContext(), "해당 계정은 이미 쁠원회원입니다.", Toast.LENGTH_SHORT).show();
                             }
