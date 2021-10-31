@@ -1,10 +1,13 @@
 package com.example.ccuda;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.ccuda.data.PasswordEncryption;
+import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.LoginRequest;
 import com.example.ccuda.data.UserData;
 import com.kakao.auth.AuthType;
@@ -29,6 +34,8 @@ import com.kakao.util.exception.KakaoException;
 import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final String TAG_PLUSONE_LOGIN = "plusonelogin";
+    private static final String TAG_KAKAO_LOGIN = "kakaologin";
 
     // 로그인 세션
     private SessionCallback sessionCallback = new SessionCallback();
@@ -42,15 +49,23 @@ public class LoginActivity extends AppCompatActivity {
         Button login=findViewById(R.id.loginbutton);
         Button signup=findViewById(R.id.signup);
         Button toHome=findViewById(R.id.tohome);
+        EditText Email = findViewById(R.id.EmailAddress);
+        EditText Password = findViewById(R.id.Password);
 
         session = Session.getCurrentSession();
         session.addCallback(sessionCallback);
         session.checkAndImplicitOpen(); // 자동 로그인
 
+        // 쁠원 자체 회원 로그인 세션
+        if(SaveSharedPreference.getEmail(this).length() != 0){
+            getUserInfo(TAG_PLUSONE_LOGIN,0,SaveSharedPreference.getEmail(this),SaveSharedPreference.getPassword(this),LoginActivity.this);
+            toMainActivity();
+        }
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                session.open(AuthType.KAKAO_LOGIN_ALL, LoginActivity.this);
+                getUserInfo(TAG_PLUSONE_LOGIN,0,Email.getText().toString(), PasswordEncryption.encrypt(Password.getText().toString()),LoginActivity.this);
             }
         });
 
@@ -77,6 +92,43 @@ public class LoginActivity extends AppCompatActivity {
         overridePendingTransition(0,0); // 전환효과 제거
         this.finish();
     }
+
+    // 로그인
+    private void getUserInfo(String option, long id, String email, String password, Context context ){
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    if(success){
+                        Log.d("success","query success");
+                        userData = UserData.getInstance();
+                        userData.setUserid(Long.parseLong(jsonObject.getString("id")));
+                        userData.setEmail(jsonObject.getString("email"));
+                        userData.setNicname(jsonObject.getString("nicname"));
+                        userData.setScore(Double.parseDouble(jsonObject.getString("score")));
+
+                        if(option == TAG_PLUSONE_LOGIN && SaveSharedPreference.getEmail(context).length() == 0){
+                            SaveSharedPreference.setSession(context, email, password);
+                            toMainActivity();
+                        }
+
+                    }
+                    else{
+                        Log.d("success","query fail");
+                        Toast.makeText(context,"회원 정보가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        LoginRequest loginRequest = new LoginRequest(option, id, email,password, responsListener);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(loginRequest);
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -154,29 +206,7 @@ public class LoginActivity extends AppCompatActivity {
                                     long p_id = result.getId();
                                     String p_email = kakaoAccount.getEmail();
                                     if (p_email == null)    p_email="";
-                                    Response.Listener<String> responsListener = new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            try{
-                                                JSONObject jsonObject = new JSONObject(response);
-                                                boolean success = jsonObject.getBoolean("success");
-                                                if(success){
-                                                    Log.d("success","query success");
-                                                    userData.setUserid(p_id);
-                                                    userData.setEmail(jsonObject.getString("email"));
-                                                    userData.setNicname(jsonObject.getString("nicname"));
-                                                    userData.setScore(Double.parseDouble(jsonObject.getString("score")));
-                                                }
-                                                else{
-                                                }
-                                            }catch (Exception e){
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    };
-                                    LoginRequest loginRequest = new LoginRequest("kakaologin", p_id, p_email,"", responsListener);
-                                    RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-                                    queue.add(loginRequest);
+                                    getUserInfo(TAG_KAKAO_LOGIN,p_id,p_email,"",LoginActivity.this);
 
                                 } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
                                     // 동의 요청 후 프로필 정보 획득 가능
