@@ -45,8 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
         session = Session.getCurrentSession();
         session.addCallback(sessionCallback);
-
-        session.getCurrentSession().checkAndImplicitOpen(); // 자동 로그인
+        session.checkAndImplicitOpen(); // 자동 로그인
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         overridePendingTransition(0,0); // 전환효과 제거
-        finish();
+        this.finish();
     }
 
     @Override
@@ -103,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onSessionOpened() {
             requestMe();
+            toMainActivity();
         }
 
         // 로그인 실패 상태
@@ -185,7 +185,6 @@ public class LoginActivity extends AppCompatActivity {
                                     // 프로필 획득 불가
                                 }
                             }
-                            toMainActivity();
                         }
                     });
         }
