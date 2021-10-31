@@ -22,6 +22,9 @@ import com.example.ccuda.db.SignupRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SignupActivity extends AppCompatActivity {
     private EditText email, password, name, passwordconfirmed;
     private Button signup_button;
@@ -54,10 +57,22 @@ public class SignupActivity extends AppCompatActivity {
 
                 PasswordEncryption passwordEncryption = new PasswordEncryption();
 
-                if (!UserPwd.equals(PassCk)){
+                // 입력 유효성 검토
+                Pattern p = Pattern.compile("^[a-zA-X0-9]@[a-zA-Z0-9].[a-zA-Z0-9]");
+                Matcher m = p.matcher(UserEmail);
+                if ( !m.matches()){
+                    Toast.makeText(SignupActivity.this, "Email형식으로 입력하세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (!UserPwd.equals(PassCk)){
                     Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                else if(UserEmail.equals(null)||UserPwd.equals(null)||UserName.equals(null)){
+                    Toast.makeText(getApplicationContext(), "올바른 정보를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Response.Listener<String> responseListener=new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -66,11 +81,8 @@ public class SignupActivity extends AppCompatActivity {
                             boolean success=jsonObject.getBoolean("success");
                             if(success){
                                 Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
-                                Intent intent=new Intent(SignupActivity.this, LoginActivity.class);
-                                startActivity(intent);
                             } else {
                                 Toast.makeText(getApplicationContext(), "해당 계정은 이미 쁠원회원입니다.", Toast.LENGTH_SHORT).show();
-                                return;
                             }
 
 
@@ -83,8 +95,8 @@ public class SignupActivity extends AppCompatActivity {
                 SignupRequest signupRequest=new SignupRequest(UserEmail, passwordEncryption.encrypt(UserPwd), UserName, responseListener);
                 RequestQueue queue= Volley.newRequestQueue(SignupActivity.this);
                 queue.add(signupRequest);
-            }
 
+            }
         });
     }
 
