@@ -22,10 +22,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.UserData;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.data.CouponData;
@@ -167,6 +170,7 @@ public class HomeActivity extends AppCompatActivity {
         //adapter.addItem("물건3", R.drawable.add, "gs");
         //adapter.addItem("물건4", R.drawable.add, "gs");
         //adapter.addItem("물건5", R.drawable.add, "gs");
+
 
     }
 
