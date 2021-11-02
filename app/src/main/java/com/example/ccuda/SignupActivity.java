@@ -5,6 +5,7 @@ package com.example.ccuda;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,6 +50,8 @@ public class SignupActivity extends AppCompatActivity {
                 final String UserPwd=password.getText().toString();
                 final String UserName=name.getText().toString();
                 final String PassCk=passwordconfirmed.getText().toString();
+                //공백제거
+                UserEmail.replace(" ",""); UserPwd.replace(" ",""); UserName.replace(" ","");
 
                 //System.out.println(UserEmail);
                 //System.out.println(UserPwd);
@@ -56,20 +59,20 @@ public class SignupActivity extends AppCompatActivity {
                 //System.out.println(PassCk);
 
                 PasswordEncryption passwordEncryption = new PasswordEncryption();
-
+                Pattern emailPattern = Patterns.EMAIL_ADDRESS;
                 // 입력 유효성 검토
-                Pattern p = Pattern.compile("^[a-zA-X0-9]@[a-zA-Z0-9].[a-zA-Z0-9]");
-                Matcher m = p.matcher(UserEmail);
-                if ( !m.matches()){
+                if (!emailPattern.matcher((UserEmail)).matches()){
                     Toast.makeText(SignupActivity.this, "Email형식으로 입력하세요", Toast.LENGTH_SHORT).show();
+                    email.requestFocus();
                     return;
                 }
-                else if (!UserPwd.equals(PassCk)){
-                    Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                else if(UserEmail.equals(null)||UserPwd.equals(null)||UserName.equals(null)){
+                if(UserEmail.equals("")||UserPwd.equals("")||UserName.equals("")){
                     Toast.makeText(getApplicationContext(), "올바른 정보를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!UserPwd.equals(PassCk)){
+                    Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    password.requestFocus();
                     return;
                 }
 
