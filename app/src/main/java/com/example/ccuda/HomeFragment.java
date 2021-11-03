@@ -3,10 +3,17 @@ package com.example.ccuda;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +30,7 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -53,12 +61,42 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment1_home, container, false);
+
+        ListView listView;
+        View v=inflater.inflate(R.layout.fragment1_home, container, false);
+        listView=(ListView) v.findViewById(R.id.listView);
+        Adapter adapter=new Adapter();
+
+        listView.setAdapter(adapter);
+
+        adapter.addItem("물건1", R.drawable.add, "gs");
+        adapter.addItem("물건2", R.drawable.add, "gs");
+        adapter.addItem("물건3", R.drawable.add, "gs");
+        adapter.addItem("물건4", R.drawable.add, "gs");
+        adapter.addItem("물건5", R.drawable.add, "gs");
+
+        FloatingActionButton addCuppon= (FloatingActionButton) v.findViewById(R.id.add_article);
+        addCuppon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(getContext(), "add button listener", Toast.LENGTH_SHORT).show();
+                UploadCoupon frameChange=new UploadCoupon();
+                FragmentTransaction transaction=getActivity().getSupportFragmentManager().beginTransaction();
+                UploadCoupon changeFragment=new UploadCoupon();
+                transaction.replace(R.id.mainhome, changeFragment);
+                transaction.commit();
+
+            }
+        });
+
+        return v;
     }
 }

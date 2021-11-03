@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -41,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HomeActivity extends AppCompatActivity {
     private ArrayList<CouponData> mArrayList = new ArrayList<>();
@@ -48,8 +50,8 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-    private ListView listView;
-    private Adapter adapter;
+    //private ListView listView;
+    //private Adapter adapter;
 
     private ImageView ivMenu;
     private DrawerLayout drawerLayout;
@@ -110,6 +112,8 @@ public class HomeActivity extends AppCompatActivity {
         toolbar=findViewById(R.id.toolbar);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
 
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //액션바 변경하기(들어갈 수 있는 타입 : Toolbar type
         setSupportActionBar(toolbar);
@@ -155,21 +159,7 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         });
-        //FrameLayout contentFrame = findViewById((R.id.innerLayout));
-        //LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //inflater.inflate(R.layout.posthome, contentFrame, false);
 
-        //changeView(0);
-        //adapter=new Adapter();
-
-        //listView=(ListView) findViewById(R.id.list);
-        //listView.setAdapter(adapter);
-
-        //adapter.addItem("물건1", R.drawable.add, "gs");
-        //adapter.addItem("물건2", R.drawable.add, "gs");
-        //adapter.addItem("물건3", R.drawable.add, "gs");
-        //adapter.addItem("물건4", R.drawable.add, "gs");
-        //adapter.addItem("물건5", R.drawable.add, "gs");
 
 
     }

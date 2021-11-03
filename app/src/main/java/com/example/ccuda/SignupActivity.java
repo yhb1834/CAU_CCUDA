@@ -101,6 +101,10 @@ public class SignupActivity extends AppCompatActivity {
                 RequestQueue queue= Volley.newRequestQueue(SignupActivity.this);
                 queue.add(signupRequest);
 
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+
+
             }
         });
     }
