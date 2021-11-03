@@ -1,6 +1,7 @@
 package com.example.ccuda;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -29,6 +31,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.data.PeopleItem;
+import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.data.UserData;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.data.CouponData;
@@ -87,6 +90,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         //FragmentTransaction transaction = fragmentManager.beginTransaction();
         //transaction.replace(R.id.frameLayout, fragmentSearch).commitAllowingStateLoss();
 
@@ -109,6 +113,16 @@ public class HomeActivity extends AppCompatActivity {
         drawerLayout=findViewById(R.id.drawer);
         toolbar=findViewById(R.id.toolbar);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+        View header = navigationView.getHeaderView(0);
+        TextView nav_nicname_text = (TextView) header.findViewById(R.id.nickname);
+        TextView nav_email_text = (TextView) header.findViewById(R.id.user_id);
+
+        if(SaveSharedPreference.getEmail(this).length() == 0)
+            nav_email_text.setText("kakao login user");
+        else
+            nav_email_text.setText(SaveSharedPreference.getEmail(this));
+        nav_nicname_text.setText(SaveSharedPreference.getNicname(this));
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //액션바 변경하기(들어갈 수 있는 타입 : Toolbar type
@@ -182,7 +196,6 @@ public class HomeActivity extends AppCompatActivity {
     // 판매 쿠폰 리스트 db 불러오기
     protected void load_couponlist(){
         mArrayList.clear();
-        userData = UserData.getInstance();
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
