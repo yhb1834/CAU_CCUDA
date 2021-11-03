@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                         userData.setScore(Double.parseDouble(jsonObject.getString("score")));
 
                         if(option == TAG_PLUSONE_LOGIN && SaveSharedPreference.getEmail(context).length() == 0){
-                            SaveSharedPreference.setSession(context, email, password);
+                            SaveSharedPreference.setSession(context, email, password, userData.getNicname());
                             toMainActivity();
                         }
 
