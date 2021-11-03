@@ -35,7 +35,8 @@
         </activity>
         <activity android:name=".HomeActivity"></activity>
         <activity android:name=".SignupActivity"></activity>
-
+        <activity android:name=".FindpasswordActivity"></activity>
+        <activity android:name=".RecreatepasswordActivity"></activity>
 
     </application>
 
