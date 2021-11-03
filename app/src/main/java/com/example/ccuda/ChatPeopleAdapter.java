@@ -31,8 +31,8 @@ public class ChatPeopleAdapter extends RecyclerView.Adapter<ChatPeopleAdapter.Vi
     }
 
 
-    public void setChatPeopleList(ArrayList<PeopleItem> PeopleItems){
-        this.PeopleItems = PeopleItems;
+    public void setChatPeopleList(ArrayList<PeopleItem> list){
+        this.PeopleItems = list;
         notifyDataSetChanged();
     }
 
