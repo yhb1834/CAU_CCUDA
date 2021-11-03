@@ -1,6 +1,6 @@
 # CAU_CCUDA
 
-# Configuration
+## Configuration
 
 Create `Config.java` on the package source directory which contains:
 
@@ -9,10 +9,12 @@ package com.example.tosmanager;
 
 public class Config {
     public static final String SERVER_URL = "http://your.server.com";
+    public final static String VALIDATION_EMAIL_ADDRESS = "your@email.com";
+    public final static String VALIDATION_EMAIL_PASSWORD = "youremailpassword" ;
 }
 ```
 
-# kakao SDK
+## kakao SDK
 
 create `kakao_app_key.xml` on the ../res/values which contains:
 
