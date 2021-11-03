@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -47,8 +48,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Button login=findViewById(R.id.loginbutton);
-        Button signup=findViewById(R.id.signup);
-        Button toHome=findViewById(R.id.tohome);
+        TextView signup=(TextView) findViewById(R.id.signup);
+        TextView findepwd =(TextView) findViewById(R.id.findpassword);
+        //Button toHome=findViewById(R.id.tohome);
         EditText Email = findViewById(R.id.EmailAddress);
         EditText Password = findViewById(R.id.Password);
 
@@ -76,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+/*
         toHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +87,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+ */
+        findepwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),FindpasswordActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     public void toMainActivity(){
         final Intent intent = new Intent(this, HomeActivity.class);
