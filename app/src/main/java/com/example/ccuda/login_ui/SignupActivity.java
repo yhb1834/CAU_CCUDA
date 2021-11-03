@@ -1,10 +1,9 @@
 // https://velog.io/@xyunkyung/안드로이드-회원가입-로그인-기능-구현하기-4
 
-package com.example.ccuda;
+package com.example.ccuda.login_ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -17,13 +16,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.ccuda.data.PasswordEncryption;
+import com.example.ccuda.R;
 import com.example.ccuda.db.SignupRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SignupActivity extends AppCompatActivity {

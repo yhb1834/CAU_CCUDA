@@ -1,4 +1,4 @@
-package com.example.ccuda;
+package com.example.ccuda.login_ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.ccuda.data.PasswordEncryption;
+import com.example.ccuda.R;
 import com.example.ccuda.db.RecoverRequest;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -51,7 +51,7 @@ public class RecreatepasswordActivity extends AppCompatActivity {
                     Toast.makeText(RecreatepasswordActivity.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                     newpwd.setText("");
                     checkpwd.setText("");
-                    checkpwd.requestFocus();
+                    newpwd.requestFocus();
                     return;
                 }
 
@@ -82,7 +82,7 @@ public class RecreatepasswordActivity extends AppCompatActivity {
                     }
 
                 };
-                RecoverRequest recoverRequest = new RecoverRequest("recreatepassword",Email, "", PasswordEncryption.encrypt(Password), responseListener);
+                RecoverRequest recoverRequest = new RecoverRequest("recreatepassword", Email, "", PasswordEncryption.encrypt(Password), responseListener);
                 RequestQueue queue = Volley.newRequestQueue(RecreatepasswordActivity.this);
                 queue.add(recoverRequest);
             }

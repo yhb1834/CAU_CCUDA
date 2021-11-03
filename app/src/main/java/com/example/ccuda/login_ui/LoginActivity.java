@@ -1,4 +1,4 @@
-package com.example.ccuda;
+package com.example.ccuda.login_ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,11 +16,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.ccuda.data.PasswordEncryption;
+import com.example.ccuda.HomeActivity;
+import com.example.ccuda.R;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.LoginRequest;
 import com.example.ccuda.data.UserData;
-import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),SignupActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
                 startActivity(intent);
             }
         });
@@ -91,9 +91,8 @@ public class LoginActivity extends AppCompatActivity {
         findepwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),FindpasswordActivity.class);
+                Intent intent = new Intent(getApplicationContext(), FindpasswordActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
     }

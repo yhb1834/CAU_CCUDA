@@ -1,7 +1,7 @@
-package com.example.ccuda;
+package com.example.ccuda.login_ui;
 
-import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -14,11 +14,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.Config;
-import com.example.ccuda.data.PasswordEncryption;
+import com.example.ccuda.GmailSender;
+import com.example.ccuda.R;
 import com.example.ccuda.db.RecoverRequest;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Random;
@@ -74,24 +74,7 @@ public class FindpasswordActivity extends AppCompatActivity  {
                             JSONObject jsonResponse = new JSONObject(response);
                             boolean success = jsonResponse.getBoolean("success");
                             if(success){
-                                try {
-                                    GmailSender gmailSender = new GmailSender(Config.VALIDATION_EMAIL_ADDRESS, Config.VALIDATION_EMAIL_PASSWORD);
-                                    //GMailSender.sendMail(제목, 본문내용, 받는사람);
-                                    gmailSender.sendMail("[CCUDA_PPLUSONE] 비밀번호를 잊으셨나요?", "인증번호: "+randomnum, Email);
-                                    Toast.makeText(getApplicationContext(), "이메일을 확인해주세요.", Toast.LENGTH_SHORT).show();
-                                    auth_numberInput.setVisibility(View.VISIBLE);
-                                    authButton.setVisibility(View.VISIBLE);
-
-                                } catch (SendFailedException e) {
-                                    Toast.makeText(getApplicationContext(), "이메일 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show();
-                                    return;
-                                } catch (MessagingException e) {
-                                    Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주십시오", Toast.LENGTH_SHORT).show();
-                                    return;
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    return;
-                                }
+                                new SendEmailAsyncTask().execute(null,null,null);
                             }
                             else {
                                 Toast.makeText(getApplicationContext(), "존재하지 않는 계정입니다.", Toast.LENGTH_SHORT).show();
@@ -121,7 +104,7 @@ public class FindpasswordActivity extends AppCompatActivity  {
                 }
                 else if(randomnum != 0 && inputnum == randomnum){
                     Toast.makeText(FindpasswordActivity.this, "이메일 인증 성공", Toast.LENGTH_SHORT).show();
-                    Intent recreatepassword = new Intent(FindpasswordActivity.this,RecreatepasswordActivity.class);
+                    Intent recreatepassword = new Intent(FindpasswordActivity.this, RecreatepasswordActivity.class);
                     recreatepassword.putExtra("Email",Email);
                     FindpasswordActivity.this.startActivity(recreatepassword);
                     finish();
@@ -157,6 +140,33 @@ public class FindpasswordActivity extends AppCompatActivity  {
             }
         }
         return numStr;
+    }
+
+    class SendEmailAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            GmailSender sender = new GmailSender(Config.VALIDATION_EMAIL_ADDRESS, Config.VALIDATION_EMAIL_PASSWORD);
+            try{
+                sender.sendMail("[CCUDA_PPLUSONE] 비밀번호를 잊으셨나요?", "인증번호: "+randomnum, Email);
+
+            } catch (SendFailedException e) {
+                Toast.makeText(getApplicationContext(), "이메일 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show();
+            } catch (MessagingException e) {
+                Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주십시오", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid){
+            super.onPostExecute(aVoid);
+            Toast.makeText(FindpasswordActivity.this,"이메일을 확인해주세요.",Toast.LENGTH_SHORT).show();
+            auth_numberInput.setVisibility(View.VISIBLE);
+            authButton.setVisibility(View.VISIBLE);
+        }
     }
 
 }
