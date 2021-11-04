@@ -16,7 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.data.ItemData;
-import com.example.ccuda.data.UserData;
+import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CartRequest;
 
@@ -28,12 +28,10 @@ import java.util.ArrayList;
 public class CartFragment extends Fragment {
     private ArrayList<ItemData> iArrayList = new ArrayList<>();
     private Context context;
-    UserData userData;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState){
         context = getContext();
-        userData = UserData.getInstance();
         return inflater.inflate(R.layout.fragment1_cart, container, false);
     }
 
@@ -98,7 +96,7 @@ public class CartFragment extends Fragment {
                 }
             }
         };
-        CartRequest cartRequest = new CartRequest("addTocart",userData.getUserid(), item_id, responsListener);
+        CartRequest cartRequest = new CartRequest("addTocart", SaveSharedPreference.getId(context), item_id, responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(cartRequest);
     }

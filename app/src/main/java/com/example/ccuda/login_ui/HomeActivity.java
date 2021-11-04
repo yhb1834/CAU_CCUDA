@@ -1,6 +1,7 @@
-package com.example.ccuda;
+package com.example.ccuda.login_ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,9 +32,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.ccuda.AppSettingsFragment;
+import com.example.ccuda.CartFragment;
+import com.example.ccuda.ChatFragment;
+import com.example.ccuda.GetcouponFragment;
+import com.example.ccuda.HomeFragment;
+import com.example.ccuda.NotifyFragment;
+import com.example.ccuda.R;
+import com.example.ccuda.RecipeFragment;
+import com.example.ccuda.UploadarticlesFragment;
 import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.SaveSharedPreference;
-import com.example.ccuda.data.UserData;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.data.CouponData;
 import com.example.ccuda.db.CouponpageRequest;
@@ -48,9 +57,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class HomeActivity extends AppCompatActivity {
-    private ArrayList<CouponData> mArrayList = new ArrayList<>();
-    UserData userData;
-
 
 
     //private ListView listView;
@@ -119,11 +125,11 @@ public class HomeActivity extends AppCompatActivity {
         TextView nav_nicname_text = (TextView) header.findViewById(R.id.nickname);
         TextView nav_email_text = (TextView) header.findViewById(R.id.user_id);
 
+        nav_nicname_text.setText(SaveSharedPreference.getNicname(this));
         if(SaveSharedPreference.getEmail(this).length() == 0)
             nav_email_text.setText("kakao login user");
         else
             nav_email_text.setText(SaveSharedPreference.getEmail(this));
-        nav_nicname_text.setText(SaveSharedPreference.getNicname(this));
 
 
 
@@ -179,119 +185,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setSupportActionBar(Toolbar toolbar) {
-    }
-
-
-
-    // 판매 쿠폰 리스트 db 불러오기
-    protected void load_couponlist(){
-        mArrayList.clear();
-        Response.Listener<String> responsListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jsonArray = jsonObject.getJSONArray("couponlist");
-                    int length = jsonArray.length();
-
-                    for(int i=0; i<length; i++){
-                        CouponData couponData = new CouponData();
-
-                        JSONObject object = jsonArray.getJSONObject(i);
-
-                        couponData.setCoupon_id(Integer.parseInt(object.getString("coupon_id")));
-                        couponData.setSeller_id(Long.parseLong(object.getString("seller_id"))); // 판매자 확인용 id
-
-                        if(object.getString("isdeal")=="1") // 거래 완료 여부
-                            couponData.setIsdeal(true);
-                        else
-                            couponData.setIsdeal(false);
-
-                        couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
-                        couponData.setSeller_name(object.getString("seller_name")); // 판매자 닉네임
-                        couponData.setSeller_score(object.getString("seller_score")); // 판매자 평점
-                        couponData.setItem_name(object.getString("item_name")); // 물품명
-                        couponData.setCategory(object.getString("category")); // 물품 카테고리
-                        couponData.setPlustype(object.getString("plustype"));
-                        couponData.setStorename(object.getString("storename"));
-                        couponData.setPrice(Integer.parseInt(object.getString("price"))); // 판매자가 등록한 쿠폰가격
-                        couponData.setExpiration_date(object.getString("expiration_date")); // 쿠폰 유효기간 "Y-m-d" 형식
-                        couponData.setContent(object.getString("content")); // 글 내용
-                        couponData.setImage(BitmapConverter.StringToBitmap(object.getString("image"))); // 상품 이미지 (!= 쿠폰 이미지)
-                        couponData.setCouponimage(BitmapConverter.StringToBitmap(object.getString("original"))); // 쿠폰 이미지 (!= 상품 이미지)
-
-                        mArrayList.add(couponData);
-                    }
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        CouponpageRequest couponpageRequest = new CouponpageRequest("couponlist", responsListener);
-        RequestQueue queue = Volley.newRequestQueue(HomeActivity.this);
-        queue.add(couponpageRequest);
-    }
-
-
-
-
-    // 판매 쿠폰 포스팅 db 저장
-    protected void posting(int item_id, int price, String expiration_date,
-                           String content, String coupon_image){
-        userData = UserData.getInstance();
-        Response.Listener<String> responsListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonObject = new JSONObject(response);
-                    String success = jsonObject.getString("success");
-                    if(success=="success"){
-                        // 포스팅 성공
-                        Log.d("success","posting success");
-                        Toast.makeText(getApplicationContext(),"판매글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        if(success == "NoItem"){
-                            // 해당 물품에 대한 편의점 데이터 부존재
-                            Log.d("success","postring fail: there no item information in DB");
-                        }
-                        else if(success == "fail")
-                            Log.d("success", "query fail");
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        PostRequest postRequest = new PostRequest("posting", userData.getUserid(), item_id, price, expiration_date, content, coupon_image, 0, responsListener);
-        RequestQueue queue = Volley.newRequestQueue(HomeActivity.this);
-        queue.add(postRequest);
-    }
-
-    // 게시글 삭제 db 저장
-    protected void deletepost(int coupon_id){
-        // 작성자: seller_id, 삭제할 쿠폰: coupon_id
-        userData = UserData.getInstance();
-        Response.Listener<String> responsListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonObject = new JSONObject(response);
-                    String success = jsonObject.getString("success");
-                    if(success=="success"){
-                        // 포스팅 성공
-                        Log.d("success","delete success");
-                        Toast.makeText(getApplicationContext(),"해당 판매글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        PostRequest postRequest = new PostRequest("deletepost",userData.getUserid(), 0, 0, "", "", "", coupon_id, responsListener);
-        RequestQueue queue = Volley.newRequestQueue(HomeActivity.this);
-        queue.add(postRequest);
     }
 
 }

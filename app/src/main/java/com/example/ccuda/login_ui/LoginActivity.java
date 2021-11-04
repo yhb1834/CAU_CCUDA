@@ -16,11 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.ccuda.HomeActivity;
 import com.example.ccuda.R;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.LoginRequest;
-import com.example.ccuda.data.UserData;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
@@ -41,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     // 로그인 세션
     private SessionCallback sessionCallback = new SessionCallback();
     Session session;
-    UserData userData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,15 +110,15 @@ public class LoginActivity extends AppCompatActivity {
                     boolean success = jsonObject.getBoolean("success");
                     if(success){
                         Log.d("success","query success");
-                        userData = UserData.getInstance();
-                        userData.setUserid(Long.parseLong(jsonObject.getString("id")));
-                        userData.setEmail(jsonObject.getString("email"));
-                        userData.setNicname(jsonObject.getString("nicname"));
-                        userData.setScore(Double.parseDouble(jsonObject.getString("score")));
+                        long p_id = Long.parseLong(jsonObject.getString("id"));
+                        String p_email = jsonObject.getString("email");
+                        String p_nicname = jsonObject.getString("nicname");
+                        double p_score = Double.parseDouble(jsonObject.getString("score"));
 
-                        if(option == TAG_PLUSONE_LOGIN && SaveSharedPreference.getEmail(context).length() == 0){
-                            SaveSharedPreference.setSession(context, email, password, userData.getNicname());
-                            toMainActivity();
+                        if(SaveSharedPreference.getEmail(context).length() == 0){
+                            SaveSharedPreference.setSession(context, p_id, p_email, password,p_nicname, p_score);
+                            if(option == TAG_PLUSONE_LOGIN)
+                                toMainActivity();
                         }
 
                     }
@@ -212,7 +209,6 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.d("KAKAO_API", "profile image: " + profile.getProfileImageUrl());
                                     Log.d("KAKAO_API", "thumbnail image: " + profile.getThumbnailImageUrl());
 
-                                    userData = UserData.getInstance();
                                     long p_id = result.getId();
                                     String p_email = kakaoAccount.getEmail();
                                     if (p_email == null)    p_email="";
