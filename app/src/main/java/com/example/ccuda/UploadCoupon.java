@@ -8,7 +8,9 @@
 
 package com.example.ccuda;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,16 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.example.ccuda.data.SaveSharedPreference;
+import com.example.ccuda.db.LoginRequest;
+import com.example.ccuda.db.SaveItemRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,6 +36,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.StringJoiner;
 
 public class UploadCoupon extends Fragment {
     FragmentTransaction transaction;
@@ -43,8 +56,11 @@ public class UploadCoupon extends Fragment {
             public void run() {
                 try{
                     ArrayList<String> cuReturn=getProductList("cu","https://pyony.com/brands/cu/");
+                    saveProductList(getActivity().getApplicationContext(),cuReturn,"cu");
                     ArrayList<String> gsReturn=getProductList("gs25","https://pyony.com/brands/gs25/");
+                    saveProductList(getActivity().getApplicationContext(),gsReturn,"gs25");
                     ArrayList<String> sevenReturn=getProductList("seven","https://pyony.com/brands/seven/");
+                    saveProductList(getActivity().getApplicationContext(),sevenReturn,"seven");
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -80,5 +96,38 @@ public class UploadCoupon extends Fragment {
         }
 
         return result;
+    }
+
+    // 크롤링한 데이터 arraylist를 JSONarray로 변환 후 저장
+    public void saveProductList(Context context, ArrayList<String> returnlist, String storename){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray jsonArray = new JSONArray();
+            for(int i=0; i< returnlist.size(); i++){
+                jsonArray.put(returnlist.get(i));
+            }
+            jsonObject.put("store", storename);
+            jsonObject.put("item", jsonArray);
+
+            String json = jsonObject.toString();
+            Response.Listener<String> responsListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try{
+                        JSONObject jsonObject = new JSONObject(response);
+                        String update_date = jsonObject.getString("date");
+                        Log.d("update",update_date);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            };
+            SaveItemRequest saveItemRequest = new SaveItemRequest(json,responsListener);
+            RequestQueue queue = Volley.newRequestQueue(context);
+            queue.add(saveItemRequest);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 }
