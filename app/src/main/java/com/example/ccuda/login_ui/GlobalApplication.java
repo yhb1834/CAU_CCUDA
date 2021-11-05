@@ -1,4 +1,4 @@
-package com.example.ccuda.ui_login;
+package com.example.ccuda.login_ui;
 
 
 import android.app.Application;

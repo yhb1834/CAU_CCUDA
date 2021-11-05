@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.ccuda.ui_login.LoginActivity;
+import com.example.ccuda.login_ui.LoginActivity;
 
 public class SplashActivity extends AppCompatActivity {
     @Override
