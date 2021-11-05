@@ -37,6 +37,7 @@ import com.example.ccuda.CartFragment;
 import com.example.ccuda.ChatFragment;
 import com.example.ccuda.GetcouponFragment;
 import com.example.ccuda.HomeFragment;
+import com.example.ccuda.MyPage;
 import com.example.ccuda.NotifyFragment;
 import com.example.ccuda.R;
 import com.example.ccuda.RecipeFragment;
@@ -124,6 +125,9 @@ public class HomeActivity extends AppCompatActivity {
         View header = navigationView.getHeaderView(0);
         TextView nav_nicname_text = (TextView) header.findViewById(R.id.nickname);
         TextView nav_email_text = (TextView) header.findViewById(R.id.user_id);
+        ImageView profile = (ImageView) header.findViewById(R.id.imageView);
+
+
 
         nav_nicname_text.setText(SaveSharedPreference.getNicname(this));
         if(SaveSharedPreference.getEmail(this).length() == 0)
@@ -180,6 +184,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast toast=Toast.makeText(getApplicationContext(), "profile", Toast.LENGTH_SHORT);
+                //toast.show();
+                drawerLayout.closeDrawers();
+                getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new MyPage()).commit();
+            }
+        });
 
 
     }

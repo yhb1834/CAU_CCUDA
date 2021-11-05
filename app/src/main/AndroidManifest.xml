@@ -15,6 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <provider
+            android:authorities="${applicationId}.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
@@ -38,6 +48,9 @@
         <activity android:name=".login_ui.FindpasswordActivity"></activity>
         <activity android:name=".login_ui.RecreatepasswordActivity"></activity>
 
+
+
     </application>
+
 
 </manifest>

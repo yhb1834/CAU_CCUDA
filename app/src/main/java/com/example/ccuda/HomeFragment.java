@@ -3,6 +3,7 @@ package com.example.ccuda;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,6 +24,7 @@ import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.db.PostRequest;
+import com.example.ccuda.login_ui.HomeActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -81,6 +83,18 @@ public class HomeFragment extends Fragment {
 
 
     }
+    HomeActivity activity;
+    @Override
+    public void onAttach(@NonNull Context context){
+        super.onAttach(context);
+        activity=(HomeActivity)getActivity();
+    }
+
+    @Override
+    public void onDetach(){
+        super.onDetach();
+        activity=null;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,12 +118,7 @@ public class HomeFragment extends Fragment {
         addCuppon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getContext(), "add button listener", Toast.LENGTH_SHORT).show();
-                UploadCoupon frameChange=new UploadCoupon();
-                FragmentTransaction transaction=getActivity().getSupportFragmentManager().beginTransaction();
-                UploadCoupon changeFragment=new UploadCoupon();
-                transaction.replace(R.id.mainhome, changeFragment);
-                transaction.commit();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new UploadCoupon()).commit();
 
             }
         });
