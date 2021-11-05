@@ -6,7 +6,7 @@
 // http://daplus.net/java-android-os-networkonmainthreadexception를-수정하는-방법/
 // https://mizzo-dev.tistory.com/entry/Mac-OS-환경에서-Selenium-Driver-Path-설정하기
 
-package com.example.ccuda;
+package com.example.ccuda.ui_Home;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.ccuda.R;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.LoginRequest;
 import com.example.ccuda.db.SaveItemRequest;

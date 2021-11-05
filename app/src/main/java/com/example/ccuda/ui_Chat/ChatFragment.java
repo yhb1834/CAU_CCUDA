@@ -1,4 +1,4 @@
-package com.example.ccuda;
+package com.example.ccuda.ui_Chat;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ccuda.R;
 import com.example.ccuda.data.PeopleItem;
 
 import java.util.ArrayList;

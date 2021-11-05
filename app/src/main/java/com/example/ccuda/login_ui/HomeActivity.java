@@ -1,46 +1,28 @@
 package com.example.ccuda.login_ui;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
-import com.example.ccuda.AppSettingsFragment;
-import com.example.ccuda.CartFragment;
-import com.example.ccuda.ChatFragment;
-import com.example.ccuda.GetcouponFragment;
-import com.example.ccuda.HomeFragment;
-import com.example.ccuda.NotifyFragment;
+import com.example.ccuda.SideMenu.AppSettingsFragment;
+import com.example.ccuda.ui_Cart.CartFragment;
+import com.example.ccuda.ui_Chat.ChatFragment;
+import com.example.ccuda.SideMenu.GetcouponFragment;
+import com.example.ccuda.ui_Home.HomeFragment;
+import com.example.ccuda.SideMenu.NotifyFragment;
 import com.example.ccuda.R;
-import com.example.ccuda.RecipeFragment;
-import com.example.ccuda.UploadarticlesFragment;
+import com.example.ccuda.ui_Recipe.RecipeFragment;
+import com.example.ccuda.SideMenu.UploadarticlesFragment;
 import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
@@ -49,12 +31,6 @@ import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.db.PostRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class HomeActivity extends AppCompatActivity {
 

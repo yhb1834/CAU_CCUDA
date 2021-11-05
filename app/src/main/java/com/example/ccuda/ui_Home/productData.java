@@ -1,4 +1,4 @@
-package com.example.ccuda;
+package com.example.ccuda.ui_Home;
 
 public class productData {
     private int photo;
