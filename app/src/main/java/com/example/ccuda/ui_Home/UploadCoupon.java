@@ -7,7 +7,7 @@
 // https://mizzo-dev.tistory.com/entry/Mac-OS-환경에서-Selenium-Driver-Path-설정하기
 // https://kumgo1d.tistory.com/5
 // https://developer.android.com/training/basics/intents/result?hl=ko -> 사진 업로드 API 써야할듯
-package com.example.ccuda;
+package com.example.ccuda.ui_Home;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -42,6 +42,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.ccuda.Config;
+import com.example.ccuda.R;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.LoginRequest;
 
@@ -246,7 +248,7 @@ public class UploadCoupon extends Fragment {
         Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         String url="tmp_"+String.valueOf(System.currentTimeMillis())+".jpg";
-        mImageCaptureUri= FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID+".fileprovider", new File(getContext().getFilesDir(),url));
+//        mImageCaptureUri= FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID+".fileprovider", new File(getContext().getFilesDir(),url));
 
         intent.putExtra(MediaStore.EXTRA_OUTPUT,mImageCaptureUri);
         startActivity(intent);
