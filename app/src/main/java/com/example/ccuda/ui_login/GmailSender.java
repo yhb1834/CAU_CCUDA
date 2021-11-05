@@ -1,4 +1,4 @@
-package com.example.ccuda;
+package com.example.ccuda.ui_login;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.example.ccuda.login_ui;
+package com.example.ccuda.ui_login;
 
 import java.security.MessageDigest;
 

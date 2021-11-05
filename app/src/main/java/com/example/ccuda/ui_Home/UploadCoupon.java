@@ -19,13 +19,14 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.ccuda.Config;
 import com.example.ccuda.R;
-import com.example.ccuda.data.SaveSharedPreference;
-import com.example.ccuda.db.LoginRequest;
-import com.example.ccuda.db.SaveItemRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +38,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.StringJoiner;
 
 public class UploadCoupon extends Fragment {
     FragmentTransaction transaction;
@@ -111,21 +111,22 @@ public class UploadCoupon extends Fragment {
             jsonObject.put("item", jsonArray);
 
             String json = jsonObject.toString();
-            Response.Listener<String> responsListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try{
-                        JSONObject jsonObject = new JSONObject(response);
-                        String update_date = jsonObject.getString("date");
-                        Log.d("update",update_date);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            };
-            SaveItemRequest saveItemRequest = new SaveItemRequest(json,responsListener);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, String.format("%s/savedata.php", Config.SERVER_URL), jsonObject, new Response.Listener<JSONObject>(){
+                        @Override
+                        public void onResponse(JSONObject response){
+                            Log.d("success","Save success");
+                        }
+                    } , new  Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error){
+                            Toast.makeText(context, "Network connecting error", Toast.LENGTH_SHORT).show();
+                            Log.d("success","volley error");
+                        }
+                    });
             RequestQueue queue = Volley.newRequestQueue(context);
-            queue.add(saveItemRequest);
+            queue.add(jsonObjectRequest);
+
 
         }catch (JSONException e){
             e.printStackTrace();

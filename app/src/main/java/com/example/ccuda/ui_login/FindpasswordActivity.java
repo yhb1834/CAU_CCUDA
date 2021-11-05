@@ -1,4 +1,4 @@
-package com.example.ccuda.login_ui;
+package com.example.ccuda.ui_login;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,7 +14,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.Config;
-import com.example.ccuda.GmailSender;
 import com.example.ccuda.R;
 import com.example.ccuda.db.RecoverRequest;
 import com.google.android.material.textfield.TextInputEditText;

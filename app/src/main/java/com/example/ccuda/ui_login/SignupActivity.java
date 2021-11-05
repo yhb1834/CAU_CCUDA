@@ -1,6 +1,6 @@
 // https://velog.io/@xyunkyung/안드로이드-회원가입-로그인-기능-구현하기-4
 
-package com.example.ccuda.login_ui;
+package com.example.ccuda.ui_login;
 
 import android.content.Intent;
 import android.os.Bundle;

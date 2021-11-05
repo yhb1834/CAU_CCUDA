@@ -1,4 +1,4 @@
-package com.example.ccuda.login_ui;
+package com.example.ccuda.ui_Home;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -23,12 +23,7 @@ import com.example.ccuda.SideMenu.NotifyFragment;
 import com.example.ccuda.R;
 import com.example.ccuda.ui_Recipe.RecipeFragment;
 import com.example.ccuda.SideMenu.UploadarticlesFragment;
-import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.SaveSharedPreference;
-import com.example.ccuda.db.BitmapConverter;
-import com.example.ccuda.data.CouponData;
-import com.example.ccuda.db.CouponpageRequest;
-import com.example.ccuda.db.PostRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
