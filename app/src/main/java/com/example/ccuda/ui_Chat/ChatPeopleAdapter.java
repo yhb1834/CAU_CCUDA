@@ -1,6 +1,5 @@
-package com.example.ccuda;
+package com.example.ccuda.ui_Chat;
 
-import android.provider.Contacts;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ccuda.R;
 import com.example.ccuda.data.PeopleItem;
 
 import java.util.ArrayList;

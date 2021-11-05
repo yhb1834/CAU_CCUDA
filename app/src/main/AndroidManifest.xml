@@ -7,7 +7,7 @@
 
     <application
         android:usesCleartextTraffic="true"
-        android:name=".login_ui.GlobalApplication"
+        android:name=".ui_login.GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ccuda_logo"
         android:label="@string/app_name"
@@ -30,7 +30,7 @@
             android:value="@string/kakao_app_key" />
 
         <activity
-            android:name=".login_ui.LoginActivity"
+            android:name=".ui_login.LoginActivity"
             android:exported="true">
         </activity>
 
@@ -43,10 +43,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login_ui.HomeActivity"></activity>
-        <activity android:name=".login_ui.SignupActivity"></activity>
-        <activity android:name=".login_ui.FindpasswordActivity"></activity>
-        <activity android:name=".login_ui.RecreatepasswordActivity"></activity>
+        <activity android:name=".ui_Home.HomeActivity"></activity>
+        <activity android:name=".ui_login.SignupActivity"></activity>
+        <activity android:name=".ui_login.FindpasswordActivity"></activity>
+        <activity android:name=".ui_login.RecreatepasswordActivity"></activity>
 
 
 

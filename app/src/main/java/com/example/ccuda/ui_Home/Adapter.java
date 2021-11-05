@@ -1,16 +1,16 @@
-package com.example.ccuda;
+package com.example.ccuda.ui_Home;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.ccuda.R;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class Adapter extends BaseAdapter {
     Context mContext=null;
