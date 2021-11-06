@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,13 +17,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.R;
-import com.example.ccuda.ui_Home.UploadCoupon;
 import com.example.ccuda.data.CouponData;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.db.PostRequest;
-import com.example.ccuda.login_ui.HomeActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
