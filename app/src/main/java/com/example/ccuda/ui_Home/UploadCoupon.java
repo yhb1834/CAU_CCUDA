@@ -44,8 +44,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.Config;
 import com.example.ccuda.R;
+import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
+import com.example.ccuda.db.BitmapConverter;
+import com.example.ccuda.db.CartRequest;
 import com.example.ccuda.db.LoginRequest;
+import com.example.ccuda.db.SaveJsoupRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -223,21 +227,20 @@ public class UploadCoupon extends Fragment {
             jsonObject.put("item", jsonArray);
 
             String json = jsonObject.toString();
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                    (Request.Method.POST, String.format("%s/savedata.php", Config.SERVER_URL), jsonObject, new Response.Listener<JSONObject>(){
-                        @Override
-                        public void onResponse(JSONObject response){
-                            Log.d("success","Save success");
-                        }
-                    } , new  Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error){
-                            Toast.makeText(context, "Network connecting error", Toast.LENGTH_SHORT).show();
-                            Log.d("success","volley error");
-                        }
-                    });
+            Response.Listener<String> responsListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try{
+                        Log.d("success", "volley success");
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            };
+            SaveJsoupRequest saveJsoupRequest = new SaveJsoupRequest(json,responsListener);
             RequestQueue queue = Volley.newRequestQueue(context);
-            queue.add(jsonObjectRequest);
+            queue.add(saveJsoupRequest);
+
 
         }catch (JSONException e){
             e.printStackTrace();
