@@ -55,12 +55,12 @@
             android:textSize="20dp"
             android:layout_margin="10dp">
         </TextView>
-        <Spinner
+        <AutoCompleteTextView
             android:id="@+id/spinner2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp">
-        </Spinner>
+        </AutoCompleteTextView>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

@@ -7,8 +7,9 @@
 // https://mizzo-dev.tistory.com/entry/Mac-OS-환경에서-Selenium-Driver-Path-설정하기
 // https://kumgo1d.tistory.com/5
 // https://developer.android.com/training/basics/intents/result?hl=ko -> 사진 업로드 API 써야할듯
-package com.example.ccuda;
+package com.example.ccuda.ui_Home;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,15 +24,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -42,6 +46,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.ccuda.Config;
+import com.example.ccuda.R;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.LoginRequest;
 
@@ -71,9 +77,15 @@ public class UploadCoupon extends Fragment {
     ArrayList<String> cuReturn=new ArrayList<String>();
     ArrayList<String> gsReturn=new ArrayList<String>();
     ArrayList<String> sevenReturn=new ArrayList<String>();
+    ArrayList<String> test=new ArrayList<String>();
+
     String[] conv={"GS25", "SEVEN11", "CU"};
     ImageView uploadPhoto;
     Uri mImageCaptureUri;
+
+    AutoCompleteTextView spinner2;
+
+
 
     private static final int PICK_FROM_ALBUM=1;
 
@@ -86,6 +98,20 @@ public class UploadCoupon extends Fragment {
             });
 
 
+    ActivityResultLauncher<Intent> launcher=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Uri data=result.getData().getData();
+                            uploadPhoto.setImageURI(data);
+                            System.out.println(data);
+                        }
+                    }
+                });
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,20 +121,23 @@ public class UploadCoupon extends Fragment {
             public void run() {
                 try{
                     cuReturn=getProductList("cu","https://pyony.com/brands/cu/");
-                    saveProductList(getActivity().getApplicationContext(),cuReturn,"cu");
+                    //System.out.println("cu onCreate: "+cuReturn);
+                    //System.out.println(cuReturn.size());
+                    //saveProductList(getActivity().getApplicationContext(),cuReturn,"cu");
                     gsReturn=getProductList("gs25","https://pyony.com/brands/gs25/");
-                    saveProductList(getActivity().getApplicationContext(),gsReturn,"gs25");
+                    //saveProductList(getActivity().getApplicationContext(),gsReturn,"gs25");
                     sevenReturn=getProductList("seven","https://pyony.com/brands/seven/");
-                    saveProductList(getActivity().getApplicationContext(),sevenReturn,"seven");
+                    //saveProductList(getActivity().getApplicationContext(),sevenReturn,"seven");
                     Thread.sleep(1000);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
         }).start();
-
-
+        System.out.println(1);
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -133,14 +162,50 @@ public class UploadCoupon extends Fragment {
         });
 
         prod=v.findViewById(R.id.prod_name);
-        Spinner spinner2=v.findViewById(R.id.spinner2);
-        ArrayAdapter<String> adapter2=new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, cuReturn);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner2.setAdapter(adapter2);
+
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try{
+                    cuReturn=getProductList("cu","https://pyony.com/brands/cu/");
+                    Thread.sleep(1000);
+                }catch (Exception e){
+                    System.out.println("hhhhh");
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        spinner2=v.findViewById(R.id.spinner2);
+        test.add("one");
+        test.add("two");
+        test.add("three");
+        test.add("four");
+        test.add("five");
+        test.add("six");
+        test.add("seven");
+        test.add("eight");
+        test.add("nine");
+        test.add("te ");
+
+        //System.out.println("cu onCreateView: "+cuReturn);
+        //System.out.println(cuReturn.size());
+        spinner2.setAdapter(new ArrayAdapter<>(
+                getContext(), android.R.layout.simple_spinner_dropdown_item, cuReturn
+        ));
+
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), cuReturn.get(position), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), cuReturn.get(position), Toast.LENGTH_SHORT).show();
+                if(position==0){
+                    Toast.makeText(getContext(), "Please Select Number", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    String sNumber=parent.getItemAtPosition(position).toString();
+                    Toast.makeText(getContext(), sNumber,Toast.LENGTH_SHORT);
+                }
             }
 
             @Override
@@ -148,6 +213,8 @@ public class UploadCoupon extends Fragment {
 
             }
         });
+
+
 
         uploadPhoto=(ImageView) v.findViewById(R.id.upload_photo);
         uploadPhoto.setOnClickListener(new View.OnClickListener() {
@@ -164,6 +231,7 @@ public class UploadCoupon extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         doTakeAlbum();
+
                     }
                 };
 
@@ -183,7 +251,7 @@ public class UploadCoupon extends Fragment {
             }
         });
 
-
+        System.out.println(2);
 
         return v;
     }
@@ -246,9 +314,9 @@ public class UploadCoupon extends Fragment {
         Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         String url="tmp_"+String.valueOf(System.currentTimeMillis())+".jpg";
-        mImageCaptureUri= FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID+".fileprovider", new File(getContext().getFilesDir(),url));
+        //mImageCaptureUri= FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID+".fileprovider", new File(getContext().getFilesDir(),url));
 
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,mImageCaptureUri);
+        //intent.putExtra(MediaStore.EXTRA_OUTPUT,mImageCaptureUri);
         startActivity(intent);
     }
 
@@ -256,7 +324,9 @@ public class UploadCoupon extends Fragment {
         Intent intent=new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         mGetContent.launch("image/*");
-        //startActivity(intent);
-        System.out.println("here");
+
+        launcher.launch(intent);
+
+
     }
 }
