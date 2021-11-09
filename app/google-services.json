@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "729732114093",
+    "project_id": "ccuda-project",
+    "storage_bucket": "ccuda-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729732114093:android:1ebe6af43fce24c3390824",
+        "android_client_info": {
+          "package_name": "com.example.ccuda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "729732114093-9mh2nl51j84h9njo2e0regsrdla6jdol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKTOVahtVjTczh4H_W9_28vnuqJ7dQFUI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "729732114093-9mh2nl51j84h9njo2e0regsrdla6jdol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

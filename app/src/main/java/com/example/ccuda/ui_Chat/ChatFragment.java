@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ccuda.R;
 import com.example.ccuda.data.PeopleItem;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -46,6 +48,13 @@ public class ChatFragment extends Fragment{
         }
         PeopleItems.add(new PeopleItem(R.drawable.person,"11번","별점 12점"));
         mChatPeopleAdapter.setChatPeopleList(PeopleItems);
+
+        /*realtime chat test*/
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("Hello, World!");
+
         return view;
     }
 }
