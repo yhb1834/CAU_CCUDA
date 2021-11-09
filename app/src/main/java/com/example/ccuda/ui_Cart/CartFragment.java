@@ -58,7 +58,8 @@ public class CartFragment extends Fragment {
                         itemData.setCategory(object.getString("category"));
                         itemData.setPlustype(object.getString("plustype"));
                         itemData.setStorename(object.getString("storename"));
-                        itemData.setItemprice(Integer.parseInt(object.getString("item_price")));
+                        itemData.setItemprice(Integer.parseInt(object.getString("item_price")));    // 원가
+                        itemData.setItemprice2(Integer.parseInt(object.getString("item_price2")));    // 개당 가격
                         itemData.setImage(BitmapConverter.StringToBitmap(object.getString("item_image")));
 
                         iArrayList.add(itemData);

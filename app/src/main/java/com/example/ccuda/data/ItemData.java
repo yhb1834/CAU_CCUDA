@@ -8,7 +8,8 @@ public class ItemData {
     private String category;
     private String plustype;
     private String storename;
-    private int price;
+    private int price;      // 원가
+    private int price2;     // 개당 가격
     private Bitmap image;   // 물품 이미지
 
 
@@ -30,6 +31,9 @@ public class ItemData {
     public int getItemprice() {
         return price;
     }
+    public int getItemprice2() {
+        return price2;
+    }
     public Bitmap getImage() {
         return image;
     }
@@ -50,6 +54,9 @@ public class ItemData {
     }
     public void setItemprice(int price) {
         this.price = price;
+    }
+    public void setItemprice2(int price2) {
+        this.price2 = price2;
     }
     public void setImage(Bitmap image) {
         this.image = image;
