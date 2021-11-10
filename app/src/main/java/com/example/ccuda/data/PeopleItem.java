@@ -5,12 +5,10 @@ public class PeopleItem {
     String star;
     int resourceId; //프로필 사진
 
-
     public PeopleItem(int resourceId, String nicname, String star) {
         this.resourceId = resourceId;
         this.nicname = nicname;
         this.star= star;
-
     }
 
     public String getNicname() { return nicname; }
@@ -25,9 +23,7 @@ public class PeopleItem {
     public void setNicname(String nicname) {
         this.nicname = nicname;
     }
-    //public void setUserid(long userid) {
-        //this.userid = userid;
-    //}
+    //public void setUserid(long userid) {this.userid = userid;}
     public void setResourceId(int resourceId){
         this.resourceId = resourceId;
     }
