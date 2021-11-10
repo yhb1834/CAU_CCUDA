@@ -22,7 +22,7 @@ public class ChatPeopleAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment1_chat_peoplelist, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, onItemClickEventListener);
     }
 
     @Override
@@ -40,6 +40,16 @@ public class ChatPeopleAdapter extends RecyclerView.Adapter<ViewHolder> {
         return PeopleItems.size();
     }
 
+    public interface OnItemClickEventListener {
+        void onItemClick(View view, int position);
+    }
+
+
+    private OnItemClickEventListener onItemClickEventListener;
+
+    public void setOnItemClickListener(OnItemClickEventListener listener) {
+        onItemClickEventListener = listener;
+    }
 }
 
 class ViewHolder extends RecyclerView.ViewHolder {
@@ -47,12 +57,22 @@ class ViewHolder extends RecyclerView.ViewHolder {
     TextView name;
     TextView star;
 
-    public ViewHolder(@NonNull View itemView) {
+    public ViewHolder(@NonNull View itemView, final ChatPeopleAdapter.OnItemClickEventListener itemClickListener) {
         super(itemView);
 
         profile = (ImageView) itemView.findViewById(R.id.profile);
         name = (TextView) itemView.findViewById(R.id.name);
         star = (TextView) itemView.findViewById(R.id.star);
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View a_view) {
+                final int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    itemClickListener.onItemClick(a_view, position);
+                }
+            }
+        });
     }
 
     void onBind(PeopleItem item){
