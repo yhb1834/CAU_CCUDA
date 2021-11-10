@@ -1,5 +1,6 @@
 package com.example.ccuda.ui_Recipe;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,9 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ccuda.R;
-import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.RecipeItem;
-import com.example.ccuda.ui_Chat.ChatPeopleAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -48,6 +48,16 @@ public class RecipeFragment extends Fragment {
             RecipeItems.add(new RecipeItem(R.drawable.person,i,i+"조합 "));
         }
         mRecipeAdapter.setRecipeList(RecipeItems);
+
+
+        FloatingActionButton fab = view.findViewById(R.id.add_recipe);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), RecipeRegisterActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 }

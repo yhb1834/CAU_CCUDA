@@ -2,11 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui_Recipe.RecipeRegisterFragment">
-
+    tools:context=".ui_Recipe.RecipeRegisterActivity">
     <TextView
         android:id="@+id/title"
         android:layout_width="75dp"
@@ -68,6 +66,7 @@
         android:layout_width="86dp"
         android:layout_height="32dp"
         android:layout_marginStart="4dp"
+        android:layout_marginTop="36dp"
         android:gravity="center"
         android:padding="6dp"
         android:text="@string/content"
@@ -83,8 +82,11 @@
         android:hint="@string/content_input"
         android:inputType="text"
         android:padding="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/content" />
+        app:layout_constraintTop_toBottomOf="@+id/content"
+        app:layout_constraintVertical_bias="0.219" />
 
     <Button
         android:id="@+id/register"
