@@ -1,5 +1,7 @@
 package com.example.ccuda.ui_Recipe;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +17,17 @@ import com.example.ccuda.data.RecipeItem;
 import java.util.ArrayList;
 
 public class RecipeAdapter extends RecyclerView.Adapter<ViewHolder> {
-
+    public Context mContext;
     private ArrayList<RecipeItem> mRecipe = null;
+
+    public RecipeAdapter() {
+
+    }
+
+    public RecipeAdapter(Context context, ArrayList<RecipeItem> list){
+        this.mRecipe = list;
+        this.mContext = context;
+    }
 
     @NonNull
     @Override
@@ -52,6 +63,20 @@ class ViewHolder extends RecyclerView.ViewHolder {
         image = (ImageView) itemView.findViewById(R.id.imageView2);
         like = (TextView) itemView.findViewById(R.id.like);
         title = (TextView) itemView.findViewById(R.id.RecipeName);
+
+        /*itemView.setClickable(true);
+        itemView.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION){
+                    Intent intent = new Intent(this, RecipeItemFragment.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("TEXT", list.get(pos));
+                    this.startActivity(intent)
+;                }
+            }
+        });*/
     }
 
     void onBindRecipe(RecipeItem item){
