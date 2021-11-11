@@ -43,7 +43,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login_ui.HomeActivity"></activity>
+        <activity android:name=".ui_Home.HomeActivity"></activity>
         <activity android:name=".login_ui.SignupActivity"></activity>
         <activity android:name=".login_ui.FindpasswordActivity"></activity>
         <activity android:name=".login_ui.RecreatepasswordActivity"></activity>

@@ -14,22 +14,21 @@ import com.example.ccuda.data.PeopleItem;
 
 import java.util.ArrayList;
 
-public class ChatPeopleAdapter extends RecyclerView.Adapter<ChatPeopleAdapter.ViewHolder> {
+public class ChatPeopleAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private ArrayList<PeopleItem> PeopleItems;
 
     @NonNull
     @Override
-    public ChatPeopleAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_peoplelist, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment1_chat_peoplelist, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatPeopleAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.onBind(PeopleItems.get(position));
     }
-
 
     public void setChatPeopleList(ArrayList<PeopleItem> list){
         this.PeopleItems = list;
@@ -41,23 +40,24 @@ public class ChatPeopleAdapter extends RecyclerView.Adapter<ChatPeopleAdapter.Vi
         return PeopleItems.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView profile;
-        TextView name;
-        TextView star;
+}
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+class ViewHolder extends RecyclerView.ViewHolder {
+    ImageView profile;
+    TextView name;
+    TextView star;
 
-            profile = (ImageView) itemView.findViewById(R.id.profile);
-            name = (TextView) itemView.findViewById(R.id.name);
-            star = (TextView) itemView.findViewById(R.id.star);
-        }
+    public ViewHolder(@NonNull View itemView) {
+        super(itemView);
 
-        void onBind(PeopleItem item){
-            profile.setImageResource((item.getResourceId()));
-            name.setText(item.getNicname());
-            star.setText(item.getStar());
-        }
+        profile = (ImageView) itemView.findViewById(R.id.profile);
+        name = (TextView) itemView.findViewById(R.id.name);
+        star = (TextView) itemView.findViewById(R.id.star);
+    }
+
+    void onBind(PeopleItem item){
+        profile.setImageResource((item.getResourceId()));
+        name.setText(item.getNicname());
+        star.setText(item.getStar());
     }
 }

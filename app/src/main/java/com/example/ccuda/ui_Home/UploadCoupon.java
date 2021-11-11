@@ -15,8 +15,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,9 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,21 +36,22 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.ccuda.Config;
 import com.example.ccuda.R;
-import com.example.ccuda.data.SaveSharedPreference;
-import com.example.ccuda.db.LoginRequest;
+import com.example.ccuda.data.ItemData;
+import com.example.ccuda.db.BitmapConverter;
+import com.example.ccuda.db.CartRequest;
+import com.example.ccuda.db.SaveJsoupRequest;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,10 +61,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.StringJoiner;
 
 public class UploadCoupon extends Fragment {
     FragmentTransaction transaction;
@@ -74,16 +74,18 @@ public class UploadCoupon extends Fragment {
     TextView convName; // 편의점명
     TextView prod;
     TextView convInfo;
-    ArrayList<String> cuReturn=new ArrayList<String>();
-    ArrayList<String> gsReturn=new ArrayList<String>();
-    ArrayList<String> sevenReturn=new ArrayList<String>();
-    ArrayList<String> test=new ArrayList<String>();
+    public ArrayList<String> cuReturn=new ArrayList<String>();
+    public ArrayList<String> gsReturn=new ArrayList<String>();
+    public ArrayList<String> sevenReturn=new ArrayList<String>();
+    public static ArrayList<String> test=new ArrayList<String>();
 
     String[] conv={"GS25", "SEVEN11", "CU"};
     ImageView uploadPhoto;
     Uri mImageCaptureUri;
 
-    AutoCompleteTextView spinner2;
+    SearchableSpinner searchView;
+    String[] hhhhh;
+    RecyclerView recyclerView;
 
 
 
@@ -99,16 +101,16 @@ public class UploadCoupon extends Fragment {
 
 
     ActivityResultLauncher<Intent> launcher=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            Uri data=result.getData().getData();
-                            uploadPhoto.setImageURI(data);
-                            System.out.println(data);
-                        }
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Uri data=result.getData().getData();
+                        uploadPhoto.setImageURI(data);
+                        System.out.println(data);
                     }
-                });
+                }
+            });
 
 
 
@@ -116,25 +118,22 @@ public class UploadCoupon extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         new Thread(new Runnable() {
-
             @Override
             public void run() {
                 try{
                     cuReturn=getProductList("cu","https://pyony.com/brands/cu/");
-                    //System.out.println("cu onCreate: "+cuReturn);
-                    //System.out.println(cuReturn.size());
                     //saveProductList(getActivity().getApplicationContext(),cuReturn,"cu");
                     gsReturn=getProductList("gs25","https://pyony.com/brands/gs25/");
                     //saveProductList(getActivity().getApplicationContext(),gsReturn,"gs25");
                     sevenReturn=getProductList("seven","https://pyony.com/brands/seven/");
                     //saveProductList(getActivity().getApplicationContext(),sevenReturn,"seven");
                     Thread.sleep(1000);
+                    //System.out.println("cuReturn: "+cuReturn);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
         }).start();
-        System.out.println(1);
     }
 
 
@@ -143,6 +142,7 @@ public class UploadCoupon extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.fragment_uploadcoupon, container, false);
+
 
         convName=v.findViewById(R.id.conv_name);
         Spinner spinner1=v.findViewById(R.id.spinner1);
@@ -153,6 +153,23 @@ public class UploadCoupon extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), conv[position], Toast.LENGTH_SHORT).show();
+                String convN="gs25";
+                String URL="https://pyony.com/brands/gs25/";
+                switch (position){
+                    case 0: // gs
+                        convN="gs25";
+                        URL="https://pyony.com/brands/gs25/";
+                        break;
+                    case 1: // seven
+                        convN="seven";
+                        URL="https://pyony.com/brands/seven/";
+                        break;
+                    case 2: // cu
+                        convN="cu";
+                        URL="https://pyony.com/brands/cu/";
+                        break;
+                }
+                runThread(convN,URL);
             }
 
             @Override
@@ -161,39 +178,18 @@ public class UploadCoupon extends Fragment {
             }
         });
 
-        prod=v.findViewById(R.id.prod_name);
 
-        new Thread(new Runnable() {
+        searchView=v.findViewById(R.id.searchProd);
 
-            @Override
-            public void run() {
-                try{
-                    cuReturn=getProductList("cu","https://pyony.com/brands/cu/");
-                    Thread.sleep(1000);
-                }catch (Exception e){
-                    System.out.println("hhhhh");
-                    e.printStackTrace();
-                }
-            }
-        }).start();
 
-        spinner2=v.findViewById(R.id.spinner2);
-        test.add("one");
-        test.add("two");
-        test.add("three");
-        test.add("four");
-        test.add("five");
-        test.add("six");
-        test.add("seven");
-        test.add("eight");
-        test.add("nine");
-        test.add("te ");
 
-        //System.out.println("cu onCreateView: "+cuReturn);
-        //System.out.println(cuReturn.size());
-        spinner2.setAdapter(new ArrayAdapter<>(
-                getContext(), android.R.layout.simple_spinner_dropdown_item, cuReturn
-        ));
+
+
+/*
+        ArrayAdapter<String> arrayList=new ArrayAdapter<>(
+                getContext(), android.R.layout.simple_spinner_dropdown_item, test
+        );
+        spinner2.setAdapter(arrayList);
 
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -214,7 +210,7 @@ public class UploadCoupon extends Fragment {
             }
         });
 
-
+*/
 
         uploadPhoto=(ImageView) v.findViewById(R.id.upload_photo);
         uploadPhoto.setOnClickListener(new View.OnClickListener() {
@@ -251,7 +247,6 @@ public class UploadCoupon extends Fragment {
             }
         });
 
-        System.out.println(2);
 
         return v;
     }
@@ -289,21 +284,20 @@ public class UploadCoupon extends Fragment {
             jsonObject.put("item", jsonArray);
 
             String json = jsonObject.toString();
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                    (Request.Method.POST, String.format("%s/savedata.php", Config.SERVER_URL), jsonObject, new Response.Listener<JSONObject>(){
-                        @Override
-                        public void onResponse(JSONObject response){
-                            Log.d("success","Save success");
-                        }
-                    } , new  Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error){
-                            Toast.makeText(context, "Network connecting error", Toast.LENGTH_SHORT).show();
-                            Log.d("success","volley error");
-                        }
-                    });
+            Response.Listener<String> responsListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try{
+                        Log.d("success", "volley success");
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            };
+            SaveJsoupRequest saveJsoupRequest = new SaveJsoupRequest(json,responsListener);
             RequestQueue queue = Volley.newRequestQueue(context);
-            queue.add(jsonObjectRequest);
+            queue.add(saveJsoupRequest);
+
 
         }catch (JSONException e){
             e.printStackTrace();
@@ -314,7 +308,11 @@ public class UploadCoupon extends Fragment {
         Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         String url="tmp_"+String.valueOf(System.currentTimeMillis())+".jpg";
+
         //mImageCaptureUri= FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID+".fileprovider", new File(getContext().getFilesDir(),url));
+
+//        mImageCaptureUri= FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID+".fileprovider", new File(getContext().getFilesDir(),url));
+
 
         //intent.putExtra(MediaStore.EXTRA_OUTPUT,mImageCaptureUri);
         startActivity(intent);
@@ -329,4 +327,54 @@ public class UploadCoupon extends Fragment {
 
 
     }
+
+    public void runThread(String convName, String URL){
+        new Thread(new Runnable() {
+            ArrayList<String> prodList;
+            Handler mHandler=new Handler();
+            @Override
+            public void run() {
+                try {
+                    prodList = getProductList(convName, URL);
+                    Thread.sleep(1000);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ArrayAdapter<String> arrayList=new ArrayAdapter<>(
+                                    getContext(), android.R.layout.simple_spinner_dropdown_item, prodList
+                            );
+
+                            searchView.setAdapter(arrayList);
+
+                            searchView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    if(position==0){
+                                        Toast.makeText(getContext(), "Please Select Number", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        String sNumber=parent.getItemAtPosition(position).toString();
+                                        Toast.makeText(getContext(), sNumber,Toast.LENGTH_SHORT);
+                                    }
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+
+
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
+
 }

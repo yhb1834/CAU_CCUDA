@@ -55,12 +55,19 @@
             android:textSize="20dp"
             android:layout_margin="10dp">
         </TextView>
-        <AutoCompleteTextView
-            android:id="@+id/spinner2"
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+            android:id="@+id/searchProd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp">
-        </AutoCompleteTextView>
+        </com.toptoche.searchablespinnerlibrary.SearchableSpinner>
+        <TextView
+            android:id="@+id/resultView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+        </TextView>
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

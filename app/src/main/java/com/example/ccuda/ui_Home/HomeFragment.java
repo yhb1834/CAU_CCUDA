@@ -24,7 +24,7 @@ import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.db.PostRequest;
-import com.example.ccuda.login_ui.HomeActivity;
+import com.example.ccuda.ui_Home.HomeActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;

@@ -37,7 +37,7 @@ public class ChatFragment extends Fragment{
         /* initiate recyclerview */
         mRecyclerView.setAdapter(mChatPeopleAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL,false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL,false));
 
         /* adapt data */
         PeopleItems = new ArrayList<>();
