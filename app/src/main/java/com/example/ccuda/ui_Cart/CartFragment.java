@@ -58,7 +58,8 @@ public class CartFragment extends Fragment {
                         itemData.setCategory(object.getString("category"));
                         itemData.setPlustype(object.getString("plustype"));
                         itemData.setStorename(object.getString("storename"));
-                        itemData.setItemprice(Integer.parseInt(object.getString("item_price")));
+                        itemData.setItemprice(Integer.parseInt(object.getString("item_price")));    // 원가
+                        itemData.setItemprice2(Integer.parseInt(object.getString("item_price2")));    // 개당 가격
                         itemData.setImage(BitmapConverter.StringToBitmap(object.getString("item_image")));
 
                         iArrayList.add(itemData);
@@ -103,8 +104,8 @@ public class CartFragment extends Fragment {
     }
 
     // 장바구니 리스트 불러오기
-    protected ArrayList<ItemData> mycartlist(ArrayList<ItemData> iarrayList){
-        ArrayList<ItemData> MycartArrayList = new ArrayList<ItemData>();
+    protected void mycartlist(ArrayList<ItemData> iarrayList){
+        mycartArrayList.clear();
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -119,7 +120,7 @@ public class CartFragment extends Fragment {
 
                         for(int j=0; i<iarrayList.size(); j++){
                             if(iarrayList.get(j).getItemid() == item_id){
-                                MycartArrayList.add(iarrayList.get(j));
+                                mycartArrayList.add(iarrayList.get(j));
                                 return;
                             }
                         }
@@ -133,8 +134,6 @@ public class CartFragment extends Fragment {
         CartRequest cartRequest = new CartRequest("mycartlist", SaveSharedPreference.getId(context), 0,responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(cartRequest);
-
-        return MycartArrayList;
     }
 
     // 장바구니 삭제 정보 db저장
