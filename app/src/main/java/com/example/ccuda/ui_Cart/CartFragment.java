@@ -69,7 +69,7 @@ public class CartFragment extends Fragment {
                 }
             }
         };
-        CartRequest cartRequest = new CartRequest("itemlist",0, 0,responsListener);
+        CartRequest cartRequest = new CartRequest("itemlist",0, 0,"",responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(cartRequest);
     }
@@ -98,7 +98,7 @@ public class CartFragment extends Fragment {
                 }
             }
         };
-        CartRequest cartRequest = new CartRequest("addTocart", SaveSharedPreference.getId(context), item_id, responsListener);
+        CartRequest cartRequest = new CartRequest("addTocart", SaveSharedPreference.getId(context), item_id,"", responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(cartRequest);
     }
@@ -131,7 +131,7 @@ public class CartFragment extends Fragment {
                 }
             }
         };
-        CartRequest cartRequest = new CartRequest("mycartlist", SaveSharedPreference.getId(context), 0,responsListener);
+        CartRequest cartRequest = new CartRequest("mycartlist", SaveSharedPreference.getId(context), 0,"",responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(cartRequest);
     }
@@ -149,7 +149,7 @@ public class CartFragment extends Fragment {
                 }
             }
         };
-        CartRequest cartRequest = new CartRequest("removeFromcart", SaveSharedPreference.getId(context), item_id, responsListener);
+        CartRequest cartRequest = new CartRequest("removeFromcart", SaveSharedPreference.getId(context), item_id,"", responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(cartRequest);
     }

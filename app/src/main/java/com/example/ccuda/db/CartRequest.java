@@ -11,13 +11,14 @@ public class CartRequest extends StringRequest {
     final static private String URL = String.format("%s/cartpage.php", Config.SERVER_URL);
     private Map<String, String> parameters;
 
-    public CartRequest(String option, long user_id, int item_id, Response.Listener<String> listener){
+    public CartRequest(String option, long user_id, int item_id,String storename, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
 
         parameters = new HashMap<>();
         parameters.put("option", option);
         parameters.put("user_id", user_id+"");
         parameters.put("item_id", item_id+"");
+        parameters.put("storename", storename);
     }
     @Override
     public Map<String,String> getParams(){

@@ -355,11 +355,38 @@ public class UploadCoupon extends Fragment {
             @Override
             public void run() {
                 try {
-                    prodList = getProductName(convName, URL); //getProductList(convName, URL);
-                    prodPrice = getProductPrice(convName, URL);
-                    Thread.sleep(1000);
+                    Response.Listener<String> responsListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try{
+                                JSONObject jsonObject = new JSONObject(response);
+                                JSONArray jsonArray = jsonObject.getJSONArray("storeitemlist");
+                                int length = jsonArray.length();
 
-                    //elements=getProductName(convName,URL);
+                                for(int i=0; i<length; i++){
+                                    ItemData itemData = new ItemData();
+
+                                    JSONObject object = jsonArray.getJSONObject(i);
+
+                                    prodList.add(object.getString("item_name"));
+                                    prodPrice.add(object.getString("item_price2"));    //개당 가격
+                                    //String image = BitmapConverter.StringToBitmap(object.getString("item_image");
+
+
+                                    //prodList = getProductName(convName, URL); //getProductList(convName, URL);
+                                    //prodPrice = getProductPrice(convName, URL);
+                                    Thread.sleep(1000);
+
+                                    //elements=getProductName(convName,URL);
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    CartRequest cartRequest = new CartRequest("storeitem",0, 0,convName,responsListener);
+                    RequestQueue queue = Volley.newRequestQueue(getActivity());
+                    queue.add(cartRequest);
 
                     mHandler.post(new Runnable() {
                         @Override
