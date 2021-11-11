@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -62,7 +63,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class UploadCoupon extends Fragment {
     FragmentTransaction transaction;
@@ -86,6 +89,7 @@ public class UploadCoupon extends Fragment {
     SearchableSpinner searchView;
     String[] hhhhh;
     RecyclerView recyclerView;
+    EditText editText;
 
 
 
@@ -146,6 +150,7 @@ public class UploadCoupon extends Fragment {
 
         convName=v.findViewById(R.id.conv_name);
         Spinner spinner1=v.findViewById(R.id.spinner1);
+        editText=v.findViewById(R.id.prodPrice);
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, conv);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1.setAdapter(adapter);
@@ -181,36 +186,6 @@ public class UploadCoupon extends Fragment {
 
         searchView=v.findViewById(R.id.searchProd);
 
-
-
-
-
-/*
-        ArrayAdapter<String> arrayList=new ArrayAdapter<>(
-                getContext(), android.R.layout.simple_spinner_dropdown_item, test
-        );
-        spinner2.setAdapter(arrayList);
-
-        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getContext(), cuReturn.get(position), Toast.LENGTH_SHORT).show();
-                if(position==0){
-                    Toast.makeText(getContext(), "Please Select Number", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    String sNumber=parent.getItemAtPosition(position).toString();
-                    Toast.makeText(getContext(), sNumber,Toast.LENGTH_SHORT);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-*/
 
         uploadPhoto=(ImageView) v.findViewById(R.id.upload_photo);
         uploadPhoto.setOnClickListener(new View.OnClickListener() {
@@ -248,6 +223,7 @@ public class UploadCoupon extends Fragment {
         });
 
 
+
         return v;
     }
 
@@ -271,6 +247,48 @@ public class UploadCoupon extends Fragment {
 
         return result;
     }
+
+
+    public ArrayList<String> getProductName(String convName, String url) throws IOException {
+        Document doc=Jsoup.connect(url).get();
+        Elements link=doc.select("a.page-link");
+        ArrayList<String> result=new ArrayList<String>();
+        Elements elements=new Elements();
+
+        String lastSize=link.get(link.size()-1).attr("href").replace("?page=","");
+        int lastPage=Integer.parseInt(lastSize);
+        for(int i=1;i<=lastPage;i++){
+            String URL=url+"?page="+Integer.toString(i);
+            Document docPage=Jsoup.connect(URL).get();
+            elements=docPage.select("div.card-body.px-2.py-2 strong"); //div.card-body strong
+            for(Element element:elements){
+                result.add(element.text());
+            }
+        }
+
+        return result;
+    }
+
+    public ArrayList<String> getProductPrice(String convName, String url) throws IOException {
+        Document doc=Jsoup.connect(url).get();
+        Elements link=doc.select("a.page-link");
+        ArrayList<String> result=new ArrayList<String>();
+
+        String lastSize=link.get(link.size()-1).attr("href").replace("?page=","");
+        int lastPage=Integer.parseInt(lastSize);
+        for(int i=1;i<=lastPage;i++){
+            String URL=url+"?page="+Integer.toString(i);
+            Document docPage=Jsoup.connect(URL).get();
+            Elements elements=docPage.select("div.card-body.px-2.py-2 span.text-muted");
+            for(Element element:elements){
+                result.add(element.text());
+            }
+        }
+
+        return result;
+    }
+
+
 
     // 크롤링한 데이터 arraylist를 JSONarray로 변환 후 저장
     public void saveProductList(Context context, ArrayList<String> returnlist, String storename){
@@ -331,12 +349,18 @@ public class UploadCoupon extends Fragment {
     public void runThread(String convName, String URL){
         new Thread(new Runnable() {
             ArrayList<String> prodList;
+            ArrayList<String> prodPrice;
             Handler mHandler=new Handler();
+            Elements elements=new Elements();
             @Override
             public void run() {
                 try {
-                    prodList = getProductList(convName, URL);
+                    prodList = getProductName(convName, URL); //getProductList(convName, URL);
+                    prodPrice = getProductPrice(convName, URL);
                     Thread.sleep(1000);
+
+                    //elements=getProductName(convName,URL);
+
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -350,12 +374,15 @@ public class UploadCoupon extends Fragment {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                     if(position==0){
-                                        Toast.makeText(getContext(), "Please Select Number", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), prodList.get(position), Toast.LENGTH_SHORT).show();
                                     }
                                     else {
                                         String sNumber=parent.getItemAtPosition(position).toString();
                                         Toast.makeText(getContext(), sNumber,Toast.LENGTH_SHORT);
                                     }
+                                    String limitPrice=prodPrice.get(position);
+                                    editText.setHint(limitPrice+"보다 적게 입력해주세요.");
+
                                 }
 
                                 @Override

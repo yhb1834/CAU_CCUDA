@@ -78,16 +78,16 @@
             android:id="@+id/conv_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="지점명"
+            android:text="가격"
             android:textSize="20dp"
             android:layout_margin="10dp">
         </TextView>
-        <Spinner
-            android:id="@+id/spinner3"
+        <EditText
+            android:id="@+id/prodPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp">
-        </Spinner>
+        </EditText>
     </LinearLayout>
 
 
