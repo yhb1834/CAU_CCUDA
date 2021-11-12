@@ -10,7 +10,7 @@ public class ItemData {
     private String storename;
     private int price;      // 원가
     private int price2;     // 개당 가격
-    private Bitmap image;   // 물품 이미지
+    private String image;   // 물품 이미지
 
 
     public int getItemid() {
@@ -34,7 +34,7 @@ public class ItemData {
     public int getItemprice2() {
         return price2;
     }
-    public Bitmap getImage() {
+    public String getImage() {
         return image;
     }
     public void setItemid(int id) {
@@ -58,7 +58,7 @@ public class ItemData {
     public void setItemprice2(int price2) {
         this.price2 = price2;
     }
-    public void setImage(Bitmap image) {
+    public void setImage(String image) {
         this.image = image;
     }
 }

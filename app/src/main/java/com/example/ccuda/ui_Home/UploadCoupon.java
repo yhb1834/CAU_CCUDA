@@ -11,6 +11,7 @@ package com.example.ccuda.ui_Home;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +39,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -48,10 +50,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.R;
+import com.example.ccuda.data.ChatData;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CartRequest;
 import com.example.ccuda.db.SaveJsoupRequest;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import org.json.JSONArray;
@@ -81,7 +90,11 @@ public class UploadCoupon extends Fragment {
     public ArrayList<String> gsReturn=new ArrayList<String>();
     public ArrayList<String> sevenReturn=new ArrayList<String>();
     public static ArrayList<String> test=new ArrayList<String>();
-
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference itemRef;
+    ArrayList<ItemData> cuItem = new ArrayList<>();
+    ArrayList<ItemData> gs25Item = new ArrayList<>();
+    ArrayList<ItemData> sevenItem = new ArrayList<>();
     String[] conv={"GS25", "SEVEN11", "CU"};
     ImageView uploadPhoto;
     Uri mImageCaptureUri;
@@ -126,11 +139,11 @@ public class UploadCoupon extends Fragment {
             public void run() {
                 try{
                     cuReturn=getProductList("cu","https://pyony.com/brands/cu/");
-                    //saveProductList(getActivity().getApplicationContext(),cuReturn,"cu");
+                    //saveProductList(cuReturn,"cu");
                     gsReturn=getProductList("gs25","https://pyony.com/brands/gs25/");
-                    //saveProductList(getActivity().getApplicationContext(),gsReturn,"gs25");
+                    //saveProductList(gsReturn,"gs25");
                     sevenReturn=getProductList("seven","https://pyony.com/brands/seven/");
-                    //saveProductList(getActivity().getApplicationContext(),sevenReturn,"seven");
+                    //saveProductList(sevenReturn,"seven");
                     Thread.sleep(1000);
                     //System.out.println("cuReturn: "+cuReturn);
                 }catch (Exception e){
@@ -222,7 +235,7 @@ public class UploadCoupon extends Fragment {
             }
         });
 
-
+        load_item();
 
         return v;
     }
@@ -291,35 +304,45 @@ public class UploadCoupon extends Fragment {
 
 
     // 크롤링한 데이터 arraylist를 JSONarray로 변환 후 저장
-    public void saveProductList(Context context, ArrayList<String> returnlist, String storename){
-        JSONObject jsonObject = new JSONObject();
-        try {
-            JSONArray jsonArray = new JSONArray();
-            for(int i=0; i< returnlist.size(); i++){
-                jsonArray.put(returnlist.get(i));
-            }
-            jsonObject.put("store", storename);
-            jsonObject.put("item", jsonArray);
+    public void saveProductList(ArrayList<String> returnlist, String storename){
 
-            String json = jsonObject.toString();
-            Response.Listener<String> responsListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try{
-                        Log.d("success", "volley success");
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            };
-            SaveJsoupRequest saveJsoupRequest = new SaveJsoupRequest(json,responsListener);
-            RequestQueue queue = Volley.newRequestQueue(context);
-            queue.add(saveJsoupRequest);
+        firebaseDatabase= FirebaseDatabase.getInstance();
+        itemRef= firebaseDatabase.getReference().child("item").child(storename);
 
+        for(int i=0; i< returnlist.size(); i++){
+            ItemData itemData = new ItemData();
+            itemData.setItemid(i);
+            itemData.setItemname(returnlist.get(i).split(" ")[0]);
+            itemData.setPlustype(returnlist.get(i).split(" ")[1]);
+            itemData.setStorename(storename);
+            int price2 = Integer.parseInt((returnlist.get(i).split(" ")[2]).replaceAll("[^0-9]",""));
+            itemData.setItemprice2(price2);
+            itemData.setItemprice(calculateprice(itemData.getPlustype(),price2));
+            itemData.setImage("");
+            itemData.setCategory("");
 
-        }catch (JSONException e){
-            e.printStackTrace();
+            itemRef.push().setValue(itemData);
         }
+
+    }
+
+    private int calculateprice(String plus,int price2){
+        int price;
+        String plustype0 = plus.substring(0,1);
+        String plustype1 = plus.substring(2);
+
+
+        if(!plustype0.equals("1")){
+            price = (price2 * (Integer.parseInt(plustype0) + Integer.parseInt(plustype1))) / Integer.parseInt(plustype0);
+            price = (price + 5) / 10 * 10;
+        }
+        else {
+            if(plustype1.equals(1))
+                price = price2 * 2;
+            else
+                price = price2;
+        }
+        return price;
     }
 
     public void doTakePhoto(){
@@ -348,45 +371,34 @@ public class UploadCoupon extends Fragment {
 
     public void runThread(String convName, String URL){
         new Thread(new Runnable() {
-            ArrayList<String> prodList;
-            ArrayList<String> prodPrice;
+            ArrayList<String> prodList=new ArrayList<>();
+            ArrayList<String> prodPrice=new ArrayList<>();
             Handler mHandler=new Handler();
             Elements elements=new Elements();
             @Override
             public void run() {
                 try {
-                    Response.Listener<String> responsListener = new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try{
-                                JSONObject jsonObject = new JSONObject(response);
-                                JSONArray jsonArray = jsonObject.getJSONArray("storeitemlist");
-                                int length = jsonArray.length();
-
-                                for(int i=0; i<length; i++){
-                                    ItemData itemData = new ItemData();
-
-                                    JSONObject object = jsonArray.getJSONObject(i);
-
-                                    prodList.add(object.getString("item_name"));
-                                    prodPrice.add(object.getString("item_price2"));    //개당 가격
-                                    //String image = BitmapConverter.StringToBitmap(object.getString("item_image");
-
-
-                                    //prodList = getProductName(convName, URL); //getProductList(convName, URL);
-                                    //prodPrice = getProductPrice(convName, URL);
-                                    Thread.sleep(1000);
-
-                                    //elements=getProductName(convName,URL);
-                                }
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
+                    if(convName == "cu"){
+                        for(int i=0; i<cuItem.size(); i++){
+                            prodList.add(cuItem.get(i).getItemname());
+                            prodPrice.add(Integer.toString(cuItem.get(i).getItemprice2()));
                         }
-                    };
-                    CartRequest cartRequest = new CartRequest("storeitem",0, 0,convName,responsListener);
-                    RequestQueue queue = Volley.newRequestQueue(getActivity());
-                    queue.add(cartRequest);
+                    }
+                    else if(convName == "seven"){
+                        for(int i=0; i<sevenItem.size(); i++){
+                            prodList.add(sevenItem.get(i).getItemname());
+                            prodPrice.add(Integer.toString(sevenItem.get(i).getItemprice2()));
+                        }
+                    }
+                    if(convName == "gs25"){
+                        for(int i=0; i<gs25Item.size(); i++){
+                            prodList.add(gs25Item.get(i).getItemname());
+                            prodPrice.add(Integer.toString(gs25Item.get(i).getItemprice2()));
+                        }
+                    }
+                    //prodList = getProductName(convName, URL); //getProductList(convName, URL);
+                    // prodPrice = getProductPrice(convName, URL);
+                    Thread.sleep(1000);
 
                     mHandler.post(new Runnable() {
                         @Override
@@ -408,7 +420,7 @@ public class UploadCoupon extends Fragment {
                                         Toast.makeText(getContext(), sNumber,Toast.LENGTH_SHORT);
                                     }
                                     String limitPrice=prodPrice.get(position);
-                                    editText.setHint(limitPrice+"보다 적게 입력해주세요.");
+                                    editText.setHint(limitPrice+"원 보다 적게 입력해주세요.");
 
                                 }
 
@@ -429,6 +441,97 @@ public class UploadCoupon extends Fragment {
         }).start();
     }
 
+    public void load_item(){
+        firebaseDatabase= FirebaseDatabase.getInstance();
+        itemRef= firebaseDatabase.getReference();
 
+        itemRef.child("item").child("cu").addChildEventListener(new ChildEventListener() {
+            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                ItemData itemData = dataSnapshot.getValue(ItemData.class);
+                cuItem.add(itemData);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        itemRef.child("item").child("gs25").addChildEventListener(new ChildEventListener() {
+            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                ItemData itemData = dataSnapshot.getValue(ItemData.class);
+                gs25Item.add(itemData);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        itemRef.child("item").child("seven").addChildEventListener(new ChildEventListener() {
+            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                ItemData itemData = dataSnapshot.getValue(ItemData.class);
+                sevenItem.add(itemData);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 
 }

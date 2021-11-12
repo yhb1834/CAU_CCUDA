@@ -60,7 +60,7 @@ public class CartFragment extends Fragment {
                         itemData.setStorename(object.getString("storename"));
                         itemData.setItemprice(Integer.parseInt(object.getString("item_price")));    // 원가
                         itemData.setItemprice2(Integer.parseInt(object.getString("item_price2")));    // 개당 가격
-                        itemData.setImage(BitmapConverter.StringToBitmap(object.getString("item_image")));
+                        itemData.setImage((object.getString("item_image")));
 
                         iArrayList.add(itemData);
                     }
