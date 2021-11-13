@@ -15,6 +15,12 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -79,13 +86,10 @@ import java.util.Arrays;
 public class UploadCoupon extends Fragment {
     FragmentTransaction transaction;
 
-    //private WebDriver driver=new ChromeDriver();
     private String URL="https://pyony.com/search/";
     public static final String WEB_DRIVER_PATH="/Users/iseung-yeon/Desktop/chromedriver";
     public static final String WEB_DRIVER_ID = "webdriver.chrome.driver";
     TextView convName; // 편의점명
-    TextView prod;
-    TextView convInfo;
     public ArrayList<String> cuReturn=new ArrayList<String>();
     public ArrayList<String> gsReturn=new ArrayList<String>();
     public ArrayList<String> sevenReturn=new ArrayList<String>();
@@ -98,12 +102,16 @@ public class UploadCoupon extends Fragment {
     String[] conv={"GS25", "SEVEN11", "CU"};
     ImageView uploadPhoto;
     Uri mImageCaptureUri;
+    String limitPrice;
 
     SearchableSpinner searchView;
-    String[] hhhhh;
-    RecyclerView recyclerView;
     EditText editText;
+    Button uploadButton;
 
+    Bitmap finalImage; // 내가 올릴 품목 사진
+    String finalConv; // 파는 품목이 어떤 편의점 물건인지
+    String finalProduct; // 내가 올릴 품목 이름
+    String finalPrice; // 내가 올린 판매 금액
 
 
     private static final int PICK_FROM_ALBUM=1;
@@ -173,6 +181,8 @@ public class UploadCoupon extends Fragment {
                 Toast.makeText(getContext(), conv[position], Toast.LENGTH_SHORT).show();
                 String convN="gs25";
                 String URL="https://pyony.com/brands/gs25/";
+                //load_item();
+                //runThread(convN,URL);
                 switch (position){
                     case 0: // gs
                         convN="gs25";
@@ -236,6 +246,41 @@ public class UploadCoupon extends Fragment {
         });
 
         load_item();
+
+
+
+        uploadButton=v.findViewById(R.id.uploadbutton);
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //BitmapDrawable drawable=(BitmapDrawable)uploadPhoto.getDrawable();
+                //finalImage= drawable.getBitmap();
+                finalConv= (String) spinner1.getSelectedItem();
+                finalProduct= (String) searchView.getSelectedItem();
+                finalPrice=editText.getText().toString();
+                //if (finalImage==null){
+                //    Toast.makeText(getContext(),"사진을 업로드해주세요.", Toast.LENGTH_SHORT).show();
+                //}
+                if(finalConv=="" || finalConv==null){
+                    Toast.makeText(getContext(),"편의점을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                }
+                else if(finalProduct=="" || finalProduct==null){
+                    Toast.makeText(getContext(),"품목을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                }
+                else if(finalPrice.length()==0 || finalPrice=="" || finalPrice==null){
+                    Toast.makeText(getContext(),"가격을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }
+                else if(Integer.parseInt(finalPrice)>Integer.parseInt(limitPrice)){
+                    Toast.makeText(getContext(), "가격은 최대 "+limitPrice+"원까지 가능합니다.", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    System.out.println("picture: "+finalImage);
+                    Toast.makeText(getContext(), finalConv+" "+finalProduct+" "+finalPrice, Toast.LENGTH_SHORT).show();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new HomeFragment()).commit();
+                }
+            }
+        });
+
 
         return v;
     }
@@ -419,7 +464,7 @@ public class UploadCoupon extends Fragment {
                                         String sNumber=parent.getItemAtPosition(position).toString();
                                         Toast.makeText(getContext(), sNumber,Toast.LENGTH_SHORT);
                                     }
-                                    String limitPrice=prodPrice.get(position);
+                                    limitPrice=prodPrice.get(position);
                                     editText.setHint(limitPrice+"원 보다 적게 입력해주세요.");
 
                                 }
