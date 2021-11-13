@@ -51,6 +51,11 @@ public class SaveSharedPreference {
     public static String getProfileimage(Context context){
         return getSharedPreferences(context).getString(PREF_USER_PROFILEIMAGE,"");
     }
+    public static void setProfileimage(Context context, String imageurl){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString(PREF_USER_PROFILEIMAGE,imageurl);
+        editor.commit();
+    }
     // 로그아웃 세션션 clear
     public static void clearSession(Context context){
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();

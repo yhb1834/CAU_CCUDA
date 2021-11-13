@@ -34,4 +34,6 @@
     <string name="title">제목을 입력하세요</string>
     <string name="content">레시피 설명</string>
     <string name="content_input">내용을 입력하세요 </string>
+
+    <string name="text_mypage">Mypage</string>
 </resources>

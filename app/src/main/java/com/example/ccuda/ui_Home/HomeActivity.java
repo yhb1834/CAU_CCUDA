@@ -3,6 +3,7 @@ package com.example.ccuda.ui_Home;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -32,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.ccuda.MyPage;
 import com.example.ccuda.R;
 import com.example.ccuda.SideMenu.AppSettingsFragment;
@@ -48,17 +51,27 @@ import com.example.ccuda.ui_Cart.CartFragment;
 import com.example.ccuda.ui_Chat.ChatFragment;
 import com.example.ccuda.ui_Home.HomeFragment;
 import com.example.ccuda.ui_Recipe.RecipeFragment;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity {
-
+    //profile image
+    Uri imgUri;
+    private ImageView profile;
 
     //private ListView listView;
     //private Adapter adapter;
@@ -124,17 +137,12 @@ public class HomeActivity extends AppCompatActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
         View header = navigationView.getHeaderView(0);
         TextView nav_nicname_text = (TextView) header.findViewById(R.id.nickname);
-        TextView nav_email_text = (TextView) header.findViewById(R.id.user_id);
-        ImageView profile = (ImageView) header.findViewById(R.id.imageView);
+        TextView mypage = (TextView) header.findViewById(R.id.mypage);
+        profile = (ImageView) header.findViewById(R.id.imageView);
 
 
-
+        Glide.with(this).load(SaveSharedPreference.getProfileimage(this)).into(profile);
         nav_nicname_text.setText(SaveSharedPreference.getNicname(this));
-        if(SaveSharedPreference.getEmail(this).length() == 0)
-            nav_email_text.setText("kakao login user");
-        else
-            nav_email_text.setText(SaveSharedPreference.getEmail(this));
-
 
 
 
@@ -184,7 +192,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        profile.setOnClickListener(new View.OnClickListener() {
+        mypage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast toast=Toast.makeText(getApplicationContext(), "profile", Toast.LENGTH_SHORT);
@@ -194,11 +202,63 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent,10);
+            }
+        });
+
 
     }
 
     private void setSupportActionBar(Toolbar toolbar) {
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 10:
+                if(resultCode==RESULT_OK){
+                    imgUri= data.getData();
+                    Glide.with(this).load(imgUri).into(profile);
+                    saveData();
+
+                }
+                else if(resultCode == RESULT_CANCELED){
+                    Toast.makeText(this,"사진 선택 취소", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+    void saveData(){
+        //Firebase storage에 이미지 저장하기 위해 파일명 만들기(날짜를 기반으로)
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
+        String fileName= sdf.format(new Date())+".png";
+
+        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+        final StorageReference imgRef= firebaseStorage.getReference("profileImages/"+fileName);
+
+        UploadTask uploadTask= imgRef.putFile(imgUri);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                //이미지 업로드가 성공되었으므로...
+                //곧바로 firebase storage의 이미지 파일 다운로드 URL을 얻어오기
+                imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        //파라미터로 firebase의 저장소에 저장되어 있는
+                        //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
+                        SaveSharedPreference.setProfileimage(HomeActivity.this, uri.toString());
+                        Toast.makeText(HomeActivity.this, "프로필 저장 완료", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
 }
 
