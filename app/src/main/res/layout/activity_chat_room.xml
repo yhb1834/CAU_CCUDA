@@ -8,39 +8,110 @@
     android:weightSum="1"
     >
 
-    <ListView
-        android:id="@+id/listView"
-        android:scrollbars="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/getfinish"
+            android:layout_width="231dp"
+            android:layout_height="58dp"
+            android:layout_weight="1"
+            android:text="구매완료" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:ignore="SpeakableTextPresentCheck" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="531dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:orientation="horizontal"
         android:background="@color/bage"
-        android:weightSum="1"
-        android:gravity="center_vertical">>
+        android:gravity="center_vertical"
+        android:weightSum="1"><![CDATA[>
+
+
+
+
+
+
+
+
+
+
+
+        ]]>
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:backgroundTint="@color/white"
+            android:minHeight="48dp"
+            android:padding="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/et"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/add_photo"
+            app:tint="@color/black"
+            tools:ignore="SpeakableTextPresentCheck" /><![CDATA[
+
+        />
+
+
+
+
+
+        ]]>
 
         <EditText
             android:id="@+id/et"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="282dp"
+            android:layout_height="40dp"
             android:background="@drawable/inputmessage"
             android:hint="메세지를 입력하세요."
             android:maxLines="3"
             android:minHeight="48dp"
-            android:padding="10dp" />/>
-        <Button
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/Button_send"
+            app:layout_constraintStart_toEndOf="@+id/imageButton"
+            app:layout_constraintTop_toTopOf="@+id/imageButton"
+            app:layout_constraintVertical_bias="0.545"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <ImageButton
             android:id="@+id/Button_send"
-            android:text="SEND"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:onClick="clickSend"/>
-    </LinearLayout>
+            android:layout_width="61dp"
+            android:layout_height="46dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/yellow"
+            android:onClick="clickSend"
+            android:src="@drawable/send"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/et"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:tint="@color/black"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
