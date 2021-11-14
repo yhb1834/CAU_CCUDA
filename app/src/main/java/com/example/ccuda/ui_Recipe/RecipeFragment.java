@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.example.ccuda.R;
 import com.example.ccuda.data.RecipeItem;
+import com.example.ccuda.ui_Home.HomeActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ public class RecipeFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecipeAdapter mRecipeAdapter;
     private ArrayList<RecipeItem> RecipeItems;
+    private FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -47,8 +51,24 @@ public class RecipeFragment extends Fragment {
         for(int i=1;i<=10;i++){
             RecipeItems.add(new RecipeItem(R.drawable.person,i,i+"조합 "));
         }
+
         mRecipeAdapter.setRecipeList(RecipeItems);
 
+
+        mRecipeAdapter.setOnItemClickListener(new RecipeAdapter.OnItemClickEventListener(){
+            private RecipeItemFragment fragmentRecipeItem = new RecipeItemFragment();
+
+            @Override
+            public void onItemClick(View a_view, int a_position) {
+                final RecipeItem item = RecipeItems.get(a_position);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.innerLayout, fragmentRecipeItem);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+
+
+        });
 
         FloatingActionButton fab = view.findViewById(R.id.add_recipe);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -59,5 +79,9 @@ public class RecipeFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private FragmentManager getSupportFragmentManager() {
+        return null;
     }
 }
