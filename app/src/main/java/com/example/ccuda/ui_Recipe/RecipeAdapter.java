@@ -33,7 +33,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment1_recipe_simple_item_layout, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, onItemClickEventListener);
     }
 
     @Override
@@ -50,6 +50,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<ViewHolder> {
     public int getItemCount() {
         return mRecipe.size();
     }
+
+
+    public interface OnItemClickEventListener {
+        void onItemClick(View view, int position);
+    }
+
+    private OnItemClickEventListener onItemClickEventListener;
+
+    public void setOnItemClickListener(OnItemClickEventListener listener) {
+        onItemClickEventListener = listener;
+    }
 }
 
 class ViewHolder extends RecyclerView.ViewHolder {
@@ -57,7 +68,7 @@ class ViewHolder extends RecyclerView.ViewHolder {
     TextView like;
     TextView title;
 
-    public ViewHolder(@NonNull View itemView) {
+    public ViewHolder(@NonNull View itemView, final RecipeAdapter.OnItemClickEventListener itemClickListener) {
         super(itemView);
 
         image = (ImageView) itemView.findViewById(R.id.imageView2);
@@ -77,7 +88,17 @@ class ViewHolder extends RecyclerView.ViewHolder {
 ;                }
             }
         });*/
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View a_view) {
+                final int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    itemClickListener.onItemClick(a_view, position);
+                }
+            }
+        });
     }
+
 
     void onBindRecipe(RecipeItem item){
         image.setImageResource((item.getImage()));

@@ -126,8 +126,11 @@ public class HomeFragment extends Fragment {
         addCuppon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new UploadCoupon()).commit();
-
+                //activity.getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new UploadCoupon()).commit();
+                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.innerLayout, new UploadCoupon());
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 

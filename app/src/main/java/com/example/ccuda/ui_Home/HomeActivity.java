@@ -50,6 +50,7 @@ import com.example.ccuda.db.PostRequest;
 import com.example.ccuda.ui_Cart.CartFragment;
 import com.example.ccuda.ui_Chat.ChatFragment;
 import com.example.ccuda.ui_Home.HomeFragment;
+import com.example.ccuda.ui_Recipe.OnBackPressedListener;
 import com.example.ccuda.ui_Recipe.RecipeFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -85,6 +86,8 @@ public class HomeActivity extends AppCompatActivity {
     private RecipeFragment fragmentRecipe = new RecipeFragment();
     private CartFragment fragmentCart = new CartFragment();
     private ChatFragment fragmentChat = new ChatFragment();
+
+    OnBackPressedListener listener;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener(){
@@ -216,6 +219,19 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setSupportActionBar(Toolbar toolbar) {
     }
+
+   public void setOnBackPressedListener(OnBackPressedListener listener){
+        this.listener = listener;
+   }
+
+   @Override
+   public void onBackPressed(){
+        if(listener != null) {
+            listener.onBackPressed();
+        }else{
+            super.onBackPressed();
+        }
+   }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
