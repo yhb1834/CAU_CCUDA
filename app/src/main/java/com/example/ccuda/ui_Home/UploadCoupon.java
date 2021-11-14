@@ -258,8 +258,6 @@ public class UploadCoupon extends Fragment {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BitmapDrawable drawable=(BitmapDrawable)uploadPhoto.getDrawable();
-                finalImage= drawable.getBitmap();
                 finalConv= (String) spinner1.getSelectedItem();
                 finalProduct= (String) searchView.getSelectedItem();
                 finalPrice=editText.getText().toString();
@@ -284,6 +282,9 @@ public class UploadCoupon extends Fragment {
                     Toast.makeText(getContext(),"유효기간을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    BitmapDrawable drawable=(BitmapDrawable)uploadPhoto.getDrawable();
+                    finalImage= drawable.getBitmap();
+
                     int item_id = getitem_id(finalConv,finalProduct);
                     Response.Listener<String> responsListener = new Response.Listener<String>() {
                         @Override
