@@ -81,6 +81,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -340,6 +341,26 @@ public class UploadCoupon extends Fragment {
         return result;
     }
 
+
+    public ArrayList<String> getProductPicture(String convName, String url) throws IOException {
+        Document doc=Jsoup.connect(url).get();
+        Elements link=doc.select("a.page-link");
+        ArrayList<String> result=new ArrayList<String>();
+
+        String lastSize=link.get(link.size()-1).attr("href").replace("?page=","");
+        int lastPage=Integer.parseInt(lastSize);
+        for(int i=1;i<=lastPage;i++){
+            String URL=url+"?page="+Integer.toString(i);
+            Document docPage=Jsoup.connect(URL).get();
+            Elements elements=docPage.select("div.card-body img");
+            for(Element element:elements){
+                String imageURL=element.getElementsByAttribute("src").attr("src");
+                result.add(imageURL);
+            }
+        }
+
+        return result;
+    }
 
     public ArrayList<String> getProductName(String convName, String url) throws IOException {
         Document doc=Jsoup.connect(url).get();
