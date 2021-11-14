@@ -59,8 +59,10 @@ import com.android.volley.toolbox.Volley;
 import com.example.ccuda.R;
 import com.example.ccuda.data.ChatData;
 import com.example.ccuda.data.ItemData;
+import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CartRequest;
+import com.example.ccuda.db.PostRequest;
 import com.example.ccuda.db.SaveJsoupRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -106,12 +108,14 @@ public class UploadCoupon extends Fragment {
 
     SearchableSpinner searchView;
     EditText editText;
+    EditText editText2;
     Button uploadButton;
 
     Bitmap finalImage; // 내가 올릴 품목 사진
     String finalConv; // 파는 품목이 어떤 편의점 물건인지
     String finalProduct; // 내가 올릴 품목 이름
     String finalPrice; // 내가 올린 판매 금액
+    String finalDate;
 
 
     private static final int PICK_FROM_ALBUM=1;
@@ -172,6 +176,7 @@ public class UploadCoupon extends Fragment {
         convName=v.findViewById(R.id.conv_name);
         Spinner spinner1=v.findViewById(R.id.spinner1);
         editText=v.findViewById(R.id.prodPrice);
+        editText2=v.findViewById(R.id.proddate);
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, conv);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1.setAdapter(adapter);
@@ -253,11 +258,13 @@ public class UploadCoupon extends Fragment {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //BitmapDrawable drawable=(BitmapDrawable)uploadPhoto.getDrawable();
-                //finalImage= drawable.getBitmap();
+                BitmapDrawable drawable=(BitmapDrawable)uploadPhoto.getDrawable();
+                finalImage= drawable.getBitmap();
                 finalConv= (String) spinner1.getSelectedItem();
                 finalProduct= (String) searchView.getSelectedItem();
                 finalPrice=editText.getText().toString();
+                finalDate=editText2.getText().toString();
+
                 //if (finalImage==null){
                 //    Toast.makeText(getContext(),"사진을 업로드해주세요.", Toast.LENGTH_SHORT).show();
                 //}
@@ -273,10 +280,36 @@ public class UploadCoupon extends Fragment {
                 else if(Integer.parseInt(finalPrice)>Integer.parseInt(limitPrice)){
                     Toast.makeText(getContext(), "가격은 최대 "+limitPrice+"원까지 가능합니다.", Toast.LENGTH_SHORT).show();
                 }
+                else if(finalDate.length()==0 || finalDate=="" || finalDate==null){
+                    Toast.makeText(getContext(),"유효기간을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }
                 else{
-                    System.out.println("picture: "+finalImage);
-                    Toast.makeText(getContext(), finalConv+" "+finalProduct+" "+finalPrice, Toast.LENGTH_SHORT).show();
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new HomeFragment()).commit();
+                    int item_id = getitem_id(finalConv,finalProduct);
+                    Response.Listener<String> responsListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try{
+                                JSONObject jsonObject = new JSONObject(response);
+                                boolean success = jsonObject.getBoolean("success");
+                                if(success){
+                                    // 포스팅 성공
+                                    Log.d("success","posting success");
+                                    //Toast.makeText(context,"판매글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                                    System.out.println("picture: "+finalImage);
+                                    Toast.makeText(getContext(), finalConv+" "+finalProduct+" "+finalPrice, Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Log.d("success", "query fail");
+                                }
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new HomeFragment()).commit();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    PostRequest postRequest = new PostRequest("posting", SaveSharedPreference.getId(getActivity()), finalConv,item_id, Integer.parseInt(finalPrice), finalDate, "", BitmapConverter.BitmapToString(finalImage), 0, responsListener);
+                    RequestQueue queue = Volley.newRequestQueue(getActivity());
+                    queue.add(postRequest);
                 }
             }
         });
@@ -366,7 +399,7 @@ public class UploadCoupon extends Fragment {
             itemData.setImage("");
             itemData.setCategory("");
 
-            itemRef.push().setValue(itemData);
+            itemRef.child(i+"").setValue(itemData);
         }
 
     }
@@ -576,7 +609,35 @@ public class UploadCoupon extends Fragment {
 
             }
         });
-
     }
 
+
+    protected int getitem_id(String storename,String itemname){
+        int itemid=0;
+        if(storename == "CU"){
+            for(int i=0; i<cuItem.size(); i++){
+                if(cuItem.get(i).getItemname() == itemname){
+                    itemid = cuItem.get(i).getItemid();
+                    break;
+                }
+            }
+        }
+        else if(storename == "GS25"){
+            for(int i=0; i<gs25Item.size(); i++){
+                if(gs25Item.get(i).getItemname() == itemname){
+                    itemid = gs25Item.get(i).getItemid();
+                    break;
+                }
+            }
+        }
+        else{
+            for(int i=0; i<sevenItem.size(); i++){
+                if(sevenItem.get(i).getItemname() == itemname){
+                    itemid = sevenItem.get(i).getItemid();
+                    break;
+                }
+            }
+        }
+        return itemid;
+    }
 }

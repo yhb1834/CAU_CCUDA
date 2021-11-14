@@ -87,17 +87,22 @@ public class ChatFragment extends Fragment{
                         if (!buyer_nicname.equals(SaveSharedPreference.getNicname(context))) {
                             // 판매자일때 챗상대방
                             double buyer_score = Double.parseDouble(object.getString("buyer_score"));
-                            PeopleItems.add(new PeopleItem(R.drawable.person, buyer_nicname, "별점" + buyer_score + "점"));
+                            //PeopleItems.add(new PeopleItem(R.drawable.person, buyer_nicname, "별점" + buyer_score + "점"));
                         } else {
                             // 구매자일때 챗상대방
                             double seller_score = Double.parseDouble(object.getString("seller_score"));
-                            PeopleItems.add(new PeopleItem(R.drawable.person, seller_nicname, "별점" + seller_score + "점"));
+                           // PeopleItems.add(new PeopleItem(R.drawable.person, seller_nicname, "별점" + seller_score + "점"));
                         }
                     }
                     System.out.println(PeopleItems);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                for(int i=1;i<=10;i++){
+                    PeopleItems.add(new PeopleItem(R.drawable.person,i+"번","별점 "+i+"점"));
+                }
+                PeopleItems.add(new PeopleItem(R.drawable.person,"11번","별점 12점"));
+
                 mChatPeopleAdapter.setChatPeopleList(PeopleItems);
 
                 /* initiate recyclerview */

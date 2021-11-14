@@ -12,13 +12,14 @@ public class PostRequest extends StringRequest {
     final static private String URL = String.format("%s/posting.php", Config.SERVER_URL);
     private Map<String, String> parameters;
 
-    public PostRequest(String option, long seller_id, int item_id, int price, String expiration_date,
+    public PostRequest(String option, long seller_id, String storename,int item_id, int price, String expiration_date,
                        String content, String coupon_image, int coupon_id, Response.Listener<String> listener){
         super(Request.Method.POST, URL, listener, null);
 
         parameters = new HashMap<>();
         parameters.put("option", option);
         parameters.put("seller_id", seller_id+"");
+        parameters.put("storename", storename);
         parameters.put("item_id", item_id+"");
         parameters.put("price", price+"");
         parameters.put("expiration_date", expiration_date);

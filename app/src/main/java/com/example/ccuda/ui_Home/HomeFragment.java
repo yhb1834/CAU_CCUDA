@@ -1,9 +1,11 @@
 package com.example.ccuda.ui_Home;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -18,6 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.R;
+import com.example.ccuda.data.ItemData;
 import com.example.ccuda.ui_Home.UploadCoupon;
 import com.example.ccuda.data.CouponData;
 import com.example.ccuda.data.SaveSharedPreference;
@@ -25,7 +28,14 @@ import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.db.PostRequest;
 import com.example.ccuda.ui_Home.HomeActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,8 +48,14 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    private ArrayList<CouponData> mArrayList = new ArrayList<>();
-
+    public ArrayList<ItemData> cuItem = new ArrayList<>();
+    public ArrayList<ItemData> gs25Item = new ArrayList<>();
+    public ArrayList<ItemData> sevenItem = new ArrayList<>();
+    Adapter adapter=new Adapter();
+    ArrayList<CouponData> CouponArrayList = new ArrayList<>();
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference itemRef;
+    ListView listView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -100,19 +116,11 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        ListView listView;
         View v=inflater.inflate(R.layout.fragment1_home, container, false);
         listView=(ListView) v.findViewById(R.id.listView);
-        Adapter adapter=new Adapter();
 
-        listView.setAdapter(adapter);
-
-        adapter.addItem("물건1", R.drawable.add, "gs");
-        adapter.addItem("물건2", R.drawable.add, "gs");
-        adapter.addItem("물건3", R.drawable.add, "gs");
-        adapter.addItem("물건4", R.drawable.add, "gs");
-        adapter.addItem("물건5", R.drawable.add, "gs");
+        load_item();
+        load_couponlist(getActivity());
 
         FloatingActionButton addCuppon= (FloatingActionButton) v.findViewById(R.id.add_article);
         addCuppon.setOnClickListener(new View.OnClickListener() {
@@ -127,9 +135,9 @@ public class HomeFragment extends Fragment {
     }
 
 
-    // 판매 쿠폰 리스트 db 불러오기
+    // 판매 쿠폰 리스트
     protected void load_couponlist(Context context){
-        mArrayList.clear();
+        CouponArrayList.clear();
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -140,33 +148,68 @@ public class HomeFragment extends Fragment {
 
                     for(int i=0; i<length; i++){
                         CouponData couponData = new CouponData();
-
                         JSONObject object = jsonArray.getJSONObject(i);
 
                         couponData.setCoupon_id(Integer.parseInt(object.getString("coupon_id")));
+                        couponData.setPrice(Integer.parseInt(object.getString("price")));       //쿠폰 가격
+                        couponData.setExpiration_date(object.getString("expiration_date")); // 쿠폰 유효기간 "Y-m-d" 형식
+                        couponData.setContent(object.getString("content")); // 글 내용
+                        String storename = object.getString("storename");
+                        couponData.setStorename(storename);
+                        couponData.setCouponimage( BitmapConverter.StringToBitmap(object.getString("original"))); // 쿠폰 이미지 (!= 상품 이미지)
                         couponData.setSeller_id(Long.parseLong(object.getString("seller_id"))); // 판매자 확인용 id
-
+                        couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
+                        boolean isdeal;
                         if(object.getString("isdeal")=="1") // 거래 완료 여부
                             couponData.setIsdeal(true);
                         else
                             couponData.setIsdeal(false);
-
-                        couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
-                        couponData.setSeller_name(object.getString("seller_name")); // 판매자 닉네임
+                        couponData.setSeller_name(object.getString("seller_nicname")); // 판매자 닉네임
                         couponData.setSeller_score(object.getString("seller_score")); // 판매자 평점
-                        couponData.setItem_name(object.getString("item_name")); // 물품명
-                        couponData.setCategory(object.getString("category")); // 물품 카테고리
-                        couponData.setPlustype(object.getString("plustype"));
-                        couponData.setStorename(object.getString("storename"));
-                        couponData.setPrice(Integer.parseInt(object.getString("price"))); // 판매자가 등록한 쿠폰가격
-                        couponData.setExpiration_date(object.getString("expiration_date")); // 쿠폰 유효기간 "Y-m-d" 형식
-                        couponData.setContent(object.getString("content")); // 글 내용
-                        couponData.setImage(BitmapConverter.StringToBitmap(object.getString("image"))); // 상품 이미지 (!= 쿠폰 이미지)
-                        couponData.setCouponimage(BitmapConverter.StringToBitmap(object.getString("original"))); // 쿠폰 이미지 (!= 상품 이미지)
 
-                        mArrayList.add(couponData);
+                        int item_id = Integer.parseInt(object.getString("item_id"));
+                        if(storename == "cu"){
+                            for(int j=0; j<cuItem.size(); j++ ){
+                                if(cuItem.get(j).getItemid()==item_id){
+                                    couponData.setItem_name(cuItem.get(j).getItemname());
+                                    couponData.setCategory(cuItem.get(j).getCategory());
+                                    couponData.setPlustype(cuItem.get(j).getPlustype());
+                                    couponData.setImage(cuItem.get(j).getImage());
+                                    break;
+                                }
+                            }
+                        }else if(storename == "gs25"){
+                            for(int j=0; j<gs25Item.size(); j++ ){
+                                if(gs25Item.get(j).getItemid()==item_id){
+                                    couponData.setItem_name(gs25Item.get(j).getItemname());
+                                    couponData.setCategory(gs25Item.get(j).getCategory());
+                                    couponData.setPlustype(gs25Item.get(j).getPlustype());
+                                    couponData.setImage(gs25Item.get(j).getImage());
+                                    break;
+                                }
+                            }
+                        }else {
+                            for(int j=0; j<sevenItem.size(); j++ ){
+                                if(sevenItem.get(j).getItemid()==item_id){
+                                    couponData.setItem_name(sevenItem.get(j).getItemname());
+                                    couponData.setCategory(sevenItem.get(j).getCategory());
+                                    couponData.setPlustype(sevenItem.get(j).getPlustype());
+                                    couponData.setImage(sevenItem.get(j).getImage());
+                                    break;
+                                }
+                            }
+                        }
+                        CouponArrayList.add(couponData);
                     }
+                    System.out.println(CouponArrayList);
+                    // TODO: Need adapter for couponArrayList(=판매글 리스트)
 
+                    adapter.addItem("물건1", R.drawable.add, "gs");
+                    adapter.addItem("물건2", R.drawable.add, "gs");
+                    adapter.addItem("물건3", R.drawable.add, "gs");
+                    adapter.addItem("물건4", R.drawable.add, "gs");
+                    adapter.addItem("물건5", R.drawable.add, "gs");
+                    listView.setAdapter(adapter);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -177,42 +220,7 @@ public class HomeFragment extends Fragment {
         queue.add(couponpageRequest);
     }
 
-
-
-
-    // 판매 쿠폰 포스팅 db 저장
-    protected void posting(Context context, int item_id, int price, String expiration_date,
-                           String content, String coupon_image){
-        Response.Listener<String> responsListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonObject = new JSONObject(response);
-                    String success = jsonObject.getString("success");
-                    if(success=="success"){
-                        // 포스팅 성공
-                        Log.d("success","posting success");
-                        Toast.makeText(context,"판매글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        if(success == "NoItem"){
-                            // 해당 물품에 대한 편의점 데이터 부존재
-                            Log.d("success","postring fail: there no item information in DB");
-                        }
-                        else if(success == "fail")
-                            Log.d("success", "query fail");
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        PostRequest postRequest = new PostRequest("posting", SaveSharedPreference.getId(context), item_id, price, expiration_date, content, coupon_image, 0, responsListener);
-        RequestQueue queue = Volley.newRequestQueue(context);
-        queue.add(postRequest);
-    }
-
-    // 게시글 삭제 db 저장
+    // 게시글 삭제
     protected void deletepost(Context context, int coupon_id){
         // 작성자: seller_id, 삭제할 쿠폰: coupon_id
         Response.Listener<String> responsListener = new Response.Listener<String>() {
@@ -225,9 +233,9 @@ public class HomeFragment extends Fragment {
                         // 포스팅 성공
                         Log.d("success","delete success");
                         int i;
-                        for(i=0; i<mArrayList.size(); i++){
-                            if(mArrayList.get(i).getCoupon_id() == coupon_id){
-                                mArrayList.remove(i);
+                        for(i=0; i<CouponArrayList.size(); i++){
+                            if(CouponArrayList.get(i).getCoupon_id() == coupon_id){
+                                CouponArrayList.remove(i);
                                 Toast.makeText(context,"해당 판매글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -237,8 +245,99 @@ public class HomeFragment extends Fragment {
                 }
             }
         };
-        PostRequest postRequest = new PostRequest("deletepost",SaveSharedPreference.getId(context), 0, 0, "", "", "", coupon_id, responsListener);
+        PostRequest postRequest = new PostRequest("deletepost",SaveSharedPreference.getId(context), "",0, 0, "", "", "", coupon_id, responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(postRequest);
+    }
+    public void load_item(){
+        firebaseDatabase= FirebaseDatabase.getInstance();
+        itemRef= firebaseDatabase.getReference();
+
+        itemRef.child("item").child("cu").addChildEventListener(new ChildEventListener() {
+            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                ItemData itemData = dataSnapshot.getValue(ItemData.class);
+                cuItem.add(itemData);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        itemRef.child("item").child("gs25").addChildEventListener(new ChildEventListener() {
+            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                ItemData itemData = dataSnapshot.getValue(ItemData.class);
+                gs25Item.add(itemData);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        itemRef.child("item").child("seven").addChildEventListener(new ChildEventListener() {
+            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                ItemData itemData = dataSnapshot.getValue(ItemData.class);
+                sevenItem.add(itemData);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

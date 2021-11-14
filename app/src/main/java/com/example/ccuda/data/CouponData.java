@@ -16,9 +16,8 @@ public class CouponData {
     private int price;
     private String expiration_date;
     private String content;
-    private Bitmap image;   // 물품 이미지
+    private String imageurl;   // 물품 이미지
     private Bitmap couponimage; // 등록된 쿠폰 이미지 - 마이페이지 등에서 필요시 판매자 본인에게만 공개
-
 
     public int getCoupon_id(){
         return coupon_id;
@@ -57,8 +56,8 @@ public class CouponData {
     public String getpostingcontent(){
         return content;
     }
-    public Bitmap getImage(){
-        return image;
+    public String getImageurl(){
+        return imageurl;
     }
     public Bitmap getCouponimage(){
         return couponimage;
@@ -103,8 +102,8 @@ public class CouponData {
     public void setContent(String content){
         this.content = content;
     }
-    public void setImage(Bitmap image){
-        this.image = image;
+    public void setImage(String imageurl){
+        this.imageurl = imageurl;
     }
     public void setCouponimage(Bitmap couponimage) { this.couponimage = couponimage; }
 }
