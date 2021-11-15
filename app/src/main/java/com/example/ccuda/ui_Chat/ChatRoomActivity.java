@@ -105,6 +105,11 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
 
     }
+
+    //qString packageName = "com.gsr.gs25/com.gsretail.android.thepop.activity.splash.SplashActivity";
+    //Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+    //startActivity(intent);
+
     public void clickSend(View view){
         if(!et.getText().toString().equals("")){
             ChatData.Comment comment = new ChatData.Comment();

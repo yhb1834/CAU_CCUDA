@@ -66,9 +66,9 @@ public class ChatAdapter extends BaseAdapter {
         tvMsg.setText(Data.msg);
         tvTime.setText(Data.timestamp);
 
-        if(Data.imageurl !=null && Data.imageurl.equals("")==false){
-            Glide.with(itemView).load(Data.imageurl).into(iv);
-        }
+        //if(Data.imageurl !=null && Data.imageurl.equals("")==false){
+        //    Glide.with(itemView).load(Data.imageurl).into(iv);
+        //}
 
         return itemView;
     }

@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <!--구분선-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,7 +16,7 @@
             android:id="@+id/profile"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/person"/>
+            android:src="@drawable/person" />
 
         <!--이름-->
 
@@ -30,7 +31,7 @@
 
         <TextView
             android:id="@+id/star"
-            android:layout_width="158dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="100dp"
             android:maxLines="1"
@@ -40,11 +41,10 @@
 
     </LinearLayout>
 
-    <!--구분선-->
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_marginHorizontal="10dp"
-        android:background="#aaa"/>
+        android:background="#aaa" />
 
 </LinearLayout>

@@ -14,25 +14,40 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/getfinish"
-            android:layout_width="231dp"
-            android:layout_height="58dp"
-            android:layout_weight="1"
-            android:text="구매완료" />
+            android:id="@+id/otherApp"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:text="Button" />
 
         <RatingBar
             android:id="@+id/ratingBar"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:numStars="5"
+            android:rating="0"
+            android:stepSize="0.5"
+            android:theme="@style/RatingBar"
             tools:ignore="SpeakableTextPresentCheck" />
+
+        <Button
+            android:id="@+id/finish"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:text="구매 완료"
+            android:textSize="12sp" />
+
     </LinearLayout>
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="531dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:layout_weight="1"
+        android:dividerHeight="0px"
+        android:divider="@color/white"
         android:scrollbars="vertical" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,7 +75,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="16dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/bage"
             android:minHeight="48dp"
             android:padding="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -82,12 +97,11 @@
 
         <EditText
             android:id="@+id/et"
-            android:layout_width="282dp"
+            android:layout_width="278dp"
             android:layout_height="40dp"
             android:background="@drawable/inputmessage"
             android:hint="메세지를 입력하세요."
-            android:maxLines="3"
-            android:minHeight="48dp"
+            android:minHeight="40dp"
             android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/Button_send"
@@ -98,8 +112,8 @@
 
         <ImageButton
             android:id="@+id/Button_send"
-            android:layout_width="61dp"
-            android:layout_height="46dp"
+            android:layout_width="45dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/yellow"
             android:onClick="clickSend"
