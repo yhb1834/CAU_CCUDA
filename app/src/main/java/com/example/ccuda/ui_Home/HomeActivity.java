@@ -48,6 +48,7 @@ import com.example.ccuda.data.CouponData;
 import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.db.PostRequest;
 import com.example.ccuda.ui_Cart.CartFragment;
+import com.example.ccuda.ui_Cart.addToCart;
 import com.example.ccuda.ui_Chat.ChatFragment;
 import com.example.ccuda.ui_Home.HomeFragment;
 import com.example.ccuda.ui_Recipe.OnBackPressedListener;
@@ -84,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private HomeFragment fragmentHome = new HomeFragment();
     private RecipeFragment fragmentRecipe = new RecipeFragment();
-    private CartFragment fragmentCart = new CartFragment();
+    private addToCart fragmentCart = new addToCart();
     private ChatFragment fragmentChat = new ChatFragment();
 
     OnBackPressedListener listener;
@@ -128,7 +129,7 @@ public class HomeActivity extends AppCompatActivity {
 
         fragmentHome = new HomeFragment();
         fragmentRecipe = new RecipeFragment();
-        fragmentCart = new CartFragment();
+        //fragmentCart = new CartFragment();
         fragmentChat = new ChatFragment();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, fragmentHome).commit();

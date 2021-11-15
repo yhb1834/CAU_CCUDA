@@ -47,6 +47,7 @@ import java.util.List;
 public class addToCart extends Fragment {
     SearchView searchView;
     RecyclerView recyclerView;
+    TextView textView;
     ArrayList<ItemData> cuItem = new ArrayList<>();
     ArrayList<ItemData> gs25Item = new ArrayList<>();
     ArrayList<ItemData> sevenItem = new ArrayList<>();
@@ -54,11 +55,12 @@ public class addToCart extends Fragment {
     DatabaseReference itemRef;
 
     CartItemAdapter adapter;
-    List<CartItemModel> itemList;
+    ArrayList<CartItemModel> itemList=new ArrayList<>();
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fillData();
     }
 
     @Override
@@ -68,17 +70,9 @@ public class addToCart extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_to_cartlist, container, false);
         searchView=view.findViewById(R.id.searchView);
         recyclerView=view.findViewById(R.id.recyclerView);
-        //load_item();
-        System.out.println("llll: "+cuItem.size());
-        load_item();
+
         setUpRecyclerView();
 
-
-
-        //textView=view.findViewById(R.id.searchTextView);
-        //textView.setText(getResult());
-
-        load_item();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -88,8 +82,6 @@ public class addToCart extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //textView.setText(search(newText));
-                //recyclerView=search(newText);
                 adapter.getFilter().filter(newText);
                 return true;
             }
@@ -98,95 +90,6 @@ public class addToCart extends Fragment {
         return view;
     }
 
-
-    public void fillData() {
-        itemList = new ArrayList<>(); //샘플테이터
-        //load_item();
-        for(int i=0;i<cuItem.size();i++){
-            itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename()));
-        }
-       // System.out.println("llll: "+cuItem.size());
-        //itemList.add(new CartItemModel(R.drawable.add, "One", "Ten"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Two", "Eleven"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Three", "Twelve"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Four", "Thirteen"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Five", "Fourteen"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Six", "Fifteen"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Seven", "Sixteen"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Eight", "Seventeen"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Nine", "Eighteen"));
-    }
-
-    public String getResult(){
-        StringBuilder sb=new StringBuilder();
-        for(int i=0;i<cuItem.size();i++){
-            String item=cuItem.get(i).getItemname();
-            sb.append(item);
-            if(i!=cuItem.size()-1){
-                sb.append("\n");
-            }
-        }
-        return sb.toString();
-    }
-
-    public ArrayList<CartItemModel> search(String query){
-        //StringBuilder sb=new StringBuilder();
-        ArrayList<CartItemModel> itemList=new ArrayList<>();
-        for(int i=0;i<cuItem.size();i++){
-            String item=cuItem.get(i).getItemname();
-            if (item.toLowerCase().contains(query.toLowerCase())){
-                //sb.append(item);
-                itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename()));
-            }
-        }
-        return itemList;
-    }
-
-    public void runThread(String convName, String URL){
-        new Thread(new Runnable() {
-            ArrayList<String> prodList=new ArrayList<>();
-            ArrayList<String> prodPrice=new ArrayList<>();
-            Handler mHandler=new Handler();
-            Elements elements=new Elements();
-            @Override
-            public void run() {
-                try {
-                    if(convName == "cu"){
-                        for(int i=0; i<cuItem.size(); i++){
-                            prodList.add(cuItem.get(i).getItemname());
-                            prodPrice.add(Integer.toString(cuItem.get(i).getItemprice2()));
-                        }
-                    }
-                    else if(convName == "seven"){
-                        for(int i=0; i<sevenItem.size(); i++){
-                            prodList.add(sevenItem.get(i).getItemname());
-                            prodPrice.add(Integer.toString(sevenItem.get(i).getItemprice2()));
-                        }
-                    }
-                    if(convName == "gs25"){
-                        for(int i=0; i<gs25Item.size(); i++){
-                            prodList.add(gs25Item.get(i).getItemname());
-                            prodPrice.add(Integer.toString(gs25Item.get(i).getItemprice2()));
-                        }
-                    }
-                    //prodList = getProductName(convName, URL); //getProductList(convName, URL);
-                    // prodPrice = getProductPrice(convName, URL);
-                    Thread.sleep(1000);
-
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-
-
-
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
 
     public void load_item(){
         firebaseDatabase= FirebaseDatabase.getInstance();
@@ -197,6 +100,8 @@ public class addToCart extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
+                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename()));
+                System.out.println("haha1: "+itemData);
                 cuItem.add(itemData);
             }
 
@@ -226,6 +131,8 @@ public class addToCart extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
+                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename()));
+                System.out.println("haha2: "+itemData);
                 gs25Item.add(itemData);
             }
 
@@ -255,6 +162,8 @@ public class addToCart extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
+                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename()));
+                System.out.println("haha3: "+itemData);
                 sevenItem.add(itemData);
             }
 
@@ -278,19 +187,54 @@ public class addToCart extends Fragment {
 
             }
         });
+
     }
 
 
 
+
+
+    public void fillData() {
+        //itemList = new ArrayList<>(); //샘플테이터
+        load_item();
+        for(int i=0;i<cuItem.size();i++){
+            itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename()));
+
+        }
+    }
+
+    public ArrayList<CartItemModel> getResult(){
+        ArrayList<CartItemModel> itemList=new ArrayList<>();
+        for(int i=0;i<cuItem.size();i++){
+            itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename()));
+            if(i!=cuItem.size()-1){
+                //sb.append("\n");
+            }
+        }
+        return itemList;
+    }
+
+
+    public ArrayList<CartItemModel> search(String query){
+        ArrayList<CartItemModel> itemList=new ArrayList<>();
+        for(int i=0;i<cuItem.size();i++){
+            String item=cuItem.get(i).getItemname();
+            if (item.toLowerCase().contains(query.toLowerCase())){
+                itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename()));
+            }
+        }
+        return itemList;
+    }
+
+
+
+
     private void setUpRecyclerView() {
-        //recyclerview
-        //RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
-        //adapter
         itemList = new ArrayList<>(); //샘플테이터
-        //load_item();
+        load_item();
         fillData();
         adapter = new CartItemAdapter(itemList);
         recyclerView.setLayoutManager(layoutManager);

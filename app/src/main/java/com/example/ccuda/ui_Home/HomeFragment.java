@@ -203,15 +203,22 @@ public class HomeFragment extends Fragment {
                             }
                         }
                         CouponArrayList.add(couponData);
+                        //adapter.addItem(couponData.getItem_name(), R.drawable.add, couponData.getStorename());
                     }
-                    System.out.println(CouponArrayList);
+                    System.out.println("coupon list: "+CouponArrayList);
                     // TODO: Need adapter for couponArrayList(=판매글 리스트)
 
-                    adapter.addItem("물건1", R.drawable.add, "gs");
-                    adapter.addItem("물건2", R.drawable.add, "gs");
-                    adapter.addItem("물건3", R.drawable.add, "gs");
-                    adapter.addItem("물건4", R.drawable.add, "gs");
-                    adapter.addItem("물건5", R.drawable.add, "gs");
+
+                    for(CouponData a:CouponArrayList){
+                        adapter.addItem(a.getItem_name(), R.drawable.add, a.getStorename());
+                        System.out.println("itemname: "+a.getItem_name());
+                    }
+
+                    //adapter.addItem("물건1", R.drawable.add, "gs");
+                    //adapter.addItem("물건2", R.drawable.add, "gs");
+                    //adapter.addItem("물건3", R.drawable.add, "gs");
+                    //adapter.addItem("물건4", R.drawable.add, "gs");
+                    //adapter.addItem("물건5", R.drawable.add, "gs");
                     listView.setAdapter(adapter);
                 }catch (Exception e){
                     e.printStackTrace();
