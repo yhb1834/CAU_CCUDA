@@ -309,7 +309,7 @@ public class UploadCoupon extends Fragment {
                             }
                         }
                     };
-                    PostRequest postRequest = new PostRequest("posting", SaveSharedPreference.getId(getActivity()), finalConv,item_id, Integer.parseInt(finalPrice), finalDate, "", BitmapConverter.BitmapToString(finalImage), 0, responsListener);
+                    PostRequest postRequest = new PostRequest("posting", SaveSharedPreference.getId(getActivity()), finalConv,"",item_id, Integer.parseInt(finalPrice), finalDate, "", BitmapConverter.BitmapToString(finalImage), 0, responsListener);
                     RequestQueue queue = Volley.newRequestQueue(getActivity());
                     queue.add(postRequest);
                 }
