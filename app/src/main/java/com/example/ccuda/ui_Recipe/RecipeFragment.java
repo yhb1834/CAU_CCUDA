@@ -49,7 +49,7 @@ public class RecipeFragment extends Fragment {
         /* adapt data */
         RecipeItems = new ArrayList<>();
         for(int i=1;i<=10;i++){
-            RecipeItems.add(new RecipeItem(R.drawable.person,i+"개",i+"조합 "));
+            RecipeItems.add(new RecipeItem(R.drawable.person,i,i+"조합 "));
         }
 
         mRecipeAdapter.setRecipeList(RecipeItems);

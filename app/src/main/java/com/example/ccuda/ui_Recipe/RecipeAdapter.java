@@ -87,8 +87,9 @@ class ViewHolder extends RecyclerView.ViewHolder {
 
 
     void onBindRecipe(RecipeItem item){
-        image.setImageResource((item.getImage()));
-        like.setText(item.getLike());
+        image.setImageResource(item.getImage());
+        like.setText(String.valueOf(item.getLike()));
         title.setText(item.getTitle());
     }
+
 }
