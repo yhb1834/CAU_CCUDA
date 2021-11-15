@@ -83,6 +83,9 @@ public class addToCart extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
+
+                //setUpRecyclerView();
+                //adapter.
                 return true;
             }
         });
@@ -101,7 +104,7 @@ public class addToCart extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
                 itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename()));
-                System.out.println("haha1: "+itemData);
+                //System.out.println("haha1: "+itemData);
                 cuItem.add(itemData);
             }
 
@@ -132,7 +135,7 @@ public class addToCart extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
                 itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename()));
-                System.out.println("haha2: "+itemData);
+                //System.out.println("haha2: "+itemData);
                 gs25Item.add(itemData);
             }
 
@@ -163,7 +166,7 @@ public class addToCart extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
                 itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename()));
-                System.out.println("haha3: "+itemData);
+                //System.out.println("haha3: "+itemData);
                 sevenItem.add(itemData);
             }
 
@@ -231,16 +234,29 @@ public class addToCart extends Fragment {
 
     private void setUpRecyclerView() {
         recyclerView.setHasFixedSize(true);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         itemList = new ArrayList<>(); //샘플테이터
         load_item();
-        fillData();
+        //fillData();
         adapter = new CartItemAdapter(itemList);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL); //밑줄
         recyclerView.addItemDecoration(dividerItemDecoration);
+
+
+        //itemList.add(new CartItemModel(R.drawable.add, "One", "Ten"));
+        //itemList.add(new CartItemModel(R.drawable.add, "Two", "Eleven"));
+        //itemList.add(new CartItemModel(R.drawable.add, "Three", "Twelve"));
+        //itemList.add(new CartItemModel(R.drawable.add, "Four", "Thirteen"));
+        //itemList.add(new CartItemModel(R.drawable.add, "Five", "Fourteen"));
+        //itemList.add(new CartItemModel(R.drawable.add, "Six", "Fifteen"));
+        //itemList.add(new CartItemModel(R.drawable.add, "Seven", "Sixteen"));
+        //itemList.add(new CartItemModel(R.drawable.add, "Eight", "Seventeen"));
+        //itemList.add(new CartItemModel(R.drawable.add, "Nine", "Eighteen"));
+
 
         //데이터셋변경시
         //adapter.dataSetChanged(exampleList);
@@ -248,6 +264,8 @@ public class addToCart extends Fragment {
         //어댑터의 리스너 호출
         adapter.setOnClickListener(this::onItemClicked);
     }
+
+
 
 
 

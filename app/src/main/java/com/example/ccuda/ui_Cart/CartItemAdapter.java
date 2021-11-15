@@ -93,13 +93,14 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ItemVi
                 String filterPattern = constraint.toString().toLowerCase().trim();
                 for (CartItemModel item : mDataListAll) {
                     //TODO filter 대상 setting
-                    if (item.getText2().toLowerCase().contains(filterPattern)) {
+                    if (item.getText1().toLowerCase().contains(filterPattern)) {
                         filteredList.add(item);
                     }
                 }
             }
             FilterResults results = new FilterResults();
             results.values = filteredList;
+            System.out.println("vaulekkk: "+filteredList);
             return results;
         }
 
@@ -107,7 +108,9 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ItemVi
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             mDataList.clear();
+            //performFiltering();
             mDataList.addAll((List) results.values);
+            //notify
             notifyDataSetChanged();
         }
     };
@@ -117,6 +120,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ItemVi
         ImageView imageView;
         TextView textView1;
         TextView textView2;
+
 
         ItemViewHolder(View itemView) {
             super(itemView);
