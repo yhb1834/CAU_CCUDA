@@ -256,7 +256,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         };
-        PostRequest postRequest = new PostRequest("deletepost",SaveSharedPreference.getId(context), "",0, 0, "", "", "", coupon_id, responsListener);
+        PostRequest postRequest = new PostRequest("deletepost",SaveSharedPreference.getId(context),"", "",0, 0, "", "", "", coupon_id, responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(postRequest);
     }

@@ -102,6 +102,9 @@ public class UploadCoupon extends Fragment {
     ArrayList<ItemData> cuItem = new ArrayList<>();
     ArrayList<ItemData> gs25Item = new ArrayList<>();
     ArrayList<ItemData> sevenItem = new ArrayList<>();
+    ArrayList<String> cuImageReturn = new ArrayList<>();
+    ArrayList<String> gsImageReturn = new ArrayList<>();
+    ArrayList<String> sevenImageReturn = new ArrayList<>();
     String[] conv={"GS25", "SEVEN11", "CU"};
     ImageView uploadPhoto;
     Uri mImageCaptureUri;
@@ -152,10 +155,13 @@ public class UploadCoupon extends Fragment {
             public void run() {
                 try{
                     cuReturn=getProductList("cu","https://pyony.com/brands/cu/");
-                    //saveProductList(cuReturn,"cu");
+                    //cuImageReturn=getProductPicture("cu","https://pyony.com/brands/cu/");
+                    //savePgroductList(cuReturn,"cu");
                     gsReturn=getProductList("gs25","https://pyony.com/brands/gs25/");
+                    //gsImageReturn=getProductPicture("gs25","https://pyony.com/brands/gs25/");
                     //saveProductList(gsReturn,"gs25");
                     sevenReturn=getProductList("seven","https://pyony.com/brands/seven/");
+                    //sevenImageReturn=getProductPicture("seven","https://pyony.com/brands/seven/");
                     //saveProductList(sevenReturn,"seven");
                     Thread.sleep(1000);
                     //System.out.println("cuReturn: "+cuReturn);
@@ -418,7 +424,13 @@ public class UploadCoupon extends Fragment {
             int price2 = Integer.parseInt((returnlist.get(i).split(" ")[2]).replaceAll("[^0-9]",""));
             itemData.setItemprice2(price2);
             itemData.setItemprice(calculateprice(itemData.getPlustype(),price2));
-            itemData.setImage("");
+            if(storename=="cu"){
+                itemData.setImage(cuImageReturn.get(i));
+            }else if(storename == "gs25"){
+                itemData.setImage(gsImageReturn.get(i));
+            }else{
+                itemData.setImage(sevenImageReturn.get(i));
+            }
             itemData.setCategory("");
 
             itemRef.child(i+"").setValue(itemData);
