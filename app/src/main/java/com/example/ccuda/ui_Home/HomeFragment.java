@@ -158,7 +158,9 @@ public class HomeFragment extends Fragment {
                         couponData.setExpiration_date(object.getString("expiration_date")); // 쿠폰 유효기간 "Y-m-d" 형식
                         couponData.setContent(object.getString("content")); // 글 내용
                         String storename = object.getString("storename");
+                        storename = storename.toLowerCase();
                         couponData.setStorename(storename);
+                        couponData.setPlustype(object.getString("category"));
                         couponData.setCouponimage( BitmapConverter.StringToBitmap(object.getString("original"))); // 쿠폰 이미지 (!= 상품 이미지)
                         couponData.setSeller_id(Long.parseLong(object.getString("seller_id"))); // 판매자 확인용 id
                         couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
@@ -176,7 +178,6 @@ public class HomeFragment extends Fragment {
                                 if(cuItem.get(j).getItemid()==item_id){
                                     couponData.setItem_name(cuItem.get(j).getItemname());
                                     couponData.setCategory(cuItem.get(j).getCategory());
-                                    couponData.setPlustype(cuItem.get(j).getPlustype());
                                     couponData.setImage(cuItem.get(j).getImage());
                                     break;
                                 }
