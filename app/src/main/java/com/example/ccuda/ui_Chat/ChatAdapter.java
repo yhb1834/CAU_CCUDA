@@ -17,10 +17,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatAdapter extends BaseAdapter {
 
-    ArrayList<ChatData> chatData;
+    ArrayList<ChatData.Comment> chatData;
     LayoutInflater layoutInflater;
 
-    public ChatAdapter(ArrayList<ChatData> chatData, LayoutInflater layoutInflater) {
+    public ChatAdapter(ArrayList<ChatData.Comment> chatData, LayoutInflater layoutInflater) {
         this.chatData = chatData;
         this.layoutInflater = layoutInflater;
     }
@@ -44,13 +44,13 @@ public class ChatAdapter extends BaseAdapter {
     public View getView(int position, View view, ViewGroup viewGroup) {
 
         //현재 보여줄 번째의(position)의 데이터로 뷰를 생성
-        ChatData Data = chatData.get(position);
+        ChatData.Comment Data = chatData.get(position);
 
         //재활용할 뷰는 사용하지 않음!!
         View itemView=null;
 
         //메세지가 내 메세지인지??
-        if(Data.getNicname().equals(SaveSharedPreference.getNicname(viewGroup.getContext()))){
+        if(Data.nicname.equals(SaveSharedPreference.getNicname(viewGroup.getContext()))){
             itemView= layoutInflater.inflate(R.layout.my_msg_box,viewGroup,false);
         }else{
             itemView= layoutInflater.inflate(R.layout.other_msg_box,viewGroup,false);
@@ -62,12 +62,12 @@ public class ChatAdapter extends BaseAdapter {
         TextView tvMsg= itemView.findViewById(R.id.tv_msg);
         TextView tvTime= itemView.findViewById(R.id.tv_time);
 
-        tvName.setText(Data.getNicname());
-        tvMsg.setText(Data.getMsg());
-        tvTime.setText(Data.getTime());
+        tvName.setText(Data.nicname);
+        tvMsg.setText(Data.msg);
+        tvTime.setText(Data.timestamp);
 
-        if(Data.getProfileUrl()!=null || Data.getProfileUrl().equals("")==false){
-            Glide.with(itemView).load(Data.getProfileUrl()).into(iv);
+        if(Data.imageurl !=null && Data.imageurl.equals("")==false){
+            Glide.with(itemView).load(Data.imageurl).into(iv);
         }
 
         return itemView;

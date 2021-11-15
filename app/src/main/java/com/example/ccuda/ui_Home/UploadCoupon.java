@@ -156,7 +156,7 @@ public class UploadCoupon extends Fragment {
                 try{
                     cuReturn=getProductList("cu","https://pyony.com/brands/cu/");
                     //cuImageReturn=getProductPicture("cu","https://pyony.com/brands/cu/");
-                    //savePgroductList(cuReturn,"cu");
+                    //saveProductList(cuReturn,"cu");
                     gsReturn=getProductList("gs25","https://pyony.com/brands/gs25/");
                     //gsImageReturn=getProductPicture("gs25","https://pyony.com/brands/gs25/");
                     //saveProductList(gsReturn,"gs25");

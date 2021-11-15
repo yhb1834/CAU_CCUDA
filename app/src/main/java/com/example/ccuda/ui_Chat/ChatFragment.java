@@ -18,10 +18,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.ccuda.R;
+import com.example.ccuda.data.ChatData;
 import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.CartRequest;
 import com.example.ccuda.db.ChatRequest;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -34,7 +36,9 @@ public class ChatFragment extends Fragment{
     private RecyclerView mRecyclerView;
     private ChatPeopleAdapter mChatPeopleAdapter;
     private ArrayList<PeopleItem> PeopleItems;
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     Context context;
+    String destid;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -63,6 +67,9 @@ public class ChatFragment extends Fragment{
             public void onItemClick(View a_view, int a_position) {
                 final PeopleItem item = PeopleItems.get(a_position);
                 Intent intent = new Intent(getActivity(),ChatRoomActivity.class);
+                intent.putExtra("roomnum",item.getCoupon_id()+SaveSharedPreference.getId(context)+item.getUserId());
+                intent.putExtra("coupon_id",item.getCoupon_id());
+                intent.putExtra("destid",item.getUserId());
                 startActivity(intent);
             }
         });
@@ -82,26 +89,38 @@ public class ChatFragment extends Fragment{
                     for (int i = 0; i < length; i++) {
                         JSONObject object = jsonArray.getJSONObject(i);
                         int coupon_id = Integer.parseInt(object.getString("coupon_id"));
+                        String buyer_id = object.getString("buyer_id");
                         String buyer_nicname = object.getString("buyer_nicname");
+                        String seller_id = object.getString("seller_id");
                         String seller_nicname = object.getString("seller_nicname");
                         if (!buyer_nicname.equals(SaveSharedPreference.getNicname(context))) {
                             // 판매자일때 챗상대방
+                            //roomnum = coupon_id+SaveSharedPreference.getId(context)+buyer_id;
+                            destid = buyer_id;
                             double buyer_score = Double.parseDouble(object.getString("buyer_score"));
-                            //PeopleItems.add(new PeopleItem(R.drawable.person, buyer_nicname, "별점" + buyer_score + "점"));
+                            PeopleItems.add(new PeopleItem(R.drawable.person, buyer_nicname, "별점" + buyer_score + "점",buyer_id,coupon_id+""));
+
                         } else {
                             // 구매자일때 챗상대방
+                            //roomnum = coupon_id+SaveSharedPreference.getId(context)+seller_id;
+                            destid = seller_id;
                             double seller_score = Double.parseDouble(object.getString("seller_score"));
-                           // PeopleItems.add(new PeopleItem(R.drawable.person, seller_nicname, "별점" + seller_score + "점"));
+                           PeopleItems.add(new PeopleItem(R.drawable.person, seller_nicname, "별점" + seller_score + "점",seller_id,coupon_id+""));
                         }
+
+                        //ChatData chatData = new ChatData();
+                        //chatData.users.put(String.valueOf(SaveSharedPreference.getId(context)),true);
+                        //chatData.users.put(destid,true);
+                        //chatData.users.put(coupon_id+"",true);
+                        //firebaseDatabase.getReference().child("chatrooms").child(coupon_id+SaveSharedPreference.getId(context)+destid).setValue(chatData); //(coupon_id + sellerid + destid)
                     }
                     System.out.println(PeopleItems);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                for(int i=1;i<=10;i++){
-                    PeopleItems.add(new PeopleItem(R.drawable.person,i+"번","별점 "+i+"점"));
+                for(int i=1;i<2;i++){
+                    PeopleItems.add(new PeopleItem(R.drawable.person,i+"번","별점 "+i+"점","",""));
                 }
-                PeopleItems.add(new PeopleItem(R.drawable.person,"11번","별점 12점"));
 
                 mChatPeopleAdapter.setChatPeopleList(PeopleItems);
 

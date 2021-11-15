@@ -1,38 +1,53 @@
 package com.example.ccuda.ui_Chat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 import com.example.ccuda.data.ChatData;
 import com.example.ccuda.data.SaveSharedPreference;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class ChatRoomActivity extends AppCompatActivity {
+import de.hdodenhof.circleimageview.CircleImageView;
 
+public class ChatRoomActivity extends AppCompatActivity {
+    ImageButton sendbtn;
     EditText et;
     ListView listView;
 
-    ArrayList<ChatData> messageItems=new ArrayList<>();
+    ArrayList<ChatData.Comment> messageItems=new ArrayList<>();
     ChatAdapter adapter;
 
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference chatRef;
+    DatabaseReference chatref;
+    String destid;
+    String coupon_id;
+    String chatRoomUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +59,21 @@ public class ChatRoomActivity extends AppCompatActivity {
         adapter=new ChatAdapter(messageItems,getLayoutInflater());
         listView.setAdapter(adapter);
 
-        //Firebase DB관리 객체
-        firebaseDatabase= FirebaseDatabase.getInstance();
-        chatRef= firebaseDatabase.getReference("messages");
+        Intent intent = getIntent();
+        chatRoomUid=intent.getExtras().getString("roomnum");
+        coupon_id = intent.getExtras().getString("coupon_id");
+        destid = intent.getExtras().getString("destid");
 
-        chatRef.addChildEventListener(new ChildEventListener() {
+        //Firebase DB관리 객체
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        chatref = firebaseDatabase.getReference();
+
+        chatref.child("chatrooms").child(chatRoomUid).child("comments").addChildEventListener(new ChildEventListener() {
             //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
                 //새로 추가된 데이터(값 : ChatData객체) 가져오기
-                ChatData chatData= dataSnapshot.getValue(ChatData.class);
+                ChatData.Comment chatData= dataSnapshot.getValue(ChatData.Comment.class);
 
                 //새로운 메세지를 리스뷰에 추가하기 위해 ArrayList에 추가
                 messageItems.add(chatData);
@@ -86,34 +105,23 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
 
     }
+    public void clickSend(View view){
+        if(!et.getText().toString().equals("")){
+            ChatData.Comment comment = new ChatData.Comment();
+            comment.user_id = String.valueOf(SaveSharedPreference.getId(this));
+            comment.nicname = SaveSharedPreference.getNicname(this);
+            comment.imageurl = SaveSharedPreference.getProfileimage(this);
+            comment.msg = et.getText().toString();
+            Calendar calendar= Calendar.getInstance();
+            comment.timestamp = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            chatref = firebaseDatabase.getReference();
+            chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(comment);
 
-    public void clickSend(View view) {
-
-        //firebase DB에 저장할 값들( 닉네임, 메세지, 프로필 이미지URL, 시간)
-        String nickName= SaveSharedPreference.getNicname(this);
-        String message= et.getText().toString();
-        String pofileUrl= SaveSharedPreference.getProfileimage(this);
-
-        //메세지 작성 시간 문자열로..
-        Calendar calendar= Calendar.getInstance(); //현재 시간을 가지고 있는 객체
-        String time=calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE); //14:16
-
-        //firebase DB에 저장할 값(MessageItem객체) 설정
-        ChatData chatData = new ChatData(nickName,message,time,pofileUrl);
-        //'char'노드에 MessageItem객체를 통해
-        chatRef.push().setValue(chatData);
-
-        //EditText에 있는 글씨 지우기
-        et.setText("");
-
-        //소프트키패드 내리기
-        InputMethodManager imm=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
-
-        //처음 시작할때 EditText가 다른 뷰들보다 우선시 되어 포커스를 받아 버림.
-        //즉, 시작부터 소프트 키패드가 올라와 있음.
-
-        //그게 싫으면...다른 뷰가 포커스를 가지도록
-        //즉, EditText를 감싼 Layout에게 포커스를 가지도록 속성을 추가!![[XML에]
+            et.setText("");
+            InputMethodManager imm=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+        }
     }
+
 }
