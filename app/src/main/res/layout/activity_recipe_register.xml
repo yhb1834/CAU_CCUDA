@@ -28,6 +28,7 @@
                     android:gravity="center"
                     android:padding="13dp"
                     android:text="@string/recipe_title"
+                    android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <EditText
@@ -40,23 +41,36 @@
                     android:inputType="text" />
             </LinearLayout>
 
+
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/add_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:text="사진 추가" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/imageRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!--구분선-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="#aaa" />
 
 
             <TextView
                 android:id="@+id/additemtext"
                 android:layout_width="113dp"
                 android:layout_height="31dp"
-                android:gravity="center"
-                android:padding="7dp"
-                android:text="관련 품목 추가" />
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="관련 품목 추가"
+                android:textColor="@color/black" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -70,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="편의점명"
-                    android:textSize="20dp"></TextView>
+                    android:textSize="15dp"></TextView>
 
                 <Spinner
                     android:id="@+id/spinner1"
@@ -93,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="품목"
-                    android:textSize="20dp"></TextView>
+                    android:textSize="15dp"></TextView>
 
                 <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/searchProd"
@@ -111,26 +125,32 @@
 
             </LinearLayout>
 
+            <!--구분선-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="#aaa" />
 
             <TextView
                 android:id="@+id/content"
-                android:layout_width="86dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="4dp"
-                android:gravity="center"
-                android:padding="6dp"
-                android:text="@string/content" />
+                android:layout_width="81dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/content"
+                android:textColor="@color/black" />
 
             <EditText
                 android:id="@+id/editContent"
-                android:layout_width="413dp"
+                android:layout_width="match_parent"
                 android:layout_height="368dp"
+                android:layout_margin="10dp"
                 android:layout_marginBottom="8dp"
-                android:ems="10"
+                android:ems="3"
                 android:gravity="start"
                 android:hint="@string/content_input"
-                android:inputType="text"
-                android:padding="10dp" />
+                android:inputType="text" />
 
             <Button
                 android:id="@+id/register"

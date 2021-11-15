@@ -59,15 +59,15 @@ public class RecipeItemFragment extends Fragment implements OnBackPressedListene
         item = getArguments().getParcelable(Global.KEY_DATA);
         if ( item != null) {
             int isImage = item.getImage();
-            String islike = item.getLike();
+            int islike = item.getLike();
             String isTitle = item.getTitle();
 
             recipeImage11 = (ImageView) v.findViewById(R.id.recipeImage2);
             like11 = (TextView) v.findViewById(R.id.likenumber2);
             recipeTitle11 = (TextView) v.findViewById(R.id.recipetitle);
 
-            recipeImage11.setImageResource(R.drawable.person);
-            like11.setText(islike);
+            recipeImage11.setImageResource(isImage);
+            like11.setText(String.valueOf(islike));
             recipeTitle11.setText(isTitle);
         }
         return v;

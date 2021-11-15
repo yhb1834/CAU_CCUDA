@@ -5,10 +5,10 @@ import android.os.Parcelable;
 
 public class RecipeItem implements Parcelable {
     int resourceId; //프로필 사진
-    String like;
+    int like;
     String title;
 
-    public RecipeItem(int resourceId, String like, String title) {
+    public RecipeItem(int resourceId, int like, String title) {
         this.resourceId = resourceId;
         this.like = like;
         this.title = title;
@@ -16,7 +16,7 @@ public class RecipeItem implements Parcelable {
 
     protected RecipeItem(Parcel in) {
         resourceId = in.readInt();
-        like = in.readString();
+        like = in.readInt();
         title = in.readString();
     }
 
@@ -33,13 +33,13 @@ public class RecipeItem implements Parcelable {
     };
 
     public int getImage() {return resourceId;}
-    public String getLike() { return like; }
+    public int getLike() { return like; }
     public String getTitle() { return title; }
 
     public void setImage(int resourceId){
         this.resourceId = resourceId;
     }
-    public void setLike(String like) { this.like = like; }
+    public void setLike(int like) { this.like = like; }
     public void setTitle(String title) {
         this.title = title;
     }
@@ -52,7 +52,7 @@ public class RecipeItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(resourceId);
-        dest.writeString(like);
+        dest.writeInt(like);
         dest.writeString(title);
     }
 }
