@@ -49,7 +49,7 @@ public class RecipeFragment extends Fragment {
         /* adapt data */
         RecipeItems = new ArrayList<>();
         for(int i=1;i<=10;i++){
-            RecipeItems.add(new RecipeItem(R.drawable.person,i,i+"조합 "));
+            RecipeItems.add(new RecipeItem(R.drawable.person,i+"개",i+"조합 "));
         }
 
         mRecipeAdapter.setRecipeList(RecipeItems);
@@ -61,6 +61,12 @@ public class RecipeFragment extends Fragment {
             @Override
             public void onItemClick(View a_view, int a_position) {
                 final RecipeItem item = RecipeItems.get(a_position);
+
+                Bundle bundle = new Bundle();
+
+                bundle.putParcelable(Global.KEY_DATA, item);
+                fragmentRecipeItem.setArguments(bundle);
+
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.innerLayout, fragmentRecipeItem);
                 transaction.addToBackStack(null);

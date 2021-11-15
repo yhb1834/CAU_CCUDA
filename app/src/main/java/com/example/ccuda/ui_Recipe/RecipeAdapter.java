@@ -1,7 +1,6 @@
 package com.example.ccuda.ui_Recipe;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,23 +70,10 @@ class ViewHolder extends RecyclerView.ViewHolder {
     public ViewHolder(@NonNull View itemView, final RecipeAdapter.OnItemClickEventListener itemClickListener) {
         super(itemView);
 
-        image = (ImageView) itemView.findViewById(R.id.imageView2);
-        like = (TextView) itemView.findViewById(R.id.like);
-        title = (TextView) itemView.findViewById(R.id.RecipeName);
+        image = (ImageView) itemView.findViewById(R.id.recipeImage1);
+        like = (TextView) itemView.findViewById(R.id.likenumber1);
+        title = (TextView) itemView.findViewById(R.id.recipeTitle1);
 
-        /*itemView.setClickable(true);
-        itemView.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                int pos = getAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION){
-                    Intent intent = new Intent(this, RecipeItemFragment.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("TEXT", list.get(pos));
-                    this.startActivity(intent)
-;                }
-            }
-        });*/
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View a_view) {
@@ -102,7 +88,7 @@ class ViewHolder extends RecyclerView.ViewHolder {
 
     void onBindRecipe(RecipeItem item){
         image.setImageResource((item.getImage()));
-        like.setInputType(item.getLike());
+        like.setText(item.getLike());
         title.setText(item.getTitle());
     }
 }
