@@ -27,8 +27,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class CartFragment extends Fragment {
-    private ArrayList<ItemData> iArrayList = new ArrayList<>();
-    private ArrayList<ItemData> mycartArrayList = new ArrayList<>();
     private Context context;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -38,38 +36,6 @@ public class CartFragment extends Fragment {
     }
 
 
-    // 장바구니 리스트 불러오기
-    protected void mycartlist(ArrayList<ItemData> iarrayList){
-        mycartArrayList.clear();
-        Response.Listener<String> responsListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jsonArray = jsonObject.getJSONArray("itemlist");
-                    int length = jsonArray.length();
-
-                    for(int i=0; i<length; i++){
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        int item_id = Integer.parseInt(object.getString("item_id"));
-
-                        for(int j=0; i<iarrayList.size(); j++){
-                            if(iarrayList.get(j).getItemid() == item_id){
-                                mycartArrayList.add(iarrayList.get(j));
-                                return;
-                            }
-                        }
-                    }
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        CartRequest cartRequest = new CartRequest("mycartlist", SaveSharedPreference.getId(context), 0,"",responsListener);
-        RequestQueue queue = Volley.newRequestQueue(context);
-        queue.add(cartRequest);
-    }
 
     // 장바구니 삭제 정보 db저장
     protected void removeFromcart(int item_id){
