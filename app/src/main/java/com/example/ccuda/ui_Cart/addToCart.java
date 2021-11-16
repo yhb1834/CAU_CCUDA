@@ -109,7 +109,7 @@ public class addToCart extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
+                itemList.add(new CartItemModel(itemData.getImage(), itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
                 //System.out.println("haha1: "+itemData);
                 cuItem.add(itemData);
             }
@@ -140,7 +140,7 @@ public class addToCart extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
+                itemList.add(new CartItemModel(itemData.getImage(), itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
                 //System.out.println("haha2: "+itemData);
                 gs25Item.add(itemData);
             }
@@ -171,7 +171,7 @@ public class addToCart extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
+                itemList.add(new CartItemModel(itemData.getImage(), itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
                 //System.out.println("haha3: "+itemData);
                 sevenItem.add(itemData);
             }
@@ -207,7 +207,7 @@ public class addToCart extends Fragment {
         //itemList = new ArrayList<>(); //샘플테이터
         load_item();
         for(int i=0;i<cuItem.size();i++){
-            itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
+            itemList.add(new CartItemModel(cuItem.get(i).getImage(), cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
 
         }
     }
@@ -215,7 +215,7 @@ public class addToCart extends Fragment {
     public ArrayList<CartItemModel> getResult(){
         ArrayList<CartItemModel> itemList=new ArrayList<>();
         for(int i=0;i<cuItem.size();i++){
-            itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
+            itemList.add(new CartItemModel(cuItem.get(i).getImage(), cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
             if(i!=cuItem.size()-1){
                 //sb.append("\n");
             }
@@ -229,7 +229,7 @@ public class addToCart extends Fragment {
         for(int i=0;i<cuItem.size();i++){
             String item=cuItem.get(i).getItemname();
             if (item.toLowerCase().contains(query.toLowerCase())){
-                itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
+                itemList.add(new CartItemModel(cuItem.get(i).getImage(), cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
             }
         }
         return itemList;

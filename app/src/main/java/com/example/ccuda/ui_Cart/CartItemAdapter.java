@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ItemVi
     public void onBindViewHolder(@NonNull CartItemAdapter.ItemViewHolder holder, int position) {
         CartItemModel currentItem = mDataList.get(position);
         // TODO : 데이터를 뷰홀더에 표시하시오
-        holder.imageView.setImageResource(currentItem.getImageResource());
+        Glide.with(holder.imageView).load(currentItem.getImageUrl()).into(holder.imageView);
         holder.textView1.setText(currentItem.getText1());
         holder.textView2.setText(currentItem.getText2());
 
