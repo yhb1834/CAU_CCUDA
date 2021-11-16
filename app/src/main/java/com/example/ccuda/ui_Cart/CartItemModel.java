@@ -7,11 +7,13 @@ public class CartItemModel {
     private int imageResource;
     private String text1;
     private String text2;
+    private int itemid;
 
-    public CartItemModel(int imageResource, String text1, String text2) {
+    public CartItemModel(int imageResource, String text1, String text2, int itemid) {
         this.imageResource = imageResource;
         this.text1 = text1;
         this.text2 = text2;
+        this.itemid = itemid;
     }
 
     public int getImageResource() {
@@ -37,5 +39,7 @@ public class CartItemModel {
     public void setText2(String text2) {
         this.text2 = text2;
     }
+
+    public int getItemid(){return itemid;}
 }
 

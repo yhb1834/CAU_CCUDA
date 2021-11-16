@@ -3,6 +3,7 @@ package com.example.ccuda.ui_Cart;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,10 +28,14 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
+import com.example.ccuda.db.CartRequest;
 import com.example.ccuda.ui_Home.Adapter;
 import com.example.ccuda.ui_Home.UploadCoupon;
 import com.google.firebase.database.ChildEventListener;
@@ -39,6 +44,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONObject;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
@@ -103,7 +109,7 @@ public class addToCart extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename()));
+                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
                 //System.out.println("haha1: "+itemData);
                 cuItem.add(itemData);
             }
@@ -134,7 +140,7 @@ public class addToCart extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename()));
+                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
                 //System.out.println("haha2: "+itemData);
                 gs25Item.add(itemData);
             }
@@ -165,7 +171,7 @@ public class addToCart extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename()));
+                itemList.add(new CartItemModel(R.drawable.add, itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
                 //System.out.println("haha3: "+itemData);
                 sevenItem.add(itemData);
             }
@@ -201,7 +207,7 @@ public class addToCart extends Fragment {
         //itemList = new ArrayList<>(); //샘플테이터
         load_item();
         for(int i=0;i<cuItem.size();i++){
-            itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename()));
+            itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
 
         }
     }
@@ -209,7 +215,7 @@ public class addToCart extends Fragment {
     public ArrayList<CartItemModel> getResult(){
         ArrayList<CartItemModel> itemList=new ArrayList<>();
         for(int i=0;i<cuItem.size();i++){
-            itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename()));
+            itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
             if(i!=cuItem.size()-1){
                 //sb.append("\n");
             }
@@ -223,7 +229,7 @@ public class addToCart extends Fragment {
         for(int i=0;i<cuItem.size();i++){
             String item=cuItem.get(i).getItemname();
             if (item.toLowerCase().contains(query.toLowerCase())){
-                itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename()));
+                itemList.add(new CartItemModel(R.drawable.add, cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
             }
         }
         return itemList;
@@ -279,7 +285,35 @@ public class addToCart extends Fragment {
      ***************************************************/
 
     public void onItemClicked(int position) {
-        Toast.makeText(getContext(), "" +position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "" +position, Toast.LENGTH_SHORT).show();
+        final CartItemModel cartItemModel = itemList.get(position);
+        String storename = cartItemModel.getText1();
+        int item_id = cartItemModel.getItemid();
+
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    if(success){
+                        // 성공
+                        Log.d("success","query success");
+                        Toast.makeText(getActivity(),"장바구니 추가", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        // 실패
+                        Log.d("success","already in cart");
+                        Toast.makeText(getActivity(),"같은 상품이 이미 장바구니에 있습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        CartRequest cartRequest = new CartRequest("addTocart", SaveSharedPreference.getId(getActivity()), item_id,storename, responsListener);
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        queue.add(cartRequest);
     }
 
 
