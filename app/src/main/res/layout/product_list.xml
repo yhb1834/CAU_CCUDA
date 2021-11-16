@@ -15,13 +15,15 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:paddingLeft="0dp">
+
             <TextView
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/black"
                 android:text="test"
-                android:textSize="15dp">
-            </TextView>
+                android:textSize="16dp"></TextView>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,20 +31,42 @@
             android:layout_gravity="top"
             android:layout_weight="1"
             android:orientation="horizontal">
+
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="117dp"
                 android:layout_weight="0.5">
+
                 <ImageView
                     android:id="@+id/icon"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"></ImageView>
+                    android:layout_width="51dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"></ImageView>
+
                 <TextView
                     android:id="@+id/store"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="81dp"
+                    android:layout_height="38dp"
                     android:gravity="center"
                     android:text="test"></TextView>
+
+                <LinearLayout
+                    android:layout_width="241dp"
+                    android:layout_height="53dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/validity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="판매가격" />
+                    <TextView
+                        android:id="@+id/price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="판매자 ID" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -51,10 +51,10 @@ public class RecipeFragment extends Fragment {
         for(int i=1;i<=10;i++){
             RecipeItems.add(new RecipeItem(R.drawable.person,i,i+"조합 "));
         }
-
         mRecipeAdapter.setRecipeList(RecipeItems);
 
 
+        //레시피 개별 페이지 클릭
         mRecipeAdapter.setOnItemClickListener(new RecipeAdapter.OnItemClickEventListener(){
             private RecipeItemFragment fragmentRecipeItem = new RecipeItemFragment();
 
@@ -72,8 +72,6 @@ public class RecipeFragment extends Fragment {
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
-
-
         });
 
         FloatingActionButton fab = view.findViewById(R.id.add_recipe);

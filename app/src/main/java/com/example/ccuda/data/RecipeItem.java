@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class RecipeItem implements Parcelable {
-    int resourceId; //프로필 사진
+    int resourceId;
     int like;
     String title;
 

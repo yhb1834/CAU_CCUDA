@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -129,6 +130,16 @@ public class HomeFragment extends Fragment {
                 //activity.getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new UploadCoupon()).commit();
                 FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.innerLayout, new UploadCoupon());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.innerLayout, new ProductItemFragment());
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
