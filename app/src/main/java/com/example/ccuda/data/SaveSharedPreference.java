@@ -56,6 +56,11 @@ public class SaveSharedPreference {
         editor.putString(PREF_USER_PROFILEIMAGE,imageurl);
         editor.commit();
     }
+    public static void setNicname(Context context, String nicname){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString(PREF_USER_NICNAME, nicname);
+        editor.commit();
+    }
     // 로그아웃 세션션 clear
     public static void clearSession(Context context){
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();

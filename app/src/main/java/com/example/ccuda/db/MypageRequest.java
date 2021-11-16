@@ -17,7 +17,7 @@ public class MypageRequest extends StringRequest {
 
         parameters = new HashMap<>();
         parameters.put("option", option);
-        parameters.put("user_id", user_id+"");
+        parameters.put("id", user_id+"");
         parameters.put("newinfo", newinfo);
     }
     @Override

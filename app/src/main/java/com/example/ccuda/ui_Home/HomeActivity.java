@@ -1,19 +1,27 @@
 package com.example.ccuda.ui_Home;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +30,7 @@ import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -46,6 +55,7 @@ import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.data.CouponData;
 import com.example.ccuda.db.CouponpageRequest;
+import com.example.ccuda.db.MypageRequest;
 import com.example.ccuda.db.PostRequest;
 import com.example.ccuda.ui_Cart.CartFragment;
 import com.example.ccuda.ui_Cart.addToCart;
@@ -56,6 +66,7 @@ import com.example.ccuda.ui_Recipe.RecipeFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -74,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
     //profile image
     Uri imgUri;
     private ImageView profile;
-
+    private String newnicname;
     //private ListView listView;
     //private Adapter adapter;
 
@@ -215,9 +226,73 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+
+
         nav_nicname_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final EditText et = new EditText(HomeActivity.this);
+                et.setSingleLine(true);
+                LinearLayout container = new LinearLayout(HomeActivity.this);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                et.setLayoutParams(params);
+
+                container.addView(et);
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(HomeActivity.this);
+                alert.setCancelable(false);
+                alert.setTitle("닉네임 변경");
+                alert.setMessage("변경할 닉네임을 입력해주세요.");
+                InputFilter[] FilterArray = new InputFilter[1];
+                FilterArray[0] = new InputFilter.LengthFilter(10); //글자수 제한
+                et.setFilters(FilterArray);
+                et.setHint("2~10글자 이내로 입력해주세요.");
+                alert.setView(container);
+                alert.setPositiveButton("확인", null);
+                alert.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) { //취소 버튼을 클ㅣ
+                    }
+                });
+                AlertDialog dialog = alert.create();
+                dialog.show();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        newnicname = et.getText().toString();
+                        if(newnicname.length()>1){
+                            Response.Listener<String> responsListener = new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try{
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        boolean success = jsonObject.getBoolean("success");
+                                        if(success){
+                                            SaveSharedPreference.setNicname(HomeActivity.this,newnicname);
+                                            nav_nicname_text.setText(newnicname);
+                                            Toast.makeText(HomeActivity.this,"닉네임 변경",Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+                                        }
+                                        else {
+                                            Toast.makeText(HomeActivity.this,"이미 해당 닉네임이 존재합니다.",Toast.LENGTH_SHORT).show();
+                                            et.setText("");
+                                            et.setBackgroundResource(R.drawable.red_edit);
+                                        }
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            MypageRequest mypageRequest = new MypageRequest("rewrite", SaveSharedPreference.getId(HomeActivity.this), newnicname, responsListener);
+                            RequestQueue queue = Volley.newRequestQueue(HomeActivity.this);
+                            queue.add(mypageRequest);
+                        }
+                    }
+                });
+
 
             }
         });
