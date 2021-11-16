@@ -22,9 +22,10 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ItemVi
     private List<CartItemModel> mDataListAll;
 
     //constructor
-    public CartItemAdapter(List<CartItemModel> items) {
+    public CartItemAdapter(ArrayList<CartItemModel> items) {
         mDataList = items;
         mDataListAll = new ArrayList<>(items);
+        System.out.println("constructor: "+items);
     }
 
     //interface - 클릭인터페이스
@@ -96,11 +97,13 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ItemVi
                     //TODO filter 대상 setting
                     if (item.getText1().toLowerCase().contains(filterPattern)) {
                         filteredList.add(item);
+                        System.out.println("item: "+item);
                     }
                 }
             }
             FilterResults results = new FilterResults();
             results.values = filteredList;
+            System.out.println("results.values: "+results.values);
             System.out.println("vaulekkk: "+filteredList);
             return results;
         }

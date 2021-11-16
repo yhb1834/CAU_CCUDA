@@ -2,6 +2,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/innerLinearLayoutUp"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+            <ImageView
+                android:id="@+id/image1"
+                android:layout_width="150dp"
+                android:layout_height="150dp">
+            </ImageView>
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="150dp"
+                android:layout_height="150dp">
+            </ImageView>
+            <ImageView
+                android:id="@+id/image3"
+                android:layout_width="150dp"
+                android:layout_height="150dp">
+            </ImageView>
+            <ImageView
+                android:id="@+id/image4"
+                android:layout_width="150dp"
+                android:layout_height="150dp">
+            </ImageView>
+            <ImageView
+                android:id="@+id/image5"
+                android:layout_width="150dp"
+                android:layout_height="150dp">
+            </ImageView>
+        </LinearLayout>
+    </HorizontalScrollView>
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"

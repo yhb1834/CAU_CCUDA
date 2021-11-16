@@ -16,6 +16,13 @@ public class CartItemModel {
         this.itemid = itemid;
     }
 
+    public CartItemModel(String imageurl, String text1, String text2) {
+        this.imageurl = imageurl;
+        this.text1 = text1;
+        this.text2 = text2;
+        this.itemid = itemid;
+    }
+
     public String getImageUrl() {
         return imageurl;
     }

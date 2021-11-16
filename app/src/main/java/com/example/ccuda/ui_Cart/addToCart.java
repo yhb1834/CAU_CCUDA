@@ -1,6 +1,8 @@
 package com.example.ccuda.ui_Cart;
 
 import android.content.Context;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -44,9 +46,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.select.Elements;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,10 +66,20 @@ public class addToCart extends Fragment {
 
     CartItemAdapter adapter;
     ArrayList<CartItemModel> itemList=new ArrayList<>();
+    ArrayList<CartItemModel> cartList=new ArrayList<>();
+    Adapter adapterCart=new Adapter();
+    ImageView imageView1;
+    ImageView imageView2;
+    ImageView imageView3;
+    ImageView imageView4;
+    ImageView imageView5;
+    ImageView[] imageViews=new ImageView[5];
+    //ArrayList<> cartItemImgs=new ArrayList<>(); // 장바구니에 추가된 사진 list
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("onCreate");
         fillData();
     }
 
@@ -76,7 +90,7 @@ public class addToCart extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_to_cartlist, container, false);
         searchView=view.findViewById(R.id.searchView);
         recyclerView=view.findViewById(R.id.recyclerView);
-
+        System.out.println("onCreateView");
         setUpRecyclerView();
 
 
@@ -89,12 +103,35 @@ public class addToCart extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
-
-                //setUpRecyclerView();
-                //adapter.
                 return true;
             }
         });
+
+
+        load_MyCartList();
+        System.out.println("cart item: "+cartList);
+
+        imageViews[0]=view.findViewById(R.id.image1);
+        imageViews[1]=view.findViewById(R.id.image2);
+        imageViews[2]=view.findViewById(R.id.image3);
+        imageViews[3]=view.findViewById(R.id.image4);
+        imageViews[4]=view.findViewById(R.id.image5);
+        //ImageView[] imageViews=new ImageView[5];
+
+        if(cartList.size()<=5){
+            for (int i=0;i<cartList.size();i++){
+                //imageViews[i].setImageURI(Uri.parse(cartList.get(i).getImageUrl()));
+                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
+                //imageViews[i].setImageResource(cartList.get(i).getImageUrl());
+            }
+        }else {
+            for (int i=0;i<5;i++){
+                //imageViews[i].setImageURI(Uri.parse(cartList.get(i).getImageUrl()));
+                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
+            }
+        }
+
+
 
         return view;
     }
@@ -243,7 +280,7 @@ public class addToCart extends Fragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
-        itemList = new ArrayList<>(); //샘플테이터
+        //itemList = new ArrayList<>(); //샘플테이터
         load_item();
         //fillData();
         adapter = new CartItemAdapter(itemList);
@@ -316,6 +353,61 @@ public class addToCart extends Fragment {
         queue.add(cartRequest);
     }
 
+
+    private void load_MyCartList(){
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("mycartlist");
+                    int length = jsonArray.length();
+
+                    for(int i=0; i<length; i++){
+                        JSONObject object = jsonArray.getJSONObject(i);
+                        String item_id = object.getString("item_id");
+                        String storename = object.getString("storename");
+
+                        if(storename.equals("cu")){
+                            for(int j=0; j<cuItem.size(); j++){
+                                if(Integer.toString(cuItem.get(j).getItemid()).equals(item_id)){
+                                    cartList.add(new CartItemModel(cuItem.get(j).getImage(),cuItem.get(j).getItemname(),storename));
+                                }
+                            }
+                        }else if(storename.equals("gs25")){
+                            for(int j=0; j<gs25Item.size(); j++){
+                                if(Integer.toString(gs25Item.get(j).getItemid()).equals(item_id)){
+                                    cartList.add(new CartItemModel(gs25Item.get(j).getImage(),gs25Item.get(j).getItemname(),storename));
+                                }
+                            }
+                        }else {
+                            for(int j=0; j<sevenItem.size(); j++){
+                                if(Integer.toString(sevenItem.get(j).getItemid()).equals(item_id)){
+                                    cartList.add(new CartItemModel(sevenItem.get(j).getImage(),sevenItem.get(j).getItemname(),storename));
+                                }
+                            }
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                for(CartItemModel a : cartList){
+                    System.out.println(a.getImageUrl());
+                }
+
+                //adapter.addItem("물건1", "", "gs");
+                //adapter.addItem("물건2", "", "gs");
+                //adapter.addItem("물건3", "", "gs");
+                //adapter.addItem("물건4", "", "gs");
+                //adapter.addItem("물건5", "", "gs");
+                //cartList.setAdapter(adapterCart);
+            }
+        };
+        CartRequest cartRequest = new CartRequest("mycartlist", SaveSharedPreference.getId(getActivity()), 0,"",responsListener);
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        queue.add(cartRequest);
+    }
 
 
 
