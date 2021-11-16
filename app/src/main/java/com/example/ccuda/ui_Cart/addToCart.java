@@ -287,7 +287,7 @@ public class addToCart extends Fragment {
     public void onItemClicked(int position) {
         //Toast.makeText(getContext(), "" +position, Toast.LENGTH_SHORT).show();
         final CartItemModel cartItemModel = itemList.get(position);
-        String storename = cartItemModel.getText1();
+        String storename = cartItemModel.getText2();
         int item_id = cartItemModel.getItemid();
 
         Response.Listener<String> responsListener = new Response.Listener<String>() {
