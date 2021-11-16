@@ -1,5 +1,7 @@
 package com.example.ccuda.SideMenu;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +9,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.ccuda.R;
+import com.example.ccuda.data.SaveSharedPreference;
+import com.example.ccuda.login_ui.LoginActivity;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.kakao.usermgmt.response.model.User;
+
+import java.util.ConcurrentModificationException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +27,7 @@ import com.example.ccuda.R;
  * create an instance of this fragment.
  */
 public class AppSettingsFragment extends Fragment {
+    Context context;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +73,43 @@ public class AppSettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment2_app_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment2_app_settings, container, false);
+        context = getActivity();
+        Button logout = view.findViewById(R.id.logout);
+        Button exit = view.findViewById(R.id.exit);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(SaveSharedPreference.getPassword(context).equals("")){
+                    Toast.makeText(context, "로그아웃", Toast.LENGTH_SHORT).show();
+                    UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                        @Override
+                        public void onCompleteLogout() {
+                            startActivity(new Intent(context,LoginActivity.class));
+                            getActivity().finish();
+                        }
+                    });
+                }else{
+                    SaveSharedPreference.clearSession(context);
+                    Toast.makeText(context, "로그아웃", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(context,LoginActivity.class));
+                    getActivity().finish();
+                }
+
+            }
+        });
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(SaveSharedPreference.getPassword(context).equals("")){
+                    //
+                }
+            }
+        });
+
+        return view;
     }
+
 }

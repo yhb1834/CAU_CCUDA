@@ -6,13 +6,15 @@ public class PeopleItem {
     String id;
     int resourceId; //프로필 사진
     String coupon_id;
+    String roomnum;
 
-    public PeopleItem(int resourceId, String nicname, String star,String id, String coupon_id) {
+    public PeopleItem(int resourceId, String nicname, String star,String id, String coupon_id, String roomnum) {
         this.resourceId = resourceId;
         this.nicname = nicname;
         this.star= star;
         this.id=id;
         this.coupon_id=coupon_id;
+        this.roomnum=roomnum;
     }
 
     public String getNicname() { return nicname; }
@@ -20,6 +22,7 @@ public class PeopleItem {
     public String getStar() { return star; }
     public int getResourceId() {return resourceId;}
     public String getCoupon_id() {return coupon_id;}
+    public String getRoomnum(){return roomnum;}
 
 
     public void setStar(String star) {

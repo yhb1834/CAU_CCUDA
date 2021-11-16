@@ -39,11 +39,12 @@ public class ChatFragment extends Fragment{
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     Context context;
     String destid;
+    String roomnum;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        }
+    }
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState){
@@ -67,7 +68,7 @@ public class ChatFragment extends Fragment{
             public void onItemClick(View a_view, int a_position) {
                 final PeopleItem item = PeopleItems.get(a_position);
                 Intent intent = new Intent(getActivity(),ChatRoomActivity.class);
-                intent.putExtra("roomnum",item.getCoupon_id()+SaveSharedPreference.getId(context)+item.getUserId());
+                intent.putExtra("roomnum",item.getRoomnum());
                 intent.putExtra("coupon_id",item.getCoupon_id());
                 intent.putExtra("destid",item.getUserId());
                 startActivity(intent);
@@ -95,31 +96,31 @@ public class ChatFragment extends Fragment{
                         String seller_nicname = object.getString("seller_nicname");
                         if (!buyer_nicname.equals(SaveSharedPreference.getNicname(context))) {
                             // 판매자일때 챗상대방
-                            //roomnum = coupon_id+SaveSharedPreference.getId(context)+buyer_id;
+                            roomnum = Integer.toString(coupon_id)+SaveSharedPreference.getId(context)+buyer_id;
                             destid = buyer_id;
                             double buyer_score = Double.parseDouble(object.getString("buyer_score"));
-                            PeopleItems.add(new PeopleItem(R.drawable.person, buyer_nicname, "별점" + buyer_score + "점",buyer_id,coupon_id+""));
+                            PeopleItems.add(new PeopleItem(R.drawable.person, buyer_nicname, "별점" + buyer_score + "점",buyer_id,coupon_id+"",roomnum));
 
                         } else {
                             // 구매자일때 챗상대방
-                            //roomnum = coupon_id+SaveSharedPreference.getId(context)+seller_id;
+                            roomnum = Integer.toString(coupon_id)+seller_id+SaveSharedPreference.getId(context);
                             destid = seller_id;
                             double seller_score = Double.parseDouble(object.getString("seller_score"));
-                           PeopleItems.add(new PeopleItem(R.drawable.person, seller_nicname, "별점" + seller_score + "점",seller_id,coupon_id+""));
+                            PeopleItems.add(new PeopleItem(R.drawable.person, seller_nicname, "별점" + seller_score + "점",seller_id,coupon_id+"",roomnum));
                         }
 
                         //ChatData chatData = new ChatData();
                         //chatData.users.put(String.valueOf(SaveSharedPreference.getId(context)),true);
                         //chatData.users.put(destid,true);
                         //chatData.users.put(coupon_id+"",true);
-                        //firebaseDatabase.getReference().child("chatrooms").child(coupon_id+SaveSharedPreference.getId(context)+destid).setValue(chatData); //(coupon_id + sellerid + destid)
+                        //firebaseDatabase.getReference().child("chatrooms").child(roomnum).setValue(chatData); //(coupon_id + sellerid + destid)
                     }
                     System.out.println(PeopleItems);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 for(int i=1;i<2;i++){
-                    PeopleItems.add(new PeopleItem(R.drawable.person,i+"번","별점 "+i+"점","",""));
+                    PeopleItems.add(new PeopleItem(R.drawable.person,i+"번","별점 "+i+"점","","","-1"));
                 }
 
                 mChatPeopleAdapter.setChatPeopleList(PeopleItems);
