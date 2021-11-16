@@ -211,7 +211,7 @@ public class HomeFragment extends Fragment {
 
 
                     for(CouponData a:CouponArrayList){
-                        adapter.addItem(a.getItem_name(), R.drawable.add, a.getStorename());
+                        adapter.addItem(a.getItem_name(), a.getImageurl(), a.getStorename());
                         System.out.println("itemname: "+a.getItem_name());
                     }
 

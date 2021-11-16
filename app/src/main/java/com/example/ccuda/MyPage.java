@@ -65,11 +65,11 @@ public class MyPage extends Fragment {
 
 
 
-        adapter.addItem("물건1", R.drawable.add, "gs");
-        adapter.addItem("물건2", R.drawable.add, "gs");
-        adapter.addItem("물건3", R.drawable.add, "gs");
-        adapter.addItem("물건4", R.drawable.add, "gs");
-        adapter.addItem("물건5", R.drawable.add, "gs");
+        adapter.addItem("물건1", "", "gs");
+        adapter.addItem("물건2", "", "gs");
+        adapter.addItem("물건3", "", "gs");
+        adapter.addItem("물건4", "", "gs");
+        adapter.addItem("물건5", "", "gs");
         cartList.setAdapter(adapter);
 
 

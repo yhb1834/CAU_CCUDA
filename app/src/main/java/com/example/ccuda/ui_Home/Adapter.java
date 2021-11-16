@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 
 import java.util.ArrayList;
@@ -53,11 +54,15 @@ public class Adapter extends BaseAdapter {
         productData listViewProduct=listViewProductList.get(position);
 
         nameTextView.setText(listViewProduct.getProductName());
-        iconImageView.setImageResource(listViewProduct.getPhoto());
+        if(listViewProduct.getPhoto()=="" || listViewProduct.getPhoto()==null){
+            iconImageView.setImageResource(R.drawable.add);
+        }else{
+            Glide.with(convertView).load(listViewProduct.getPhoto()).into(iconImageView);
+        }
         storeTextView.setText(listViewProduct.getConvenientStore());
         return  convertView;
     }
-    public void addItem(String name, int icon, String store){
+    public void addItem(String name, String icon, String store){
         productData product=new productData();
 
         product.setProductName(name);
