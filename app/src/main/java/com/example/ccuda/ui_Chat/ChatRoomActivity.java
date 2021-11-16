@@ -1,16 +1,23 @@
 package com.example.ccuda.ui_Chat;
 
+import static android.view.View.*;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatRoomActivity extends AppCompatActivity {
     ImageButton sendbtn;
+
     EditText et;
     ListView listView;
 
@@ -48,6 +56,10 @@ public class ChatRoomActivity extends AppCompatActivity {
     String destid;
     String coupon_id;
     String chatRoomUid;
+
+
+    String[] items = {"","나만의 냉장고", "포켓CU"};
+    ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,13 +114,50 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+
         });
+
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        Spinner openApp = (Spinner) findViewById(R.id.otherApp);
+        openApp.setAdapter(arrayAdapter);
+        openApp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected (AdapterView<?> parent, View view,int position, long id){
+                //Toast.makeText(getApplicationContext(),items[position] , Toast.LENGTH_LONG).show();
+                switch (position) {
+                    case 1:
+                        String packageName = "com.gsr.gs25";
+                        Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        packageName = "com.bgfcu.membership"; ///com.gsretail.android.thepop.activity.splash.SplashActivity";
+                        intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
+                        startActivity(intent);
+                        break;
+                }
+
+            }
+            @Override
+            public void onNothingSelected (AdapterView < ? > parent){
+            }
+
+        });
+
+
+        /*openApp.setOnClickListener(new OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String packageName = "com.gsr.gs25/com.gsretail.android.thepop.activity.splash.SplashActivity";
+                Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
+                startActivity(intent);
+            }
+        });*/
 
     }
 
-    //qString packageName = "com.gsr.gs25/com.gsretail.android.thepop.activity.splash.SplashActivity";
-    //Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-    //startActivity(intent);
 
     public void clickSend(View view){
         if(!et.getText().toString().equals("")){

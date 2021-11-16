@@ -26,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:textSize="18sp"
         android:text="@string/user_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:drawableLeft="@drawable/ic_baseline_create_24"
@@ -35,6 +36,7 @@
         android:id="@+id/mypage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="24sp"
         android:text="@string/text_mypage"
         android:drawableLeft="@drawable/ic_baseline_home_24"
         android:drawablePadding="1dp"/>

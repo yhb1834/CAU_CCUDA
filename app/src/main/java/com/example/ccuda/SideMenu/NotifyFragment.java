@@ -1,5 +1,6 @@
 package com.example.ccuda.SideMenu;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import com.example.ccuda.data.SaveSharedPreference;
 
 import com.example.ccuda.R;
 
@@ -16,7 +19,7 @@ import com.example.ccuda.R;
  * create an instance of this fragment.
  */
 public class NotifyFragment extends Fragment {
-
+/*
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,14 +33,14 @@ public class NotifyFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
+    *//**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
      * @return A new instance of fragment NotifyFragment.
-     */
+     *//*
     // TODO: Rename and change types and number of parameters
     public static NotifyFragment newInstance(String param1, String param2) {
         NotifyFragment fragment = new NotifyFragment();
@@ -55,12 +58,19 @@ public class NotifyFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-    }
+    }*/
+
+    private TextView myID;
+    Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment2_notify, container, false);
+        View v = inflater.inflate(R.layout.fragment2_notify, container, false);
+        myID = v.findViewById(R.id.notify_myID);
+        context = getActivity();
+        myID.setText(SaveSharedPreference.getNicname(context));
+        return v;
     }
 }
