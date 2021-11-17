@@ -50,6 +50,7 @@ import com.example.ccuda.SideMenu.AppSettingsFragment;
 import com.example.ccuda.SideMenu.GetcouponFragment;
 import com.example.ccuda.SideMenu.NotifyFragment;
 import com.example.ccuda.SideMenu.UploadarticlesFragment;
+import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
@@ -67,8 +68,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -82,8 +86,15 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity {
+    public static ArrayList<ItemData> cuItem = new ArrayList<>();
+    public static ArrayList<ItemData> gs25Item = new ArrayList<>();
+    public static ArrayList<ItemData> sevenItem = new ArrayList<>();
     //profile image
     Uri imgUri;
+    //firebase 객체
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference itemref;
+
     private ImageView profile;
     private String newnicname;
     //private ListView listView;
@@ -137,6 +148,8 @@ public class HomeActivity extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById((R.id.bottom_navigation));
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        load_item();
 
         fragmentHome = new HomeFragment();
         fragmentRecipe = new RecipeFragment();
@@ -356,6 +369,57 @@ public class HomeActivity extends AppCompatActivity {
                         Toast.makeText(HomeActivity.this, "프로필 저장 완료", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+    }
+
+    private void load_item(){
+        firebaseDatabase= FirebaseDatabase.getInstance();
+        itemref= firebaseDatabase.getReference();
+
+        itemref.child("item").child("cu").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ItemData itemData = snapshot.getValue(ItemData.class);
+                    cuItem.add(itemData);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        itemref.child("item").child("gs25").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ItemData itemData = snapshot.getValue(ItemData.class);
+                    gs25Item.add(itemData);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        itemref.child("item").child("seven").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ItemData itemData = snapshot.getValue(ItemData.class);
+                    sevenItem.add(itemData);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }

@@ -99,9 +99,9 @@ public class UploadCoupon extends Fragment {
     public static ArrayList<String> test=new ArrayList<String>();
     FirebaseDatabase firebaseDatabase;
     DatabaseReference itemRef;
-    ArrayList<ItemData> cuItem = new ArrayList<>();
-    ArrayList<ItemData> gs25Item = new ArrayList<>();
-    ArrayList<ItemData> sevenItem = new ArrayList<>();
+    ArrayList<ItemData> cuItem = HomeActivity.cuItem;
+    ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
+    ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
     ArrayList<String> cuImageReturn = new ArrayList<>();
     ArrayList<String> gsImageReturn = new ArrayList<>();
     ArrayList<String> sevenImageReturn = new ArrayList<>();
@@ -256,9 +256,6 @@ public class UploadCoupon extends Fragment {
                         .show();
             }
         });
-
-        load_item();
-
 
 
         uploadButton=v.findViewById(R.id.uploadbutton);
@@ -552,99 +549,6 @@ public class UploadCoupon extends Fragment {
             }
         }).start();
     }
-
-    public void load_item(){
-        firebaseDatabase= FirebaseDatabase.getInstance();
-        itemRef= firebaseDatabase.getReference();
-
-        itemRef.child("item").child("cu").addChildEventListener(new ChildEventListener() {
-            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                cuItem.add(itemData);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        itemRef.child("item").child("gs25").addChildEventListener(new ChildEventListener() {
-            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                gs25Item.add(itemData);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        itemRef.child("item").child("seven").addChildEventListener(new ChildEventListener() {
-            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                sevenItem.add(itemData);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
 
     protected int getitem_id(String storename,String itemname){
         int itemid=0;

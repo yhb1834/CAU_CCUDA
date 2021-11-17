@@ -39,6 +39,7 @@ import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.CartRequest;
 import com.example.ccuda.ui_Home.Adapter;
+import com.example.ccuda.ui_Home.HomeActivity;
 import com.example.ccuda.ui_Home.UploadCoupon;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -58,9 +59,9 @@ public class addToCart extends Fragment {
     SearchView searchView;
     RecyclerView recyclerView;
     TextView textView;
-    ArrayList<ItemData> cuItem = new ArrayList<>();
-    ArrayList<ItemData> gs25Item = new ArrayList<>();
-    ArrayList<ItemData> sevenItem = new ArrayList<>();
+    ArrayList<ItemData> cuItem = HomeActivity.cuItem;
+    ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
+    ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference itemRef;
 
@@ -136,113 +137,8 @@ public class addToCart extends Fragment {
         return view;
     }
 
-
-    public void load_item(){
-        firebaseDatabase= FirebaseDatabase.getInstance();
-        itemRef= firebaseDatabase.getReference();
-
-        itemRef.child("item").child("cu").addChildEventListener(new ChildEventListener() {
-            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                itemList.add(new CartItemModel(itemData.getImage(), itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
-                //System.out.println("haha1: "+itemData);
-                cuItem.add(itemData);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        itemRef.child("item").child("gs25").addChildEventListener(new ChildEventListener() {
-            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                itemList.add(new CartItemModel(itemData.getImage(), itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
-                //System.out.println("haha2: "+itemData);
-                gs25Item.add(itemData);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        itemRef.child("item").child("seven").addChildEventListener(new ChildEventListener() {
-            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                itemList.add(new CartItemModel(itemData.getImage(), itemData.getItemname(), itemData.getStorename(), itemData.getItemid()));
-                //System.out.println("haha3: "+itemData);
-                sevenItem.add(itemData);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-
-
-
-
     public void fillData() {
         //itemList = new ArrayList<>(); //샘플테이터
-        load_item();
         for(int i=0;i<cuItem.size();i++){
             itemList.add(new CartItemModel(cuItem.get(i).getImage(), cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
 
@@ -281,7 +177,6 @@ public class addToCart extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         //itemList = new ArrayList<>(); //샘플테이터
-        load_item();
         //fillData();
         adapter = new CartItemAdapter(itemList);
         recyclerView.setLayoutManager(layoutManager);

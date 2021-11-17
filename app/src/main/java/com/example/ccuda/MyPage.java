@@ -26,6 +26,7 @@ import com.example.ccuda.db.CartRequest;
 import com.example.ccuda.ui_Cart.CartItemModel;
 import com.example.ccuda.ui_Cart.addToCart;
 import com.example.ccuda.ui_Home.Adapter;
+import com.example.ccuda.ui_Home.HomeActivity;
 import com.example.ccuda.ui_Home.UploadCoupon;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,11 +44,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class MyPage extends Fragment {
-    private ArrayList<ItemData> cuItem = new ArrayList<>();
-    private ArrayList<ItemData> gs25Item = new ArrayList<>();
-    private ArrayList<ItemData> sevenItem = new ArrayList<>();
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference cartref;
+    private ArrayList<ItemData> cuItem = HomeActivity.cuItem;
+    private ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
+    private ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
     private TextView mypagetv;
     private ImageView mypageiv;
     Context context;
@@ -92,7 +91,6 @@ public class MyPage extends Fragment {
         });
 
 
-        load_item();
         laod_MyCartList();
         addCart=view.findViewById(R.id.add_to_cart_button);
         addCart.setOnClickListener(new View.OnClickListener() {
@@ -158,57 +156,6 @@ public class MyPage extends Fragment {
         CartRequest cartRequest = new CartRequest("mycartlist", SaveSharedPreference.getId(context), 0,"",responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(cartRequest);
-    }
-
-    public void load_item(){
-        firebaseDatabase= FirebaseDatabase.getInstance();
-        cartref= firebaseDatabase.getReference();
-
-        cartref.child("item").child("cu").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ItemData itemData = snapshot.getValue(ItemData.class);
-                    cuItem.add(itemData);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-        cartref.child("item").child("gs25").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ItemData itemData = snapshot.getValue(ItemData.class);
-                    gs25Item.add(itemData);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        cartref.child("item").child("seven").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ItemData itemData = snapshot.getValue(ItemData.class);
-                    sevenItem.add(itemData);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
 }
