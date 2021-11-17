@@ -61,7 +61,12 @@ public class SaveSharedPreference {
         editor.putString(PREF_USER_NICNAME, nicname);
         editor.commit();
     }
-    // 로그아웃 세션션 clear
+    public static void setPrefUserEmail(Context context, String email){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString(PREF_USER_EMAIL,email);
+        editor.commit();
+    }
+    // 세션션 clear
     public static void clearSession(Context context){
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.clear();

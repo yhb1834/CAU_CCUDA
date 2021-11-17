@@ -43,7 +43,7 @@ import java.util.Calendar;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatRoomActivity extends AppCompatActivity {
-    ImageButton sendbtn;
+    Button finish;
 
     EditText et;
     ListView listView;
@@ -155,6 +155,14 @@ public class ChatRoomActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });*/
+
+        finish = findViewById(R.id.finish);
+        finish.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              // TODO: 거래완료
+            }
+        });
 
     }
 

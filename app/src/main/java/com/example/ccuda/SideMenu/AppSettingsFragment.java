@@ -5,19 +5,31 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.example.ccuda.R;
+import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.SaveSharedPreference;
+import com.example.ccuda.db.ChatRequest;
+import com.example.ccuda.db.MypageRequest;
 import com.example.ccuda.login_ui.LoginActivity;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.response.model.User;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ConcurrentModificationException;
 
@@ -105,6 +117,39 @@ public class AppSettingsFragment extends Fragment {
             public void onClick(View view) {
                 if(SaveSharedPreference.getPassword(context).equals("")){
                     //
+                }else{
+                    Response.Listener<String> responsListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                Boolean success = jsonObject.getBoolean("success");
+                                if(success){
+                                    Toast.makeText(context,"회원탈퇴",Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(context,LoginActivity.class));
+                                    getActivity().finish();
+                                }else {
+                                    String check = jsonObject.getString("check");
+
+                                    // TODO: 탈퇴불가 이후 동작
+                                    if(check.equals("report")){
+                                        Log.d("exit",": "+jsonObject.getString("reportdate")+" 자로 신고된 건 처리중 탈퇴 불가");
+                                        //
+                                    }
+                                    else if(check.equals("deal")){
+                                        Log.d("exit",": 거래중 탈퇴 불가");
+                                        //
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    MypageRequest mypageRequest = new MypageRequest("exit", SaveSharedPreference.getId(context),"",responsListener);
+                    RequestQueue queue = Volley.newRequestQueue(context);
+                    queue.add(mypageRequest);
+
                 }
             }
         });
