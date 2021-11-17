@@ -23,12 +23,6 @@ import com.example.ccuda.data.RecipeItem;
 import com.kakao.network.ErrorResult;
 import com.kakao.util.KakaoParameterException;
 import com.kakao.util.helper.log.Logger;
-import com.kakao.kakaolink.v2.KakaoLinkResponse;
-import com.kakao.kakaolink.v2.KakaoLinkService;
-import com.kakao.message.template.ButtonObject;
-import com.kakao.message.template.ContentObject;
-import com.kakao.message.template.FeedTemplate;
-import com.kakao.message.template.LinkObject;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 
