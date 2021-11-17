@@ -24,8 +24,11 @@ import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.ChatRequest;
 import com.example.ccuda.db.MypageRequest;
 import com.example.ccuda.login_ui.LoginActivity;
+import com.kakao.network.ApiErrorCode;
+import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import com.kakao.usermgmt.response.model.User;
 
 import org.json.JSONArray;
@@ -95,6 +98,7 @@ public class AppSettingsFragment extends Fragment {
             public void onClick(View view) {
                 if(SaveSharedPreference.getPassword(context).equals("")){
                     Toast.makeText(context, "로그아웃", Toast.LENGTH_SHORT).show();
+                    SaveSharedPreference.setPrefUserEmail(context,"");
                     UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
                         @Override
                         public void onCompleteLogout() {
@@ -115,46 +119,75 @@ public class AppSettingsFragment extends Fragment {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(SaveSharedPreference.getPassword(context).equals("")){
-                    //
-                }else{
-                    Response.Listener<String> responsListener = new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                Boolean success = jsonObject.getBoolean("success");
-                                if(success){
-                                    Toast.makeText(context,"회원탈퇴",Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(context,LoginActivity.class));
-                                    getActivity().finish();
-                                }else {
-                                    String check = jsonObject.getString("check");
+                Response.Listener<String> responsListener = new Response.Listener<String>() {
+                    @Override
+                       public void onResponse(String response) {
+                           try {
+                               JSONObject jsonObject = new JSONObject(response);
+                               Boolean success = jsonObject.getBoolean("success");
+                               if(success){
+                                   Toast.makeText(context,"회원탈퇴",Toast.LENGTH_SHORT).show();
+                                   if(SaveSharedPreference.getPassword(context).equals("")){
+                                       kakaosignout();
+                                   }
+                                   else{
+                                       startActivity(new Intent(context,LoginActivity.class));
+                                       getActivity().finish();
+                                   }
+                               }else {
+                                   String check = jsonObject.getString("check");
 
-                                    // TODO: 탈퇴불가 이후 동작
-                                    if(check.equals("report")){
-                                        Log.d("exit",": "+jsonObject.getString("reportdate")+" 자로 신고된 건 처리중 탈퇴 불가");
-                                        //
-                                    }
-                                    else if(check.equals("deal")){
-                                        Log.d("exit",": 거래중 탈퇴 불가");
-                                        //
-                                    }
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-                    MypageRequest mypageRequest = new MypageRequest("exit", SaveSharedPreference.getId(context),"",responsListener);
-                    RequestQueue queue = Volley.newRequestQueue(context);
-                    queue.add(mypageRequest);
+                                   // TODO: 탈퇴불가 이후 동작
+                                   if(check.equals("report")){
+                                       Log.d("exit",": "+jsonObject.getString("reportdate")+" 자로 신고된 건 처리중 탈퇴 불가");
+                                       //
+                                   }
+                                   else if(check.equals("deal")){
+                                       Log.d("exit",": 거래중 탈퇴 불가");
+                                       //
+                                   }
+                               }
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                           }
+                       }
+                   };
+                   MypageRequest mypageRequest = new MypageRequest("exit", SaveSharedPreference.getId(context),"",responsListener);
+                   RequestQueue queue = Volley.newRequestQueue(context);
+                   queue.add(mypageRequest);
 
-                }
             }
+
         });
 
         return view;
+    }
+
+    private void kakaosignout(){
+        UserManagement.getInstance()
+                .requestUnlink(new UnLinkResponseCallback() {
+                    @Override
+                    public void onSessionClosed(ErrorResult errorResult) {
+                        Toast.makeText(context, "에러: "+errorResult+"로그인 세션이 닫혔습니다.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public  void onFailure(ErrorResult errorResult) {
+                        int error = errorResult.getErrorCode();
+                        if(error == ApiErrorCode.CLIENT_ERROR_CODE) {
+                            Toast.makeText(context, "에러: "+error+"\n네트워크 연결이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "에러: "+error+"\n회원 탈퇴에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onSuccess(Long result) {
+                        Toast.makeText(context, "성공: "+result+"\n회원 탈퇴 되었습니다.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                });
     }
 
 }

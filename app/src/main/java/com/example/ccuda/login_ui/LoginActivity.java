@@ -213,7 +213,7 @@ public class LoginActivity extends AppCompatActivity {
                                     long p_id = result.getId();
                                     String p_email = kakaoAccount.getEmail();
                                     if (p_email == null)    p_email="";
-                                    getUserInfo(TAG_KAKAO_LOGIN,p_id,p_email,"",null    ,LoginActivity.this);
+                                    getUserInfo(TAG_KAKAO_LOGIN,p_id,p_email,"", null,LoginActivity.this);
 
                                 } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
                                     // 동의 요청 후 프로필 정보 획득 가능

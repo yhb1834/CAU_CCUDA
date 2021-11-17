@@ -71,6 +71,13 @@ public class NotifyFragment extends Fragment {
         myID = v.findViewById(R.id.notify_myID);
         context = getActivity();
         myID.setText(SaveSharedPreference.getNicname(context));
+
+
+
         return v;
+    }
+
+    private void clickreport(){
+
     }
 }
