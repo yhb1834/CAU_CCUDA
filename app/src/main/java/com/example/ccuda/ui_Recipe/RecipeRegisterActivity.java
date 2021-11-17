@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.ccuda.R;
+import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.ui_Home.HomeActivity;
 import com.google.android.gms.tasks.Continuation;
@@ -35,7 +36,9 @@ import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,9 +47,13 @@ public class RecipeRegisterActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private FirebaseDatabase firebaseDatabase;
 
+    // 각 편의점 상품 객체 리스트
+    private ArrayList<ItemData> cuItem = HomeActivity.cuItem;
+    private ArrayList<ItemData> gsItem = HomeActivity.gs25Item;
+    private ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
+
     ArrayList<Uri> uriList = new ArrayList<>();     // 이미지의 uri를 담을 ArrayList 객체
-    ArrayList<String> urlList = new ArrayList<>();  // 이미지 절대경로 담을 객체
-    ArrayList<String> itemList = new ArrayList<>(); // 상품명 담을 객체
+    ArrayList<String> itemList = new ArrayList<>(); // 고른 상품명 담을 객체
 
 
     RecyclerView recyclerView;  // 이미지를 보여줄 리사이클러뷰
@@ -88,7 +95,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String title = edit_title.getText().toString();
                 String content = edit_Content.getText().toString();
-                String storename = "";
+                String storename;
                 //clickregister(title, storename, content);
             }
         });
@@ -126,10 +133,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         Uri imageUri = clipData.getItemAt(i).getUri();  // 선택한 이미지들의 uri를 가져온다.
                         try {
                             uriList.add(imageUri);  //uri를 list에 담는다.
-
-                            // 절대경로를 구해 list에 담음
-                            urlList.add(getRealPathFromUrl(imageUri));
-
 
                         } catch (Exception e) {
                             Log.e(TAG, "File select error", e);
@@ -179,37 +182,37 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
     }*/
 
-    // 절대경로 구하기
-    private String getRealPathFromUrl(Uri uri){
-        String[] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader cursorLoader = new CursorLoader(this, uri, proj, null, null, null);
-        Cursor cursor = cursorLoader.loadInBackground();
-
-        int colindex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String imgurl = cursor.getString(colindex);
-        cursor.close();
-        return imgurl;
-    }
-
     private void clickregister(String title, String storename,String content){
-        for(int j=0; j<urlList.size(); j++){
-            uploadimg(j,urlList.get(j),title);
+        itemList.add("1");
+        itemList.add("2");
+        for(int j=0; j<uriList.size(); j++){
+            uploadimg(uriList.get(j),title,j);
         }
         for(int j=0; j<itemList.size(); j++){
             firebaseDatabase.getReference().child("Recipe").child(title).child("item").push().setValue(itemList.get(j));
         }
+        RecipeDTO recipeDTO = new RecipeDTO();
+        recipeDTO.setTitle(title);
+        recipeDTO.setStorename(storename);
+        recipeDTO.setContent(content);
+        recipeDTO.setWriter_id(Long.toString(SaveSharedPreference.getId(this)));
+
+        firebaseDatabase.getReference().child("Recipe").child(title).push().setValue(recipeDTO);
+
+        //TODO: 레시피 등록 완료 후 동작
+
+
     }
 
     // firebase에 파일 및 이미지 저장
-    private void uploadimg(int index, String url, String title) {
+    private void uploadimg( Uri uri, String title, int index) {
         try{
-            StorageReference storageReference = storage.getReference();
+            String fileName= title+index+".png";
 
-            Uri file = Uri.fromFile(new File(url));
-            final StorageReference imgRef = storageReference.child("images/"+file.getLastPathSegment());
+            FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+            final StorageReference imgRef= firebaseStorage.getReference("recipeImages/"+fileName);
 
-            UploadTask uploadTask = imgRef.putFile(file);
+            UploadTask uploadTask= imgRef.putFile(uri);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -220,13 +223,11 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             //파라미터로 firebase의 저장소에 저장되어 있는
                             //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
-                            firebaseDatabase.getReference().child("Recipe").child(title).child("image").push().setValue(uri.toString());
-                            urlList.set(index, uri.toString());
+                            firebaseDatabase.getReference().child("Recipe").child(title).child("images").push().setValue(uri.toString());
                         }
                     });
                 }
             });
-
         }catch (NullPointerException e){
             e.printStackTrace();
         }
