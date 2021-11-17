@@ -4,14 +4,31 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.SaveSharedPreference;
 
 import com.example.ccuda.R;
+import com.example.ccuda.db.ChatRequest;
+import com.example.ccuda.db.ReportRequest;
+import com.google.firebase.database.core.Repo;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +36,7 @@ import com.example.ccuda.R;
  * create an instance of this fragment.
  */
 public class NotifyFragment extends Fragment {
+    ArrayList<String> cheaterlist = new ArrayList<>();
 /*
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,7 +79,9 @@ public class NotifyFragment extends Fragment {
     }*/
 
     private TextView myID;
+    private Button btn_report;
     Context context;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,15 +89,69 @@ public class NotifyFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment2_notify, container, false);
         myID = v.findViewById(R.id.notify_myID);
+        btn_report = v.findViewById(R.id.btn_report);
+
         context = getActivity();
         myID.setText(SaveSharedPreference.getNicname(context));
 
+        getcheaterlist();
 
+
+        btn_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String cheater_name = "";
+                String content = "";
+                // TODO: get cheater_name, content
+                if(!content.equals(""))
+                    clickreport(cheater_name, content);
+            }
+        });
 
         return v;
     }
 
-    private void clickreport(){
+    private void clickreport(String cheater_name, String content){
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Toast.makeText(context,"신고접수 완료",Toast.LENGTH_SHORT).show();
+                    // TODO: 신고접수완료 후 동작
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        ReportRequest reportRequest = new ReportRequest("report", SaveSharedPreference.getId(context)+"",cheater_name,content,responsListener);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(reportRequest);
 
     }
+
+    private void getcheaterlist(){
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("cheaterlist");
+                    int length = jsonArray.length();
+                    for(int i = 0; i<length; i++){
+                        JSONObject object = jsonArray.getJSONObject(i);
+                        cheaterlist.add(object.getString("nicname"));
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        ReportRequest reportRequest = new ReportRequest("cheaterlist", SaveSharedPreference.getId(context)+"","","",responsListener);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(reportRequest);
+    }
+
+
 }
