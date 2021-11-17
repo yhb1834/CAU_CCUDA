@@ -128,9 +128,11 @@ public class AppSettingsFragment extends Fragment {
                                if(success){
                                    Toast.makeText(context,"회원탈퇴",Toast.LENGTH_SHORT).show();
                                    if(SaveSharedPreference.getPassword(context).equals("")){
+                                       SaveSharedPreference.clearSession(context);
                                        kakaosignout();
                                    }
                                    else{
+                                       SaveSharedPreference.clearSession(context);
                                        startActivity(new Intent(context,LoginActivity.class));
                                        getActivity().finish();
                                    }
