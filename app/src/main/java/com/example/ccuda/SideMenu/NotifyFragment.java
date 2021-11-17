@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,7 +84,7 @@ public class NotifyFragment extends Fragment {
     private TextView myID;
     private Button btn_report;
     Context context;
-
+    ArrayAdapter<String> arrayAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,15 +92,36 @@ public class NotifyFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment2_notify, container, false);
         myID = v.findViewById(R.id.notify_myID);
-        btn_report = v.findViewById(R.id.btn_report);
+        //btn_report = v.findViewById(R.id.btn_report);
 
         context = getActivity();
         myID.setText(SaveSharedPreference.getNicname(context));
 
         getcheaterlist();
 
+        arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, cheaterlist);
+        Spinner btn_report = (Spinner) v.findViewById(R.id.notify_spinner);
+        btn_report.setAdapter(arrayAdapter);
+        btn_report.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                /*String cheater_name = "";
+                String content = "";
+                // TODO: get cheater_name, content
+                if(!content.equals(""))
+                    clickreport(cheater_name, content);*/
+                //String notify;
+                //notify = cheaterlist.get(position);
+                String notify =  btn_report.getSelectedItem().toString();
+            }
 
-        btn_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        /*btn_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String cheater_name = "";
@@ -106,7 +130,7 @@ public class NotifyFragment extends Fragment {
                 if(!content.equals(""))
                     clickreport(cheater_name, content);
             }
-        });
+        });*/
 
         return v;
     }

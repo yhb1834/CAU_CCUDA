@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="20dp">
 
 
     <LinearLayout
@@ -14,8 +15,8 @@
 
         <ImageView
             android:id="@+id/upload_photo"
-            android:layout_width="109dp"
-            android:layout_height="124dp"
+            android:layout_width="67dp"
+            android:layout_height="77dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:src="@drawable/add">
@@ -36,12 +37,19 @@
             android:textSize="20dp"
             android:layout_margin="10dp">
         </TextView>
-        <Spinner
-            android:id="@+id/spinner1"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
-        </Spinner>
+            android:background="@drawable/corner_shape">
+
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_margin="10dp"
+                android:paddingLeft="10dp"></Spinner>
+        </FrameLayout>
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,12 +64,19 @@
             android:textSize="20dp"
             android:layout_margin="10dp">
         </TextView>
-        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-            android:id="@+id/searchProd"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
-        </com.toptoche.searchablespinnerlibrary.SearchableSpinner>
+            android:background="@drawable/corner_shape">
+
+            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                android:id="@+id/notify_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_margin="10dp"
+                android:paddingLeft="3dp"></com.toptoche.searchablespinnerlibrary.SearchableSpinner>
+        </FrameLayout>
+
         <TextView
             android:id="@+id/resultView"
             android:layout_width="match_parent"

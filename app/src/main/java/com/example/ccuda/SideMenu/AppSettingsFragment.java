@@ -1,6 +1,8 @@
 package com.example.ccuda.SideMenu;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -96,68 +98,14 @@ public class AppSettingsFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(SaveSharedPreference.getPassword(context).equals("")){
-                    Toast.makeText(context, "로그아웃", Toast.LENGTH_SHORT).show();
-                    SaveSharedPreference.setPrefUserEmail(context,"");
-                    UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-                        @Override
-                        public void onCompleteLogout() {
-                            startActivity(new Intent(context,LoginActivity.class));
-                            getActivity().finish();
-                        }
-                    });
-                }else{
-                    SaveSharedPreference.clearSession(context);
-                    Toast.makeText(context, "로그아웃", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(context,LoginActivity.class));
-                    getActivity().finish();
-                }
-
+                showdialog_logout();
             }
         });
 
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Response.Listener<String> responsListener = new Response.Listener<String>() {
-                    @Override
-                       public void onResponse(String response) {
-                           try {
-                               JSONObject jsonObject = new JSONObject(response);
-                               Boolean success = jsonObject.getBoolean("success");
-                               if(success){
-                                   Toast.makeText(context,"회원탈퇴",Toast.LENGTH_SHORT).show();
-                                   if(SaveSharedPreference.getPassword(context).equals("")){
-                                       SaveSharedPreference.clearSession(context);
-                                       kakaosignout();
-                                   }
-                                   else{
-                                       SaveSharedPreference.clearSession(context);
-                                       startActivity(new Intent(context,LoginActivity.class));
-                                       getActivity().finish();
-                                   }
-                               }else {
-                                   String check = jsonObject.getString("check");
-
-                                   // TODO: 탈퇴불가 이후 동작
-                                   if(check.equals("report")){
-                                       Log.d("exit",": "+jsonObject.getString("reportdate")+" 자로 신고된 건 처리중 탈퇴 불가");
-                                       //
-                                   }
-                                   else if(check.equals("deal")){
-                                       Log.d("exit",": 거래중 탈퇴 불가");
-                                       //
-                                   }
-                               }
-                           } catch (Exception e) {
-                               e.printStackTrace();
-                           }
-                       }
-                   };
-                   MypageRequest mypageRequest = new MypageRequest("exit", SaveSharedPreference.getId(context),"",responsListener);
-                   RequestQueue queue = Volley.newRequestQueue(context);
-                   queue.add(mypageRequest);
-
+                showdialog_exit();
             }
 
         });
@@ -165,6 +113,93 @@ public class AppSettingsFragment extends Fragment {
         return view;
     }
 
+    void showdialog_logout(){
+        AlertDialog.Builder msgBuilder = new AlertDialog.Builder(getContext())
+                .setTitle("로그아웃")
+                .setMessage("정말 로그아웃하시겠습니까?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(SaveSharedPreference.getPassword(context).equals("")){
+                            Toast.makeText(context, "로그아웃", Toast.LENGTH_SHORT).show();
+                            SaveSharedPreference.setPrefUserEmail(context,"");
+                            UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                                @Override
+                                public void onCompleteLogout() {
+                                    startActivity(new Intent(context,LoginActivity.class));
+                                    getActivity().finish();
+                                }
+                            });
+                        }else{
+                            SaveSharedPreference.clearSession(context);
+                            Toast.makeText(context, "로그아웃", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(context,LoginActivity.class));
+                            getActivity().finish();
+                        }
+                    }
+                });
+        AlertDialog msgDlg = msgBuilder.create();
+        msgDlg.show();
+    }
+
+    void showdialog_exit(){
+        AlertDialog.Builder msgBuilder =new AlertDialog.Builder(getContext())
+                .setTitle("회원 탈퇴")
+                .setMessage("정말 쁠원을 탈퇴하시겠습니까?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Response.Listener<String> responsListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    Boolean success = jsonObject.getBoolean("success");
+                                    if(success){
+                                        Toast.makeText(context,"회원탈퇴",Toast.LENGTH_SHORT).show();
+                                        if(SaveSharedPreference.getPassword(context).equals("")){
+                                            SaveSharedPreference.clearSession(context);
+                                            kakaosignout();
+                                        }
+                                        else{
+                                            SaveSharedPreference.clearSession(context);
+                                            startActivity(new Intent(context,LoginActivity.class));
+                                            getActivity().finish();
+                                        }
+                                    }else {
+                                        String check = jsonObject.getString("check");
+
+                                        // TODO: 탈퇴불가 이후 동작
+                                        if(check.equals("report")){
+                                            Log.d("exit",": "+jsonObject.getString("reportdate")+" 자로 신고된 건 처리중 탈퇴 불가");
+                                            //
+                                        }
+                                        else if(check.equals("deal")){
+                                            Log.d("exit",": 거래중 탈퇴 불가");
+                                            //
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        MypageRequest mypageRequest = new MypageRequest("exit", SaveSharedPreference.getId(context),"",responsListener);
+                        RequestQueue queue = Volley.newRequestQueue(context);
+                        queue.add(mypageRequest);
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        AlertDialog msgDlg = msgBuilder.create();
+        msgDlg.show();
+
+    }
     private void kakaosignout(){
         UserManagement.getInstance()
                 .requestUnlink(new UnLinkResponseCallback() {

@@ -30,6 +30,7 @@
             android:layout_alignParentRight="true"
             android:backgroundTint="@color/white"
             android:src="@drawable/favorite"
+            android:background="@android:color/transparent"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView

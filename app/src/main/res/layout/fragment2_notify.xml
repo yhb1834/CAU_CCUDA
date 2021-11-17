@@ -5,81 +5,102 @@
     android:layout_height="match_parent"
     tools:context=".SideMenu.NotifyFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="663dp"
-        android:padding="20dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="59dp"
-                android:layout_height="match_parent"
-
-                android:gravity="center_vertical"
-                android:text="신고인 "
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/notify_myID"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="@string/com_kakao_profile_userId" />
-
-        </LinearLayout>
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="20dp">
 
-            <TextView
-                android:id="@+id/textView11"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:gravity="bottom"
-                android:text="신고 대상 선택"
+                android:layout_height="80dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="59dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="신고인 "
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/notify_myID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/com_kakao_profile_userId" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:text="신고 대상 선택"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/corner_shape">
+
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                    android:id="@+id/notify_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_margin="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    tools:ignore="SpeakableTextPresentCheck"></com.toptoche.searchablespinnerlibrary.SearchableSpinner>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/MultiLine2"
+                android:layout_width="match_parent"
+                android:layout_height="380dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:background="@drawable/corner_shape"
+                android:padding="20dp"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:hint="신고 사유를 입력하세요 "
+                android:inputType="textMultiLine"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <Button
+                android:id="@+id/btn_report"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/orange"
+                android:gravity="center"
+                android:text="신고하기" />
 
         </LinearLayout>
+    </ScrollView>
 
-        <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:minHeight="48dp"
-            tools:ignore="SpeakableTextPresentCheck"></Spinner>
-
-        <EditText
-            android:id="@+id/MultiLine2"
-            android:layout_width="match_parent"
-            android:layout_height="316dp"
-            android:layout_marginBottom="10dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:hint="신고 사유를 입력하세요 "
-            android:inputType="textMultiLine"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-        <Button
-            android:id="@+id/btn_report"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:backgroundTint="@color/orange"
-            android:gravity="center"
-            android:text="신고하기" />
-
-    </LinearLayout>
 </FrameLayout>
