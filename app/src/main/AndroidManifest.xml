@@ -59,6 +59,7 @@
         <activity android:name=".login_ui.FindpasswordActivity" />
         <activity android:name=".login_ui.RecreatepasswordActivity" />
         <activity android:name=".ui_Chat.ChatRoomActivity" />
+        <activity android:name=".ui_Cart.ItemPopUp" android:theme="@android:style/Theme.Dialog"/>
     </application>
 
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"

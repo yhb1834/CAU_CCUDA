@@ -1,6 +1,7 @@
 package com.example.ccuda.ui_Cart;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -75,6 +76,8 @@ public class addToCart extends Fragment {
     ImageView imageView4;
     ImageView imageView5;
     ImageView[] imageViews=new ImageView[5];
+    int i;
+    TextView emptyCartText;
     //ArrayList<> cartItemImgs=new ArrayList<>(); // 장바구니에 추가된 사진 list
 
 
@@ -111,6 +114,7 @@ public class addToCart extends Fragment {
 
         load_MyCartList();
         System.out.println("cart item: "+cartList);
+        emptyCartText=view.findViewById(R.id.emptyCartText);
 
         imageViews[0]=view.findViewById(R.id.image1);
         imageViews[1]=view.findViewById(R.id.image2);
@@ -119,16 +123,32 @@ public class addToCart extends Fragment {
         imageViews[4]=view.findViewById(R.id.image5);
         //ImageView[] imageViews=new ImageView[5];
 
+        if(cartList.size()!=0){
+            emptyCartText.setText("");
+            emptyCartText.setTextSize(0);
+        }
         if(cartList.size()<=5){
-            for (int i=0;i<cartList.size();i++){
+            for (i=0;i<cartList.size();i++){
                 //imageViews[i].setImageURI(Uri.parse(cartList.get(i).getImageUrl()));
                 Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
+                imageViews[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        click_cart_item(cartList.get(i));
+                    }
+                });
                 //imageViews[i].setImageResource(cartList.get(i).getImageUrl());
             }
         }else {
-            for (int i=0;i<5;i++){
+            for (i=0;i<5;i++){
                 //imageViews[i].setImageURI(Uri.parse(cartList.get(i).getImageUrl()));
                 Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
+                imageViews[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        click_cart_item(cartList.get(i));
+                    }
+                });
             }
         }
 
@@ -303,6 +323,15 @@ public class addToCart extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(cartRequest);
     }
+
+    private void click_cart_item(CartItemModel item){
+        Intent intent=new Intent(getActivity(),ItemPopUp.class);
+        intent.putExtra("prodImage", item.getImageUrl());
+        intent.putExtra("prodName", item.getText1());
+        intent.putExtra("prodConv", item.getText2());
+        startActivity(intent);
+    }
+
 
 
 

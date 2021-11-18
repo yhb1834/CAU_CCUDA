@@ -2,12 +2,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:text="장바구니"
+        android:layout_margin="10dp">
+    </TextView>
+    <TextView
+        android:id="@+id/emptyCartText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아직 장바구니에 물품이 없습니다\n아래에서 검색을 통해 추가해보세요"
+        android:layout_margin="10dp"
+        android:textSize="20dp">
+    </TextView>
     <HorizontalScrollView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/innerLinearLayoutUp"
             android:orientation="horizontal"
             android:layout_margin="10dp">
