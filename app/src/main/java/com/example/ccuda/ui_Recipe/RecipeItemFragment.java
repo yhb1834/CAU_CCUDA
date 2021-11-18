@@ -33,7 +33,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RecipeItemFragment extends Fragment implements OnBackPressedListener{
+public class RecipeItemFragment extends Fragment { //implements OnBackPressedListener{
 
     private TextView like11, recipeTitle11;
     private ImageView recipeImage11;
@@ -88,8 +88,8 @@ public class RecipeItemFragment extends Fragment implements OnBackPressedListene
         return v;
     }
 
-    @Override
-    public void onBackPressed() {
+    //@Override
+    /*public void onBackPressed() {
         getActivity().finish();
-    }
+    }*/
 }

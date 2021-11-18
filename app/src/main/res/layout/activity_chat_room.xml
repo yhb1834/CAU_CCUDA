@@ -109,6 +109,7 @@
             app:layout_constraintStart_toEndOf="@+id/imageButton"
             app:layout_constraintTop_toTopOf="@+id/imageButton"
             app:layout_constraintVertical_bias="0.545"
+            android:theme="@style/EditTheme"
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton

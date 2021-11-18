@@ -18,7 +18,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="50dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -75,7 +75,7 @@
                     tools:ignore="SpeakableTextPresentCheck"></com.toptoche.searchablespinnerlibrary.SearchableSpinner>
             </FrameLayout>
 
-            <TextView
+            <EditText
                 android:id="@+id/MultiLine2"
                 android:layout_width="match_parent"
                 android:layout_height="380dp"
@@ -83,7 +83,7 @@
                 android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:gravity="start|top"
-                android:background="@drawable/corner_shape"
+                android:background="@drawable/corner_rec"
                 android:padding="20dp"
                 android:textSize="16sp"
                 android:hint="신고 사유를 입력하세요 "
