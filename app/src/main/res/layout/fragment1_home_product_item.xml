@@ -23,7 +23,7 @@
                 android:layout_gravity="center">
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/photo"
                     android:layout_width="300dp"
                     android:layout_height="300dp"
                     android:layout_alignParentEnd="true"

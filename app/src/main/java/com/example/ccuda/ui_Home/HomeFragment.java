@@ -8,7 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +50,7 @@ import java.util.ArrayList;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefreshListener {
     public ArrayList<ItemData> cuItem = new ArrayList<>();
     public ArrayList<ItemData> gs25Item = new ArrayList<>();
     public ArrayList<ItemData> sevenItem = new ArrayList<>();
@@ -57,6 +59,8 @@ public class HomeFragment extends Fragment {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference itemRef;
     ListView listView;
+
+    SwipeRefreshLayout mSwipeRefreshLayout;//새로고침
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -113,12 +117,17 @@ public class HomeFragment extends Fragment {
         activity=null;
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment1_home, container, false);
         listView=(ListView) v.findViewById(R.id.listView);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefresh);//새로고침
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         load_item();
         load_couponlist(getActivity());
@@ -135,11 +144,31 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            private ProductItemFragment productItemFragment = new ProductItemFragment();
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                productData data = (productData) parent.getItemAtPosition(position);
+
+                Bundle extras = new Bundle();
+                /*extras.putString("photo", data.getImageurl());
+                extras.putString("productname", data.getItem_name());
+                extras.putString("store", data.getStorename());
+                extras.putInt("price", data.getPrice());
+                extras.putString("seller", data.getSeller_name());*/
+
+                extras.putString("photo", data.getPhoto());
+                extras.putString("productname", data.getProductName());
+                extras.putString("store", data.getConvenientStore());
+                extras.putInt("price", data.getPrice());
+                extras.putString("seller", data.getSellerID());
+
+                productItemFragment.setArguments(extras);
+
                 FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.innerLayout, new ProductItemFragment());
+                transaction.replace(R.id.innerLayout, productItemFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -361,5 +390,21 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //adapter.init();
+                //adapter.notifyDataSetChanged();
+                load_item();
+                load_couponlist(getActivity());
+                listView.setAdapter(adapter);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1000);
     }
 }

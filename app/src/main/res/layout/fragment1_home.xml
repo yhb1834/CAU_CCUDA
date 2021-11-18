@@ -5,5 +5,13 @@
     android:layout_height="match_parent"
     android:id="@+id/mainhome"
     tools:context=".ui_Home.HomeFragment">
-    <include layout="@layout/posthome"></include>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <include layout="@layout/posthome"></include>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </FrameLayout>
