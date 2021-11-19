@@ -164,7 +164,7 @@ public class addToCart extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle result=new Bundle();
-                result.putParcelableArrayList("itemlist", (ArrayList<ItemParccelable>) cartList);
+                result.putParcelableArrayList("itemlist", sendToFramgent);
                 //result.put
                 getParentFragmentManager().setFragmentResult("requestKey", result);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -308,19 +308,33 @@ public class addToCart extends Fragment {
                             for(int j=0; j<cuItem.size(); j++){
                                 if(Integer.toString(cuItem.get(j).getItemid()).equals(item_id)){
                                     cartList.add(new CartItemModel(cuItem.get(j).getImage(),cuItem.get(j).getItemname(),storename));
-                                    sendToFramgent.add(new ItemParccelable())
+                                    ItemParccelable item=new ItemParccelable();
+                                    item.setProdName(cuItem.get(j).getItemname());
+                                    item.setConvName(storename);
+                                    item.setImgUrl(cuItem.get(j).getImage());
+                                    sendToFramgent.add(item);
                                 }
                             }
                         }else if(storename.equals("gs25")){
                             for(int j=0; j<gs25Item.size(); j++){
                                 if(Integer.toString(gs25Item.get(j).getItemid()).equals(item_id)){
                                     cartList.add(new CartItemModel(gs25Item.get(j).getImage(),gs25Item.get(j).getItemname(),storename));
+                                    ItemParccelable item=new ItemParccelable();
+                                    item.setProdName(gs25Item.get(j).getItemname());
+                                    item.setConvName(storename);
+                                    item.setImgUrl(gs25Item.get(j).getImage());
+                                    sendToFramgent.add(item);
                                 }
                             }
                         }else {
                             for(int j=0; j<sevenItem.size(); j++){
                                 if(Integer.toString(sevenItem.get(j).getItemid()).equals(item_id)){
                                     cartList.add(new CartItemModel(sevenItem.get(j).getImage(),sevenItem.get(j).getItemname(),storename));
+                                    ItemParccelable item=new ItemParccelable();
+                                    item.setProdName(sevenItem.get(j).getItemname());
+                                    item.setConvName(storename);
+                                    item.setImgUrl(sevenItem.get(j).getImage());
+                                    sendToFramgent.add(item);
                                 }
                             }
                         }

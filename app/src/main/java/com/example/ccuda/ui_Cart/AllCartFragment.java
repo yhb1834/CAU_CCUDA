@@ -18,13 +18,14 @@ import java.util.ArrayList;
 public class AllCartFragment extends Fragment {
     GridView cartItemList;
     AllCartListAdapter adapter;
+    ArrayList<ItemParccelable> itemList;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getChildFragmentManager().setFragmentResult("key", this, new FragmentResultListener(){
+        getChildFragmentManager().setFragmentResultListener("key", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                ArrayList<CartItemModel> itemList=result.getParcelableArrayList("itemlist");
+                itemList=result.getParcelableArrayList("itemlist");
             }
         });
     }

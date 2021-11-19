@@ -7,6 +7,9 @@ public class ItemParccelable implements Parcelable {
     String prodName;
     String convName;
     String imgUrl;
+    protected ItemParccelable() {
+    }
+
     protected ItemParccelable(Parcel in) {
         prodName=in.readString();
         convName=in.readString();
@@ -47,5 +50,17 @@ public class ItemParccelable implements Parcelable {
 
     public String getImgUrl(){
         return imgUrl;
+    }
+
+    public void setProdName(String name) {
+        this.prodName = name;
+    }
+
+    public void setConvName(String name){
+        this.convName=name;
+    }
+
+    public void setImgUrl(String url){
+        this.imgUrl=url;
     }
 }
