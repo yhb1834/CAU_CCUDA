@@ -58,14 +58,14 @@ public class LoginActivity extends AppCompatActivity {
 
         // 쁠원 자체 회원 로그인 세션
         if(SaveSharedPreference.getEmail(this).length() != 0){
-            getUserInfo(TAG_PLUSONE_LOGIN,0,SaveSharedPreference.getEmail(this),SaveSharedPreference.getPassword(this),SaveSharedPreference.getProfileimage(this),LoginActivity.this);
+            getUserInfo(TAG_PLUSONE_LOGIN,0,SaveSharedPreference.getEmail(this),SaveSharedPreference.getPassword(this),LoginActivity.this);
             toMainActivity();
         }
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getUserInfo(TAG_PLUSONE_LOGIN,0,Email.getText().toString(), PasswordEncryption.encrypt(Password.getText().toString()),null,LoginActivity.this);
+                getUserInfo(TAG_PLUSONE_LOGIN,0,Email.getText().toString(), PasswordEncryption.encrypt(Password.getText().toString()),LoginActivity.this);
             }
         });
 
@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // 로그인
-    private void getUserInfo(String option, long id, String email, String password, String imageurl,Context context){
+    private void getUserInfo(String option, long id, String email, String password,Context context){
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -115,7 +115,13 @@ public class LoginActivity extends AppCompatActivity {
                         String p_email = jsonObject.getString("email");
                         String p_nicname = jsonObject.getString("nicname");
                         double p_score = Double.parseDouble(jsonObject.getString("score"));
-
+                        String imageurl = jsonObject.getString("profile");
+                        String filename = jsonObject.getString("filename");
+                        if(imageurl.equals("null")){
+                            imageurl = null;
+                        }else{
+                            SaveSharedPreference.setPrefUserProfilefile(LoginActivity.this, filename);
+                        }
                         if(SaveSharedPreference.getEmail(context).length() == 0){
                             SaveSharedPreference.setSession(context, p_id, p_email, password,p_nicname, p_score,imageurl);
                             if(option == TAG_PLUSONE_LOGIN)
@@ -213,7 +219,7 @@ public class LoginActivity extends AppCompatActivity {
                                     long p_id = result.getId();
                                     String p_email = kakaoAccount.getEmail();
                                     if (p_email == null)    p_email="";
-                                    getUserInfo(TAG_KAKAO_LOGIN,p_id,p_email,"", null,LoginActivity.this);
+                                    getUserInfo(TAG_KAKAO_LOGIN,p_id,p_email,"", LoginActivity.this);
 
                                 } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
                                     // 동의 요청 후 프로필 정보 획득 가능

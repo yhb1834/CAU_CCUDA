@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -315,7 +316,6 @@ public class HomeActivity extends AppCompatActivity {
                     imgUri= data.getData();
                     Glide.with(this).load(imgUri).into(profile);
                     saveData();
-
                 }
                 else if(resultCode == RESULT_CANCELED){
                     Toast.makeText(this,"사진 선택 취소", Toast.LENGTH_SHORT).show();
@@ -342,12 +342,36 @@ public class HomeActivity extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         //파라미터로 firebase의 저장소에 저장되어 있는
                         //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
+                        if(SaveSharedPreference.getPrefUserProfilefile(HomeActivity.this).length()!=0){
+                            StorageReference desertRef = firebaseStorage.getReference("profileImages/"+SaveSharedPreference.getPrefUserProfilefile(HomeActivity.this));
+                            desertRef.delete();
+                        }
                         SaveSharedPreference.setProfileimage(HomeActivity.this, uri.toString());
-                        Toast.makeText(HomeActivity.this, "프로필 저장 완료", Toast.LENGTH_SHORT).show();
+                        SaveSharedPreference.setPrefUserProfilefile(HomeActivity.this,fileName);
+                        saveprofile("profile",SaveSharedPreference.getProfileimage(HomeActivity.this));
+                        saveprofile("filename",SaveSharedPreference.getPrefUserProfilefile(HomeActivity.this));
                     }
                 });
+
             }
         });
+    }
+
+
+    void saveprofile(String option, String newinfo){
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    Log.d("profile","success");
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        MypageRequest mypageRequest = new MypageRequest(option, SaveSharedPreference.getId(this), newinfo, responsListener);
+        RequestQueue queue = Volley.newRequestQueue(HomeActivity.this);
+        queue.add(mypageRequest);
     }
 
     private void load_item(){

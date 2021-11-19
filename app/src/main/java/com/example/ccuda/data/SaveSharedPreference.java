@@ -12,6 +12,7 @@ public class SaveSharedPreference {
     static final String PREF_USER_NICNAME = "nicname";
     static final String PREF_USER_SCORE = "score";
     static final String PREF_USER_PROFILEIMAGE = "profileimage";
+    static final String PREF_USER_PROFILEFILE = "profilefilename";
 
     static SharedPreferences getSharedPreferences(Context context){
         return context.getSharedPreferences("test_preferences",Context.MODE_PRIVATE);
@@ -51,6 +52,9 @@ public class SaveSharedPreference {
     public static String getProfileimage(Context context){
         return getSharedPreferences(context).getString(PREF_USER_PROFILEIMAGE,"");
     }
+    public static String getPrefUserProfilefile(Context context){
+        return getSharedPreferences(context).getString(PREF_USER_PROFILEFILE,"");
+    }
     public static void setProfileimage(Context context, String imageurl){
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putString(PREF_USER_PROFILEIMAGE,imageurl);
@@ -64,6 +68,11 @@ public class SaveSharedPreference {
     public static void setPrefUserEmail(Context context, String email){
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putString(PREF_USER_EMAIL,email);
+        editor.commit();
+    }
+    public static void setPrefUserProfilefile(Context context, String filename){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString(PREF_USER_PROFILEFILE,filename);
         editor.commit();
     }
     // 세션션 clear
