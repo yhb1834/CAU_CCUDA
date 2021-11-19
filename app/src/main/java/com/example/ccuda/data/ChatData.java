@@ -9,8 +9,6 @@ public class ChatData {
 
     public static class Comment{
         public String user_id;
-        public String imageurl;
-        public String nicname;
         public String msg;
         public String timestamp;
     }

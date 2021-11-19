@@ -108,7 +108,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/send2"
+                android:id="@+id/btn_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="메세지 보내기" />

@@ -69,8 +69,6 @@ public class ChatFragment extends Fragment{
                 final PeopleItem item = PeopleItems.get(a_position);
                 Intent intent = new Intent(getActivity(),ChatRoomActivity.class);
                 intent.putExtra("roomnum",item.getRoomnum());
-                intent.putExtra("coupon_id",item.getCoupon_id());
-                intent.putExtra("destid",item.getUserId());
                 startActivity(intent);
             }
         });

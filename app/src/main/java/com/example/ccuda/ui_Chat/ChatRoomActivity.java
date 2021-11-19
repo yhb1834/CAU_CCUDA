@@ -59,8 +59,6 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference chatref;
-    String destid;
-    String coupon_id;
     String chatRoomUid;
 
 
@@ -79,8 +77,6 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         chatRoomUid=intent.getExtras().getString("roomnum");
-        coupon_id = intent.getExtras().getString("coupon_id");
-        destid = intent.getExtras().getString("destid");
 
         //Firebase DB관리 객체
         firebaseDatabase = FirebaseDatabase.getInstance();
