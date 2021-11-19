@@ -6,6 +6,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -78,6 +79,8 @@ public class addToCart extends Fragment {
     ImageView[] imageViews=new ImageView[5];
     int i;
     TextView emptyCartText;
+    Button viewAll;
+    ArrayList<ItemParccelable> sendToFramgent=new ArrayList<>();
     //ArrayList<> cartItemImgs=new ArrayList<>(); // 장바구니에 추가된 사진 list
 
 
@@ -115,6 +118,7 @@ public class addToCart extends Fragment {
         load_MyCartList();
         System.out.println("cart item: "+cartList);
         emptyCartText=view.findViewById(R.id.emptyCartText);
+        viewAll=view.findViewById(R.id.view_all);
 
         imageViews[0]=view.findViewById(R.id.image1);
         imageViews[1]=view.findViewById(R.id.image2);
@@ -126,6 +130,10 @@ public class addToCart extends Fragment {
         if(cartList.size()!=0){
             emptyCartText.setText("");
             emptyCartText.setTextSize(0);
+            viewAll.setVisibility(View.VISIBLE);
+        }
+        if(cartList.size()==0){
+            viewAll.setVisibility(View.INVISIBLE);
         }
         if(cartList.size()<=5){
             for (i=0;i<cartList.size();i++){
@@ -152,6 +160,19 @@ public class addToCart extends Fragment {
             }
         }
 
+        viewAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle result=new Bundle();
+                result.putParcelableArrayList("itemlist", (ArrayList<ItemParccelable>) cartList);
+                //result.put
+                getParentFragmentManager().setFragmentResult("requestKey", result);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.innerLayout, new AllCartFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
 
         return view;
@@ -287,6 +308,7 @@ public class addToCart extends Fragment {
                             for(int j=0; j<cuItem.size(); j++){
                                 if(Integer.toString(cuItem.get(j).getItemid()).equals(item_id)){
                                     cartList.add(new CartItemModel(cuItem.get(j).getImage(),cuItem.get(j).getItemname(),storename));
+                                    sendToFramgent.add(new ItemParccelable())
                                 }
                             }
                         }else if(storename.equals("gs25")){
