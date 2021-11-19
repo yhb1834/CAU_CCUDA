@@ -43,7 +43,7 @@ public class CartFragment extends Fragment {
 
 
     // 장바구니 삭제 정보 db저장
-    protected void removeFromcart(int item_id){
+    protected void removeFromcart(int item_id, String storename){
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -55,10 +55,11 @@ public class CartFragment extends Fragment {
                 }
             }
         };
-        CartRequest cartRequest = new CartRequest("removeFromcart", SaveSharedPreference.getId(context), item_id,"", responsListener);
+        CartRequest cartRequest = new CartRequest("removeFromcart", SaveSharedPreference.getId(context), item_id,storename, responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(cartRequest);
     }
+
     public void click_cart_item(Context context,CartItemModel item){
         Intent intent=new Intent(context,ItemPopUp.class);
         intent.putExtra("prodImage", item.getImageUrl());

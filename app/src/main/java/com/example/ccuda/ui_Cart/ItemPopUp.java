@@ -55,7 +55,7 @@ public class ItemPopUp extends Activity {
 
     public void onClickDelete(View v){
         CartFragment fragment=new CartFragment();
-        fragment.removeFromcart(prodId);
+        fragment.removeFromcart(prodId, prodConv);
         finish(); // 팝업 닫기
     }
     @Override
