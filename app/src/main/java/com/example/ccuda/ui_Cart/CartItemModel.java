@@ -4,6 +4,7 @@ package com.example.ccuda.ui_Cart;
 
 public class CartItemModel {
 
+    //private String id;
     private String imageurl;
     private String text1;
     private String text2;
@@ -20,7 +21,7 @@ public class CartItemModel {
         this.imageurl = imageurl;
         this.text1 = text1;
         this.text2 = text2;
-        this.itemid = itemid;
+        //this.itemid = itemid;
     }
 
     public String getImageUrl() {

@@ -67,6 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="2">
         <Button
+            android:id="@+id/popup_cancel_button"
             android:text="취소"
             android:textSize="15sp"
             android:textColor="#E9BD15"
@@ -78,6 +79,7 @@
             android:layout_height="53dp"
             android:onClick="onClickCancel"/>
         <Button
+            android:id="@+id/popup_delete_button"
             android:text="장바구니에서 삭제"
             android:textSize="15sp"
             android:textColor="#E9BD15"

@@ -1,6 +1,7 @@
 package com.example.ccuda.ui_Cart;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -53,5 +58,13 @@ public class CartFragment extends Fragment {
         CartRequest cartRequest = new CartRequest("removeFromcart", SaveSharedPreference.getId(context), item_id,"", responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(cartRequest);
+    }
+    public void click_cart_item(Context context,CartItemModel item){
+        Intent intent=new Intent(context,ItemPopUp.class);
+        intent.putExtra("prodImage", item.getImageUrl());
+        intent.putExtra("prodName", item.getText1());
+        intent.putExtra("prodConv", item.getText2());
+        intent.putExtra("prodId", item.getItemid());
+        startActivity(intent);
     }
 }

@@ -57,7 +57,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class addToCart extends Fragment {
+public class addToCart extends CartFragment {
     SearchView searchView;
     RecyclerView recyclerView;
     TextView textView;
@@ -86,7 +86,7 @@ public class addToCart extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("onCreate");
+        //System.out.println("onCreate");
         fillData();
     }
 
@@ -97,7 +97,7 @@ public class addToCart extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_to_cartlist, container, false);
         searchView=view.findViewById(R.id.searchView);
         recyclerView=view.findViewById(R.id.recyclerView);
-        System.out.println("onCreateView");
+        //System.out.println("onCreateView");
         setUpRecyclerView();
 
 
@@ -116,7 +116,7 @@ public class addToCart extends Fragment {
 
 
         load_MyCartList();
-        System.out.println("cart item: "+cartList);
+        //System.out.println("cart item: "+cartList);
         emptyCartText=view.findViewById(R.id.emptyCartText);
         viewAll=view.findViewById(R.id.view_all);
 
@@ -137,24 +137,24 @@ public class addToCart extends Fragment {
         }
         if(cartList.size()<=5){
             for (i=0;i<cartList.size();i++){
-                //imageViews[i].setImageURI(Uri.parse(cartList.get(i).getImageUrl()));
+                CartItemModel item=cartList.get(i);
                 Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        click_cart_item(cartList.get(i));
+                        click_cart_item(getContext(),item);
                     }
                 });
-                //imageViews[i].setImageResource(cartList.get(i).getImageUrl());
             }
         }else {
             for (i=0;i<5;i++){
-                //imageViews[i].setImageURI(Uri.parse(cartList.get(i).getImageUrl()));
+                CartItemModel item=cartList.get(i);
                 Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        click_cart_item(cartList.get(i));
+                        click_cart_item(getContext(),item);
+
                     }
                 });
             }
@@ -168,7 +168,9 @@ public class addToCart extends Fragment {
                 //result.put
                 getParentFragmentManager().setFragmentResult("requestKey", result);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.innerLayout, new AllCartFragment());
+                AllCartFragment fragment=new AllCartFragment();
+                fragment.setArguments(result);
+                transaction.replace(R.id.innerLayout, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -307,7 +309,7 @@ public class addToCart extends Fragment {
                         if(storename.equals("cu")){
                             for(int j=0; j<cuItem.size(); j++){
                                 if(Integer.toString(cuItem.get(j).getItemid()).equals(item_id)){
-                                    cartList.add(new CartItemModel(cuItem.get(j).getImage(),cuItem.get(j).getItemname(),storename));
+                                    cartList.add(new CartItemModel(cuItem.get(j).getImage(),cuItem.get(j).getItemname(),storename,cuItem.get(j).getItemid()));
                                     ItemParccelable item=new ItemParccelable();
                                     item.setProdName(cuItem.get(j).getItemname());
                                     item.setConvName(storename);
@@ -318,7 +320,7 @@ public class addToCart extends Fragment {
                         }else if(storename.equals("gs25")){
                             for(int j=0; j<gs25Item.size(); j++){
                                 if(Integer.toString(gs25Item.get(j).getItemid()).equals(item_id)){
-                                    cartList.add(new CartItemModel(gs25Item.get(j).getImage(),gs25Item.get(j).getItemname(),storename));
+                                    cartList.add(new CartItemModel(gs25Item.get(j).getImage(),gs25Item.get(j).getItemname(),storename,gs25Item.get(j).getItemid()));
                                     ItemParccelable item=new ItemParccelable();
                                     item.setProdName(gs25Item.get(j).getItemname());
                                     item.setConvName(storename);
@@ -329,7 +331,7 @@ public class addToCart extends Fragment {
                         }else {
                             for(int j=0; j<sevenItem.size(); j++){
                                 if(Integer.toString(sevenItem.get(j).getItemid()).equals(item_id)){
-                                    cartList.add(new CartItemModel(sevenItem.get(j).getImage(),sevenItem.get(j).getItemname(),storename));
+                                    cartList.add(new CartItemModel(sevenItem.get(j).getImage(),sevenItem.get(j).getItemname(),storename,sevenItem.get(j).getItemid()));
                                     ItemParccelable item=new ItemParccelable();
                                     item.setProdName(sevenItem.get(j).getItemname());
                                     item.setConvName(storename);
@@ -344,7 +346,7 @@ public class addToCart extends Fragment {
                 }
 
                 for(CartItemModel a : cartList){
-                    System.out.println(a.getImageUrl());
+                   // System.out.println(a.getImageUrl());
                 }
 
                 //adapter.addItem("물건1", "", "gs");
@@ -360,13 +362,8 @@ public class addToCart extends Fragment {
         queue.add(cartRequest);
     }
 
-    private void click_cart_item(CartItemModel item){
-        Intent intent=new Intent(getActivity(),ItemPopUp.class);
-        intent.putExtra("prodImage", item.getImageUrl());
-        intent.putExtra("prodName", item.getText1());
-        intent.putExtra("prodConv", item.getText2());
-        startActivity(intent);
-    }
+
+
 
 
 

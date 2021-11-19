@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,14 @@ public class ItemPopUp extends Activity {
     ImageView popupImage;
     TextView name;
     TextView conv;
+    Button cancelButton;
+    Button deleteButton;
+    boolean isClicked=false;
+
+    String prodImage;
+    String prodName;
+    String prodConv;
+    int prodId;
 
     @Override
     protected void onCreate(Bundle saveInstanceState) {
@@ -26,14 +35,17 @@ public class ItemPopUp extends Activity {
         popupImage=findViewById(R.id.popup_image);
         name=findViewById(R.id.popup_prod);
         conv=findViewById(R.id.popup_conv);
-        String prodImage=intent.getStringExtra("prodImage");
-        String prodName=intent.getStringExtra("prodName");
-        String prodConv=intent.getStringExtra("prodConv");
+        cancelButton=findViewById(R.id.popup_cancel_button);
+        deleteButton=findViewById(R.id.popup_delete_button);
+        prodImage=intent.getStringExtra("prodImage");
+        prodName=intent.getStringExtra("prodName");
+        prodConv=intent.getStringExtra("prodConv");
+        prodId=intent.getIntExtra("prodId",-1);
 
         Glide.with(this).load(prodImage).into(popupImage);
         name.setText(prodName);
         conv.setText(prodConv);
-        //popupImage.setImage
+
     }
 
     public void onClickCancel(View v){
@@ -42,6 +54,8 @@ public class ItemPopUp extends Activity {
     }
 
     public void onClickDelete(View v){
+        CartFragment fragment=new CartFragment();
+        fragment.removeFromcart(prodId);
         finish(); // 팝업 닫기
     }
     @Override

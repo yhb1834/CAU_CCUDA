@@ -1,5 +1,6 @@
 package com.example.ccuda.ui_Cart;
 
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -29,6 +30,16 @@ public class AllCartListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        ItemView view=null;
+        if(convertView==null){
+            view=new ItemView(parent.getContext());
+        }
+        else {
+            view=(ItemView) convertView;
+        }
+        CartItemModel item=items.get(position);
+        view.setImageView(item.getImageUrl());
+        view.setGravity(Gravity.CENTER);
+        return view;
     }
 }

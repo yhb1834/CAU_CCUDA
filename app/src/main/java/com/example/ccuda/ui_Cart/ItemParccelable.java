@@ -7,6 +7,7 @@ public class ItemParccelable implements Parcelable {
     String prodName;
     String convName;
     String imgUrl;
+    int id;
     protected ItemParccelable() {
     }
 
@@ -14,6 +15,7 @@ public class ItemParccelable implements Parcelable {
         prodName=in.readString();
         convName=in.readString();
         imgUrl=in.readString();
+        id=in.readInt();
     }
 
     public static final Creator<ItemParccelable> CREATOR = new Creator<ItemParccelable>() {
@@ -52,6 +54,10 @@ public class ItemParccelable implements Parcelable {
         return imgUrl;
     }
 
+    public int getId(){
+        return id;
+    }
+
     public void setProdName(String name) {
         this.prodName = name;
     }
@@ -63,4 +69,7 @@ public class ItemParccelable implements Parcelable {
     public void setImgUrl(String url){
         this.imgUrl=url;
     }
+
+
+
 }

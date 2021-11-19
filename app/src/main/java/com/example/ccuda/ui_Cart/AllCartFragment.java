@@ -1,9 +1,11 @@
 package com.example.ccuda.ui_Cart;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
@@ -15,27 +17,38 @@ import com.example.ccuda.R;
 
 import java.util.ArrayList;
 
-public class AllCartFragment extends Fragment {
+public class AllCartFragment extends CartFragment {
     GridView cartItemList;
     AllCartListAdapter adapter;
-    ArrayList<ItemParccelable> itemList;
+    ArrayList<ItemParccelable> itemList=new ArrayList<>();
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getChildFragmentManager().setFragmentResultListener("key", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                itemList=result.getParcelableArrayList("itemlist");
-            }
-        });
     }
 
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_all_cartlist, container, false);
         cartItemList=view.findViewById(R.id.cartItemGrid);
-
+        adapter=new AllCartListAdapter();
+        Bundle bundle=getArguments();
+        if(bundle!=null){
+            itemList=bundle.getParcelableArrayList("itemlist");
+        }
+        System.out.println("itemList2"+itemList);
+        for(int i=0;i<itemList.size();i++){
+            adapter.addItem(new CartItemModel(itemList.get(i).getImgUrl(),itemList.get(i).getProdName(),itemList.get(i).getConvName(),itemList.get(i).getId()));
+        }
+        cartItemList.setAdapter(adapter);
+        cartItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CartItemModel item=(CartItemModel) adapter.getItem(position);
+                click_cart_item(getActivity(), item);
+            }
+        });
         return view;
     }
 }
