@@ -201,14 +201,8 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                         storename = storename.toLowerCase();
                         couponData.setStorename(storename);
                         couponData.setPlustype(object.getString("category"));
-                        couponData.setCouponimage( BitmapConverter.StringToBitmap(object.getString("original"))); // 쿠폰 이미지 (!= 상품 이미지)
                         couponData.setSeller_id(Long.parseLong(object.getString("seller_id"))); // 판매자 확인용 id
                         couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
-                        boolean isdeal;
-                        if(object.getString("isdeal")=="1") // 거래 완료 여부
-                            couponData.setIsdeal(true);
-                        else
-                            couponData.setIsdeal(false);
                         couponData.setSeller_name(object.getString("seller_nicname")); // 판매자 닉네임
                         couponData.setSeller_score(object.getString("seller_score")); // 판매자 평점
 

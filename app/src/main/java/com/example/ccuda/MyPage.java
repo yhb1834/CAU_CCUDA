@@ -20,9 +20,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.ccuda.data.CouponData;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
+import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CartRequest;
+import com.example.ccuda.db.MypageRequest;
 import com.example.ccuda.ui_Cart.CartItemModel;
 import com.example.ccuda.ui_Cart.addToCart;
 import com.example.ccuda.ui_Home.Adapter;
@@ -91,7 +94,8 @@ public class MyPage extends Fragment {
         });
 
 
-        laod_MyCartList();
+        // 장바구니
+        load_MyCartList();
         addCart=view.findViewById(R.id.add_to_cart_button);
         addCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +110,46 @@ public class MyPage extends Fragment {
         return view;
     }
 
-    private void laod_MyCartList(){
+    private void load_Mycouponlist(){
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("mycouponlist");
+                    int length = jsonArray.length();
+
+                    for(int i=0; i<length; i++){
+                        CouponData couponData = new CouponData();
+                        JSONObject object = jsonArray.getJSONObject(i);
+
+                        couponData.setCoupon_id(Integer.parseInt(object.getString("coupon_id")));
+                        couponData.setPrice(Integer.parseInt(object.getString("price")));       //쿠폰 가격
+                        couponData.setExpiration_date(object.getString("expiration_date")); // 쿠폰 유효기간 "Y-m-d" 형식
+                        couponData.setContent(object.getString("content")); // 글 내용
+                        String storename = object.getString("storename");
+                        storename = storename.toLowerCase();
+                        couponData.setStorename(storename);
+                        couponData.setPlustype(object.getString("category"));
+                        couponData.setCouponimage( BitmapConverter.StringToBitmap(object.getString("original"))); // 쿠폰 이미지 (!= 상품 이미지)
+                        couponData.setSeller_id(Long.parseLong(object.getString("seller_id"))); // 판매자 확인용 id
+                        couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
+                        couponData.setSeller_name(object.getString("seller_nicname")); // 판매자 닉네임
+                        couponData.setSeller_score(object.getString("seller_score")); // 판매자 평점
+
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        MypageRequest mypageRequest = new MypageRequest("mycouponlist", SaveSharedPreference.getId(context), "",responsListener);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(mypageRequest);
+    }
+
+
+    private void load_MyCartList(){
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
