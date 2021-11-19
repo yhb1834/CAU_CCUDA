@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class SaveSharedPreference {
-    static final String BASIC_IMAGE_URL = "https://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg";
+    public static final String BASIC_IMAGE_URL = "https://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg";
     static final String PREF_USER_ID = "id";
     static final String PREF_USER_EMAIL = "email";
     static final String PREF_USER_PWD = "password";

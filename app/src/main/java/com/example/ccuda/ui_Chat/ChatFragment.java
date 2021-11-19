@@ -119,9 +119,9 @@ public class ChatFragment extends Fragment{
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                for(int i=1;i<2;i++){
-                    PeopleItems.add(new PeopleItem(R.drawable.person,i+"번","별점 "+i+"점","","","-1"));
-                }
+                //for(int i=1;i<2;i++){
+                //    PeopleItems.add(new PeopleItem(R.drawable.person,i+"번","별점 "+i+"점","","","-1"));
+                //}
 
                 mChatPeopleAdapter.setChatPeopleList(PeopleItems);
 

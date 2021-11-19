@@ -232,8 +232,6 @@ public class ChatRoomActivity extends AppCompatActivity {
         if(!et.getText().toString().equals("")){
             ChatData.Comment comment = new ChatData.Comment();
             comment.user_id = String.valueOf(SaveSharedPreference.getId(this));
-            comment.nicname = SaveSharedPreference.getNicname(this);
-            comment.imageurl = SaveSharedPreference.getProfileimage(this);
             comment.msg = et.getText().toString();
             Calendar calendar= Calendar.getInstance();
             comment.timestamp = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
