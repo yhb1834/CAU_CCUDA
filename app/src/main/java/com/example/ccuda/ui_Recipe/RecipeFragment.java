@@ -10,7 +10,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +24,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class RecipeFragment extends Fragment {
+public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView mRecyclerView;
     private RecipeAdapter mRecipeAdapter;
     private ArrayList<RecipeItem> RecipeItems;
     private FragmentManager fragmentManager = getSupportFragmentManager();
+    SwipeRefreshLayout mSwipeRefreshLayout;//새로고침
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -37,6 +40,9 @@ public class RecipeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment1_recipe, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.RecipeRecyclerView);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh2);//새로고침
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         /* initiate adapter */
         mRecipeAdapter = new RecipeAdapter();
@@ -87,5 +93,21 @@ public class RecipeFragment extends Fragment {
 
     private FragmentManager getSupportFragmentManager() {
         return null;
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                //adapter.notifyDataSetChanged();
+                //GettingPHP gPHP = new GettingPHP();
+                //gPHP.execute(url_showPrescription);
+                //listView.setAdapter(adapter);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1000);
     }
 }

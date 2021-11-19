@@ -7,60 +7,47 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.ccuda.R;
+import com.example.ccuda.data.CouponData;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProductItemFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProductItemFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ProductItemFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProductItemFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProductItemFragment newInstance(String param1, String param2) {
-        ProductItemFragment fragment = new ProductItemFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private CouponData data;
+    TextView Productname, Store, Price, Date, Seller, Star, Otheritems;
+    ImageView Photo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment1_home_product_item, container, false);
+        View view = inflater.inflate(R.layout.fragment1_home_product_item, container, false);
+
+        String photo = getArguments().getString("photo");
+        String productname = getArguments().getString("productname");
+        String store = getArguments().getString("store");
+        int price = getArguments().getInt("price");
+        String seller = getArguments().getString("seller");
+
+        Photo = (ImageView) view.findViewById(R.id.photo);
+        Productname = (TextView) view.findViewById(R.id.itemname2);
+        Store = (TextView) view.findViewById(R.id.store2);
+        Price = (TextView) view.findViewById(R.id.price2);
+        Date = (TextView) view.findViewById(R.id.validity2);
+        Seller = (TextView) view.findViewById(R.id.sellerID2);
+        Star = (TextView) view.findViewById(R.id.star2);
+
+
+        //Photo.setImageResource(StringToBitmap(photo));
+        Productname.setText(productname);
+        Store.setText(store);
+        Price.setInputType(price);
+        //Date.setText(date);
+        Seller.setText(seller);
+        //Star.setText(score);
+
+        return view;
     }
+
 }

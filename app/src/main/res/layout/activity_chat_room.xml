@@ -48,6 +48,7 @@
         android:layout_margin="10dp"
         android:layout_weight="1"
         android:dividerHeight="0px"
+        android:stackFromBottom="true"
         android:divider="@color/white"
         android:scrollbars="vertical" />
 
@@ -109,6 +110,7 @@
             app:layout_constraintStart_toEndOf="@+id/imageButton"
             app:layout_constraintTop_toTopOf="@+id/imageButton"
             app:layout_constraintVertical_bias="0.545"
+            android:theme="@style/EditTheme"
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
