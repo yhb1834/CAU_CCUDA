@@ -1,46 +1,33 @@
 package com.example.ccuda.ui_Recipe;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ClipData;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.ccuda.R;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.ui_Home.HomeActivity;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.kakao.network.ErrorResult;
-import com.kakao.network.callback.ResponseCallback;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RecipeRegisterActivity extends AppCompatActivity {
     private static final String TAG = "MultiImageActivity";
@@ -183,10 +170,12 @@ public class RecipeRegisterActivity extends AppCompatActivity {
     }*/
 
     private void clickregister(String title, String storename,String content){
-        itemList.add("1");
-        itemList.add("2");
+         SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
+        String fileName=sdf.format(new Date())+"";
+        String child = fileName+SaveSharedPreference.getId(this);
         for(int j=0; j<uriList.size(); j++){
-            uploadimg(uriList.get(j),title,j);
+            fileName = fileName+j+".png";
+            uploadimg(uriList.get(j),fileName, child);
         }
         for(int j=0; j<itemList.size(); j++){
             firebaseDatabase.getReference().child("Recipe").child(title).child("item").push().setValue(itemList.get(j));
@@ -197,7 +186,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         recipeDTO.setContent(content);
         recipeDTO.setWriter_id(Long.toString(SaveSharedPreference.getId(this)));
 
-        firebaseDatabase.getReference().child("Recipe").child(title).push().setValue(recipeDTO);
+        firebaseDatabase.getReference().child("Recipe").child(child).child("content").push().setValue(recipeDTO);
 
         //TODO: 레시피 등록 완료 후 동작
 
@@ -205,10 +194,8 @@ public class RecipeRegisterActivity extends AppCompatActivity {
     }
 
     // firebase에 파일 및 이미지 저장
-    private void uploadimg( Uri uri, String title, int index) {
+    private void uploadimg( Uri uri,String fileName,String child) {
         try{
-            String fileName= title+index+".png";
-
             FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
             final StorageReference imgRef= firebaseStorage.getReference("recipeImages/"+fileName);
 
@@ -223,7 +210,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             //파라미터로 firebase의 저장소에 저장되어 있는
                             //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
-                            firebaseDatabase.getReference().child("Recipe").child(title).child("images").push().setValue(uri.toString());
+                            firebaseDatabase.getReference().child("Recipe").child(child).child("images").push().setValue(uri.toString());
                         }
                     });
                 }

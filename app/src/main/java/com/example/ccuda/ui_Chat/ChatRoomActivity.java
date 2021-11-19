@@ -5,6 +5,7 @@ import static android.view.View.*;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -128,16 +129,30 @@ public class ChatRoomActivity extends AppCompatActivity {
             @Override
             public void onItemSelected (AdapterView<?> parent, View view,int position, long id){
                 //Toast.makeText(getApplicationContext(),items[position] , Toast.LENGTH_LONG).show();
+                PackageManager pm = getApplicationContext().getPackageManager();
                 switch (position) {
                     case 1:
                         String packageName = "com.gsr.gs25";
-                        Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
-                        startActivity(intent);
+                        try {
+                            pm.getApplicationInfo(packageName,PackageManager.GET_META_DATA);
+                            Intent intent = pm.getLaunchIntentForPackage(packageName);
+                            startActivity(intent);
+                        }catch (PackageManager.NameNotFoundException e){
+                            Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id="+packageName));
+                            startActivity(intent);
+                        }
+
                         break;
                     case 2:
                         packageName = "com.bgfcu.membership"; ///com.gsretail.android.thepop.activity.splash.SplashActivity";
-                        intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
-                        startActivity(intent);
+                        try {
+                            pm.getApplicationInfo(packageName,PackageManager.GET_META_DATA);
+                            Intent intent = pm.getLaunchIntentForPackage(packageName);
+                            startActivity(intent);
+                        }catch (PackageManager.NameNotFoundException e){
+                            Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id="+packageName));
+                            startActivity(intent);
+                        }
                         break;
                 }
 
