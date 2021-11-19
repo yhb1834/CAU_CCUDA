@@ -266,7 +266,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                 }
             }
         };
-        CouponpageRequest couponpageRequest = new CouponpageRequest("couponlist", responsListener);
+        CouponpageRequest couponpageRequest = new CouponpageRequest("couponlist", "","","",responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(couponpageRequest);
     }

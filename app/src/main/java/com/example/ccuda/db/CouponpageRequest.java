@@ -11,11 +11,14 @@ public class CouponpageRequest extends StringRequest {
     final static private String URL = String.format("%s/couponpage.php", Config.SERVER_URL);
     private Map<String, String> parameters;
 
-    public CouponpageRequest(String option, Response.Listener<String> listener){
+    public CouponpageRequest(String option, String user_id, String seller_id, String coupon_id,Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
 
         parameters = new HashMap<>();
         parameters.put("option",option);
+        parameters.put("user_id",user_id);
+        parameters.put("seller_id",seller_id);
+        parameters.put("coupon_id",coupon_id);
     }
     @Override
     public Map<String,String> getParams(){
