@@ -406,7 +406,7 @@ public class UploadCoupon extends Fragment {
             }
             itemData.setCategory("");
 
-            itemRef.child(i+"").setValue(itemData);
+            itemRef.push().setValue(itemData);
         }
 
     }

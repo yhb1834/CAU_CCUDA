@@ -4,6 +4,7 @@ import static android.view.View.*;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -220,7 +222,35 @@ public class ChatRoomActivity extends AppCompatActivity {
                         //파라미터로 firebase의 저장소에 저장되어 있는
                         //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
                         imageurl = uri.toString();
-                        et.setText(imageurl);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomActivity.this)
+                                .setTitle("이미지를 전송")
+                                .setMessage("해당 이미지를 전송하시겠습니까?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        ChatData.Comment comment = new ChatData.Comment();
+                                        comment.user_id = String.valueOf(SaveSharedPreference.getId(ChatRoomActivity.this));
+                                        Calendar calendar= Calendar.getInstance();
+                                        comment.timestamp = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+
+                                        comment.msg = imageurl;
+                                        comment.type = "image";
+
+                                        firebaseDatabase = FirebaseDatabase.getInstance();
+                                        chatref = firebaseDatabase.getReference();
+                                        chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(comment);
+
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        imageurl=null;
+                                    }
+                                });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
                     }
                 });
 
@@ -294,20 +324,16 @@ public class ChatRoomActivity extends AppCompatActivity {
         if(!et.getText().toString().equals("")){
             ChatData.Comment comment = new ChatData.Comment();
             comment.user_id = String.valueOf(SaveSharedPreference.getId(this));
-            comment.msg = et.getText().toString();
             Calendar calendar= Calendar.getInstance();
             comment.timestamp = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
-            if(imageurl != null){
-                comment.type = "text";
-            }
-            else{
-                comment.type = "image";
-            }
+
+            comment.msg = et.getText().toString();
+            comment.type = "text";
+
             firebaseDatabase = FirebaseDatabase.getInstance();
             chatref = firebaseDatabase.getReference();
             chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(comment);
 
-            imageurl = null;
             et.setText("");
             InputMethodManager imm=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);

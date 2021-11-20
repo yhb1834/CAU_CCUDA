@@ -39,6 +39,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -54,7 +55,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
     public ArrayList<ItemData> cuItem = new ArrayList<>();
     public ArrayList<ItemData> gs25Item = new ArrayList<>();
     public ArrayList<ItemData> sevenItem = new ArrayList<>();
-    Adapter adapter=new Adapter();
+    Adapter adapter;
     private ArrayList<CouponData> CouponArrayList = new ArrayList<>();
     FirebaseDatabase firebaseDatabase;
     DatabaseReference itemRef;
@@ -129,8 +130,8 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefresh);//새로고침
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        adapter =new Adapter();
         load_item();
-        load_couponlist(getActivity());
 
         FloatingActionButton addCuppon= (FloatingActionButton) v.findViewById(R.id.add_article);
         addCuppon.setOnClickListener(new View.OnClickListener() {
@@ -239,14 +240,15 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                         }
                         CouponArrayList.add(couponData);
                         //adapter.addItem(couponData.getItem_name(), R.drawable.add, couponData.getStorename());
+
                     }
                     System.out.println("coupon list: "+CouponArrayList);
-
 
                     for(CouponData a:CouponArrayList){
                         adapter.addItem(a.getItem_name(), a.getImageurl(), a.getStorename());
                         System.out.println("itemname: "+a.getItem_name());
                     }
+
 
                     //adapter.addItem("물건1", R.drawable.add, "gs");
                     //adapter.addItem("물건2", R.drawable.add, "gs");
@@ -290,96 +292,59 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
         firebaseDatabase= FirebaseDatabase.getInstance();
         itemRef= firebaseDatabase.getReference();
 
-        itemRef.child("item").child("cu").addChildEventListener(new ChildEventListener() {
-            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
+        itemRef.child("item").child("cu").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                cuItem.add(itemData);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ItemData itemData = snapshot.getValue(ItemData.class);
+                    cuItem.add(itemData);
+                }
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
 
-        itemRef.child("item").child("gs25").addChildEventListener(new ChildEventListener() {
-            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
+        itemRef.child("item").child("gs25").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                gs25Item.add(itemData);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ItemData itemData = snapshot.getValue(ItemData.class);
+                    gs25Item.add(itemData);
+                }
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
 
-        itemRef.child("item").child("seven").addChildEventListener(new ChildEventListener() {
-            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
+
+        itemRef.child("item").child("seven").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                ItemData itemData = dataSnapshot.getValue(ItemData.class);
-                sevenItem.add(itemData);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ItemData itemData = snapshot.getValue(ItemData.class);
+                    sevenItem.add(itemData);
+                }
+
+                load_couponlist(getActivity());
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+
     }
 
     @Override
     public void onRefresh() {
+        adapter = new Adapter();
         mSwipeRefreshLayout.setRefreshing(true);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -387,7 +352,6 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                 //adapter.init();
                 //adapter.notifyDataSetChanged();
                 load_item();
-                load_couponlist(getActivity());
                 listView.setAdapter(adapter);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
