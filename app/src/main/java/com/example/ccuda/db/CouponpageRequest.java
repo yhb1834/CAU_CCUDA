@@ -11,7 +11,7 @@ public class CouponpageRequest extends StringRequest {
     final static private String URL = String.format("%s/couponpage.php", Config.SERVER_URL);
     private Map<String, String> parameters;
 
-    public CouponpageRequest(String option, String user_id, String seller_id, String coupon_id,Response.Listener<String> listener){
+    public CouponpageRequest(String option, String user_id, String seller_id, String coupon_id, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
 
         parameters = new HashMap<>();

@@ -154,17 +154,13 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                 productData data = (productData) parent.getItemAtPosition(position);
 
                 Bundle extras = new Bundle();
-                /*extras.putString("photo", data.getImageurl());
-                extras.putString("productname", data.getItem_name());
-                extras.putString("store", data.getStorename());
-                extras.putInt("price", data.getPrice());
-                extras.putString("seller", data.getSeller_name());*/
 
                 extras.putString("photo", data.getPhoto());
                 extras.putString("productname", data.getProductName());
                 extras.putString("store", data.getConvenientStore());
                 extras.putInt("price", data.getPrice());
-                extras.putString("seller", data.getSellerID());
+                extras.putString("validity", data.getValidity());
+                extras.putString("item_id", data.getItem_id());
 
                 productItemFragment.setArguments(extras);
 
@@ -172,6 +168,10 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                 transaction.replace(R.id.innerLayout, productItemFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
+            }
+
+            private String toString(int item_id) {
+                return Integer.toString(item_id);
             }
         });
 
@@ -245,7 +245,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                     System.out.println("coupon list: "+CouponArrayList);
 
                     for(CouponData a:CouponArrayList){
-                        adapter.addItem(a.getItem_name(), a.getImageurl(), a.getStorename());
+                        adapter.addItem(a.getItem_name(), a.getImageurl(), a.getStorename(), a.getPrice(), a.getExpiration_date(), a.getCoupon_id());
                         System.out.println("itemname: "+a.getItem_name());
                     }
 
@@ -350,11 +350,11 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
             @Override
             public void run() {
                 //adapter.init();
-                //adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
                 load_item();
                 listView.setAdapter(adapter);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-        }, 1000);
+        }, 500);
     }
 }

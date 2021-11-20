@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class Adapter extends BaseAdapter {
@@ -21,6 +23,8 @@ public class Adapter extends BaseAdapter {
     private ImageView iconImageView;
     private TextView nameTextView;
     private TextView storeTextView;
+    private TextView priceTextView;
+    private TextView validityTextView;
 
     @Override
     public int getCount() {
@@ -50,6 +54,8 @@ public class Adapter extends BaseAdapter {
         nameTextView=(TextView) convertView.findViewById(R.id.name);
         iconImageView=(ImageView) convertView.findViewById(R.id.icon);
         storeTextView=(TextView) convertView.findViewById(R.id.store);
+        priceTextView=(TextView) convertView.findViewById(R.id.price1);
+        validityTextView=(TextView) convertView.findViewById(R.id.validity1);
 
         productData listViewProduct=listViewProductList.get(position);
 
@@ -60,16 +66,33 @@ public class Adapter extends BaseAdapter {
             Glide.with(convertView).load(listViewProduct.getPhoto()).into(iconImageView);
         }
         storeTextView.setText(listViewProduct.getConvenientStore());
+        priceTextView.setText("  "+listViewProduct.getPrice() + " 원");
+        validityTextView.setText(listViewProduct.getValidity());
+
         return  convertView;
     }
-    public void addItem(String name, String icon, String store){
+
+
+
+    public void addItem(String name, String icon, String store, int price, String validity, String coupon_id){
         productData product=new productData();
 
         product.setProductName(name);
         product.setConvenientStore(store);
         product.setPhoto(icon);
+        product.setPrice(price);
+        product.setValidity(validity);
+        product.setItem_id(coupon_id);
 
         listViewProductList.add(product);
+    }
+
+    public void addItem(String itemname, String image, String storename) {
+        productData product=new productData();
+
+        product.setProductName(itemname);
+        product.setConvenientStore(storename);
+        product.setPhoto(image);
     }
 }
 /*
