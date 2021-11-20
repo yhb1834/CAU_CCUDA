@@ -33,6 +33,35 @@ import java.util.ArrayList;
 
 public class CartFragment extends Fragment {
     private Context context;
+
+    ActivityResultLauncher<Intent> startForResult_main=registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if(result.getResultCode()==getActivity().RESULT_OK){
+                    System.out.println("메인에서 눌렀어");
+                    Intent intent=result.getData();
+                    getView().invalidate();
+                    
+                }
+            }
+    );
+    ActivityResultLauncher<Intent> startForResult_cart=registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if(result.getResultCode()==getActivity().RESULT_OK){
+                    Intent intent=result.getData();
+                    System.out.println("전체보기에서 눌렀어");
+                    getView().invalidate();
+                }
+            }
+    );
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState){
@@ -66,6 +95,18 @@ public class CartFragment extends Fragment {
         intent.putExtra("prodName", item.getText1());
         intent.putExtra("prodConv", item.getText2());
         intent.putExtra("prodId", item.getItemid());
-        startActivity(intent);
+        intent.putExtra("clickedWhere","MAIN_CART");
+        //startActivity(intent);
+        startForResult_main.launch(intent);
+    }
+    public void click_cart_item_in_all(Context context,CartItemModel item){
+        Intent intent=new Intent(context,ItemPopUp.class);
+        intent.putExtra("prodImage", item.getImageUrl());
+        intent.putExtra("prodName", item.getText1());
+        intent.putExtra("prodConv", item.getText2());
+        intent.putExtra("prodId", item.getItemid());
+        intent.putExtra("clickedWhere","ALL_CART");
+        //startActivity(intent);
+        startForResult_cart.launch(intent);
     }
 }

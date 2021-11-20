@@ -28,6 +28,8 @@ public class AllCartListAdapter extends BaseAdapter {
         items.add(item);
     }
 
+    public void removeAll(){ items.clear(); }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ItemView view=null;

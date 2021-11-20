@@ -36,6 +36,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.example.ccuda.R;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
@@ -135,30 +138,7 @@ public class addToCart extends CartFragment {
         if(cartList.size()==0){
             viewAll.setVisibility(View.INVISIBLE);
         }
-        if(cartList.size()<=5){
-            for (i=0;i<cartList.size();i++){
-                CartItemModel item=cartList.get(i);
-                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
-                imageViews[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        click_cart_item(getContext(),item);
-                    }
-                });
-            }
-        }else {
-            for (i=0;i<5;i++){
-                CartItemModel item=cartList.get(i);
-                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
-                imageViews[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        click_cart_item(getContext(),item);
-
-                    }
-                });
-            }
-        }
+        resetImageview();
 
         viewAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,6 +255,7 @@ public class addToCart extends CartFragment {
                         // 성공
                         Log.d("success","query success");
                         Toast.makeText(getActivity(),"장바구니 추가", Toast.LENGTH_SHORT).show();
+
                     }
                     else{
                         // 실패
@@ -289,10 +270,16 @@ public class addToCart extends CartFragment {
         CartRequest cartRequest = new CartRequest("addTocart", SaveSharedPreference.getId(getActivity()), item_id,storename, responsListener);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(cartRequest);
+
+
+
+        resetImageview();
     }
 
 
     private void load_MyCartList(){
+        //cartList=new ArrayList<>();
+        //cartList.clear();
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -362,7 +349,87 @@ public class addToCart extends CartFragment {
         queue.add(cartRequest);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        /*
+        //for(i=0;i<5;i++){
+        //   imageViews[i].setImageResource(0);
+        //}
+        //System.out.println(cartList);
+        System.out.println("before"+cartList);
+        ArrayList<CartItemModel> reloadCart=new ArrayList<>();
+        cartList.clear();
+        load_MyCartList();
+        System.out.println("after"+cartList);
 
+        if(cartList.size()<=5){
+            for (i=0;i<cartList.size();i++){
+                CartItemModel item=cartList.get(i);
+                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
+                imageViews[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        click_cart_item(getContext(),item);
+                    }
+                });
+            }
+        }else {
+            for (i=0;i<5;i++){
+                CartItemModel item=cartList.get(i);
+                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
+                imageViews[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        click_cart_item(getContext(),item);
+
+                    }
+                });
+            }
+        }
+
+        */
+
+        //Intent intent=new Intent(getActivity(), addToCart.class);
+        //startActivity(this);
+
+
+    }
+
+    private void resetImageview(){
+        if(cartList.size()<=5){
+            for (i=0;i<cartList.size();i++){
+                CartItemModel item=cartList.get(i);
+                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).apply(new RequestOptions()
+                        .signature(new ObjectKey("signature string"))
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE))
+                        .into(imageViews[cartList.size()-1-i]);
+                imageViews[cartList.size()-1-i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        click_cart_item(getContext(),item);
+                    }
+                });
+            }
+        }else {
+            for (i=0;i<5;i++){
+                CartItemModel item=cartList.get(i);
+                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).apply(new RequestOptions()
+                        .signature(new ObjectKey("signature string"))
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE))
+                        .into(imageViews[4-i]);
+                imageViews[4-i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        click_cart_item(getContext(),item);
+
+                    }
+                });
+            }
+        }
+    }
 
 
 

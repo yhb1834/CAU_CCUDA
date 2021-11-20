@@ -116,7 +116,7 @@ public class UploadCoupon extends Fragment {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Uri data=result.getData().getData();
                         uploadPhoto.setImageURI(data);
-                        System.out.println(data);
+                        //System.out.println(data);
                     }
                 }
             });
@@ -276,7 +276,7 @@ public class UploadCoupon extends Fragment {
                                     // 포스팅 성공
                                     Log.d("success","posting success");
                                     //Toast.makeText(context,"판매글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                                    System.out.println("picture: "+finalImage);
+                                    //System.out.println("picture: "+finalImage);
                                     Toast.makeText(getContext(), finalConv+" "+finalProduct+" "+finalPrice, Toast.LENGTH_SHORT).show();
                                 }
                                 else {

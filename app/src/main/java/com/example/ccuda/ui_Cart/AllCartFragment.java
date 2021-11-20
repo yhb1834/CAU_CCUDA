@@ -46,9 +46,32 @@ public class AllCartFragment extends CartFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CartItemModel item=(CartItemModel) adapter.getItem(position);
-                click_cart_item(getActivity(), item);
+                click_cart_item_in_all(getActivity(), item);
+                //adapter.notifyDataSetChanged();
             }
         });
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.removeAll();
+        for(int i=0;i<itemList.size();i++){
+            adapter.addItem(new CartItemModel(itemList.get(i).getImgUrl(),itemList.get(i).getProdName(),itemList.get(i).getConvName(),itemList.get(i).getId()));
+        }
+        cartItemList.setAdapter(adapter);
+        cartItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CartItemModel item=(CartItemModel) adapter.getItem(position);
+                click_cart_item_in_all(getActivity(), item);
+                //adapter.notifyDataSetChanged();
+            }
+        });
+        adapter.notifyDataSetChanged();
+
+        System.out.println("hihihihihihihihihihi");
+    }
+
 }
