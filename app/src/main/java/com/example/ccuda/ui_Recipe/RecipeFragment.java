@@ -80,6 +80,16 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
+
+        //맨 위로 플로팅 버
+        FloatingActionButton fabup = (FloatingActionButton) view.findViewById(R.id.scrolltop2);
+        fabup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mRecyclerView.smoothScrollToPosition(0);
+            }
+        });
+
         FloatingActionButton fab = view.findViewById(R.id.add_recipe);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

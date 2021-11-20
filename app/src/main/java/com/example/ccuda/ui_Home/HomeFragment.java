@@ -1,6 +1,7 @@
 package com.example.ccuda.ui_Home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -132,6 +133,15 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
 
         adapter =new Adapter();
         load_item();
+
+        //맨 위로 플로팅 버
+        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.scrolltop);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listView.smoothScrollToPosition(0);
+            }
+        });
 
         FloatingActionButton addCuppon= (FloatingActionButton) v.findViewById(R.id.add_article);
         addCuppon.setOnClickListener(new View.OnClickListener() {

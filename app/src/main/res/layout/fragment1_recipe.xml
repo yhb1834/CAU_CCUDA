@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh2"
         android:layout_width="match_parent"
@@ -23,6 +23,20 @@
             </androidx.recyclerview.widget.RecyclerView>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/scrolltop2"
+                app:fabSize="mini"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end|bottom"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="75dp"
+                android:backgroundTint="@color/gray3"
+                android:outlineProvider="none"
+                android:src="@drawable/up"
+                app:borderWidth="0dp">
+            </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/add_recipe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -31,6 +45,7 @@
                 android:backgroundTint="@color/yellow"
                 android:src="@drawable/add"
                 android:tint="@color/black"
+                app:borderWidth="0dp"
                 tools:ignore="SpeakableTextPresentCheck"></com.google.android.material.floatingactionbutton.FloatingActionButton>
         </FrameLayout>
 

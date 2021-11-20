@@ -10,7 +10,24 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/white"/>
+        android:divider="@color/white">
+
+
+    </ListView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scrolltop"
+        app:fabSize="mini"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="end|bottom"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="75dp"
+        android:backgroundTint="@color/gray3"
+        android:outlineProvider="none"
+        android:src="@drawable/up"
+        app:borderWidth="0dp"
+        tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_article"
@@ -21,6 +38,7 @@
         android:src="@drawable/add"
         android:backgroundTint="@color/yellow"
         android:tint="@color/black"
+        app:borderWidth="0dp"
         tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
 
