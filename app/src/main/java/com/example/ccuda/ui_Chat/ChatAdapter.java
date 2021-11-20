@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -60,41 +61,80 @@ public class ChatAdapter extends BaseAdapter {
         itemView=null;
 
         //메세지가 내 메세지인지??
-        if(Data.user_id.equals(Long.toString(SaveSharedPreference.getId(viewGroup.getContext())))){
-            itemView= layoutInflater.inflate(R.layout.my_msg_box,viewGroup,false);
-        }else{
-            itemView= layoutInflater.inflate(R.layout.other_msg_box,viewGroup,false);
-        }
-        //만들어진 itemView에 값들 설정
-        CircleImageView iv= itemView.findViewById(R.id.iv);
-        TextView tvName= itemView.findViewById(R.id.tv_name);
-        TextView tvMsg= itemView.findViewById(R.id.tv_msg);
-        TextView tvTime= itemView.findViewById(R.id.tv_time);
-
-        Response.Listener<String> responsListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonObject = new JSONObject(response);
-                    String nicname = jsonObject.getString("nicname");
-                    String imageurl = jsonObject.getString("profile");
-                    if(imageurl.equals("null")){
-                        imageurl = SaveSharedPreference.BASIC_IMAGE_URL;
-                    }
-
-                    tvName.setText(nicname);
-                    tvMsg.setText(Data.msg);
-                    tvTime.setText(Data.timestamp);
-                    Glide.with(itemView).load(imageurl).into(iv);
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+        if(Data.type.equals("image")){
+            if(Data.user_id.equals(Long.toString(SaveSharedPreference.getId(viewGroup.getContext())))){
+                itemView= layoutInflater.inflate(R.layout.my_imagemsg_box,viewGroup,false);
+            }else{
+                itemView= layoutInflater.inflate(R.layout.other_imagemsg_box,viewGroup,false);
             }
-        };
-        ChatRequest chatRequest = new ChatRequest("userinfo",Long.parseLong(Data.user_id), responsListener);
-        RequestQueue queue = Volley.newRequestQueue(viewGroup.getContext());
-        queue.add(chatRequest);
+            //만들어진 itemView에 값들 설정
+            CircleImageView iv= itemView.findViewById(R.id.iv);
+            TextView tvName= itemView.findViewById(R.id.tv_name);
+            ImageView ivMsg= itemView.findViewById(R.id.iv_msg);
+            TextView tvTime= itemView.findViewById(R.id.tv_time);
+
+            Response.Listener<String> responsListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try{
+                        JSONObject jsonObject = new JSONObject(response);
+                        String nicname = jsonObject.getString("nicname");
+                        String imageurl = jsonObject.getString("profile");
+                        if(imageurl.equals("null")){
+                            imageurl = SaveSharedPreference.BASIC_IMAGE_URL;
+                        }
+
+                        tvName.setText(nicname);
+                        Glide.with(itemView).load(Data.msg).into(ivMsg);
+                        tvTime.setText(Data.timestamp);
+                        Glide.with(itemView).load(imageurl).into(iv);
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            };
+            ChatRequest chatRequest = new ChatRequest("userinfo",Long.parseLong(Data.user_id), responsListener);
+            RequestQueue queue = Volley.newRequestQueue(viewGroup.getContext());
+            queue.add(chatRequest);
+        }
+        else{
+            if(Data.user_id.equals(Long.toString(SaveSharedPreference.getId(viewGroup.getContext())))){
+                itemView= layoutInflater.inflate(R.layout.my_msg_box,viewGroup,false);
+            }else{
+                itemView= layoutInflater.inflate(R.layout.other_msg_box,viewGroup,false);
+            }
+            //만들어진 itemView에 값들 설정
+            CircleImageView iv= itemView.findViewById(R.id.iv);
+            TextView tvName= itemView.findViewById(R.id.tv_name);
+            TextView tvMsg= itemView.findViewById(R.id.tv_msg);
+            TextView tvTime= itemView.findViewById(R.id.tv_time);
+
+            Response.Listener<String> responsListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try{
+                        JSONObject jsonObject = new JSONObject(response);
+                        String nicname = jsonObject.getString("nicname");
+                        String imageurl = jsonObject.getString("profile");
+                        if(imageurl.equals("null")){
+                            imageurl = SaveSharedPreference.BASIC_IMAGE_URL;
+                        }
+
+                        tvName.setText(nicname);
+                        tvMsg.setText(Data.msg);
+                        tvTime.setText(Data.timestamp);
+                        Glide.with(itemView).load(imageurl).into(iv);
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            };
+            ChatRequest chatRequest = new ChatRequest("userinfo",Long.parseLong(Data.user_id), responsListener);
+            RequestQueue queue = Volley.newRequestQueue(viewGroup.getContext());
+            queue.add(chatRequest);
+        }
 
         return itemView;
     }

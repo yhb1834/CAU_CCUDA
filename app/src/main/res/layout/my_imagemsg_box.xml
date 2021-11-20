@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_baseline_account_circle_24" />
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textColor="#333333"
+        android:layout_toLeftOf="@+id/iv"
+        android:layout_marginRight="10dp"/>
+
+    <ImageView
+        android:id="@+id/iv_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_name"
+        android:layout_marginRight="16dp"
+        android:layout_toLeftOf="@id/iv"
+        android:background="@drawable/back_et_mymsgbox"
+        android:maxWidth="250dp"
+        android:padding="12dp"
+        android:text="Hello android"
+        android:textColor="@color/black" />
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="13:35"
+        android:textSize="12sp"
+        android:layout_toLeftOf="@+id/iv_msg"
+        android:layout_marginRight="8dp"
+        android:layout_alignBottom="@id/iv_msg"/>
+</RelativeLayout>
+
+    <!--
+    <?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+
+        &lt;!&ndash;
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_baseline_account_circle_24"
+            android:layout_alignParentRight="true"/>
+            &ndash;&gt;
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="name"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/tv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_name"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/back_et_mymsgbox"
+            android:maxWidth="250dp"
+            android:padding="12dp"
+            android:text="Hello android"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="13:35"
+            android:textSize="12sp"
+            android:layout_toLeftOf="@+id/tv_msg"
+            android:layout_marginRight="8dp"
+            android:layout_alignBottom="@id/tv_msg"/>
+    </RelativeLayout>
+    -->

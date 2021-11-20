@@ -34,7 +34,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 import com.example.ccuda.data.ChatData;
+import com.example.ccuda.data.CouponData;
 import com.example.ccuda.data.SaveSharedPreference;
+import com.example.ccuda.ui_Home.HomeActivity;
 import com.example.ccuda.ui_Recipe.MultiImageAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -43,9 +45,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -61,6 +68,9 @@ public class ChatRoomActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference chatref;
     String chatRoomUid;
+    Uri imageuri;
+    String imageurl;
+    ChatData.Comment couponimagechat = new ChatData.Comment();
 
 
     String[] items = {"","나만의 냉장고", "포켓CU"};
@@ -168,11 +178,57 @@ public class ChatRoomActivity extends AppCompatActivity {
         btn_getImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 2222);
+                Intent intent= new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent,10);
+            }
+        });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 10:
+                if(resultCode==RESULT_OK){
+                    imageuri = data.getData();
+                    saveData();
+                }
+                else if(resultCode == RESULT_CANCELED){
+                    Toast.makeText(this,"사진 선택 취소", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+    void saveData(){
+        //Firebase storage에 이미지 저장하기 위해 파일명 만들기(날짜를 기반으로)
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
+        String fileName= sdf.format(new Date())+".png";
+
+        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+        final StorageReference imgRef= firebaseStorage.getReference("chatImages/"+fileName);
+
+        UploadTask uploadTask= imgRef.putFile(imageuri);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                //이미지 업로드가 성공되었으므로...
+                //곧바로 firebase storage의 이미지 파일 다운로드 URL을 얻어오기
+                imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        //파라미터로 firebase의 저장소에 저장되어 있는
+                        //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
+                        imageurl = uri.toString();
+                        et.setText(imageurl);
+                        couponimagechat.user_id = String.valueOf(SaveSharedPreference.getId(ChatRoomActivity.this));
+                        couponimagechat.msg = et.getText().toString();
+                        Calendar calendar= Calendar.getInstance();
+                        couponimagechat.timestamp = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+                        couponimagechat.type = "image";
+
+                    }
+                });
+
             }
         });
     }
@@ -241,14 +297,22 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     public void clickSend(View view){
         if(!et.getText().toString().equals("")){
-            ChatData.Comment comment = new ChatData.Comment();
-            comment.user_id = String.valueOf(SaveSharedPreference.getId(this));
-            comment.msg = et.getText().toString();
-            Calendar calendar= Calendar.getInstance();
-            comment.timestamp = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            chatref = firebaseDatabase.getReference();
-            chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(comment);
+            if(couponimagechat==null){
+                ChatData.Comment comment = new ChatData.Comment();
+                comment.user_id = String.valueOf(SaveSharedPreference.getId(this));
+                comment.msg = et.getText().toString();
+                Calendar calendar= Calendar.getInstance();
+                comment.timestamp = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+                comment.type = "text";
+                firebaseDatabase = FirebaseDatabase.getInstance();
+                chatref = firebaseDatabase.getReference();
+                chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(comment);
+            }
+            else{
+                firebaseDatabase = FirebaseDatabase.getInstance();
+                chatref = firebaseDatabase.getReference();
+                chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(couponimagechat);
+            }
 
             et.setText("");
             InputMethodManager imm=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
