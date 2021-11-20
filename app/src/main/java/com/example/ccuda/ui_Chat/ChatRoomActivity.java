@@ -69,7 +69,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     DatabaseReference chatref;
     String chatRoomUid;
     Uri imageuri;
-    String imageurl;
+    String imageurl="";
     ChatData.Comment couponimagechat = new ChatData.Comment();
 
 
@@ -191,7 +191,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             case 10:
                 if(resultCode==RESULT_OK){
                     imageuri = data.getData();
-                    saveData();
+                    //saveData();
                 }
                 else if(resultCode == RESULT_CANCELED){
                     Toast.makeText(this,"사진 선택 취소", Toast.LENGTH_SHORT).show();
@@ -297,7 +297,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     public void clickSend(View view){
         if(!et.getText().toString().equals("")){
-            if(couponimagechat==null){
+            if(imageurl.equals("")){
                 ChatData.Comment comment = new ChatData.Comment();
                 comment.user_id = String.valueOf(SaveSharedPreference.getId(this));
                 comment.msg = et.getText().toString();
@@ -308,11 +308,12 @@ public class ChatRoomActivity extends AppCompatActivity {
                 chatref = firebaseDatabase.getReference();
                 chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(comment);
             }
-            else{
+           /* else{
                 firebaseDatabase = FirebaseDatabase.getInstance();
                 chatref = firebaseDatabase.getReference();
                 chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(couponimagechat);
-            }
+                couponimagechat = null;
+            }*/
 
             et.setText("");
             InputMethodManager imm=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
