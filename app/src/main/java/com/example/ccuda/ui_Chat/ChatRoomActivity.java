@@ -69,8 +69,8 @@ public class ChatRoomActivity extends AppCompatActivity {
     DatabaseReference chatref;
     String chatRoomUid;
     Uri imageuri;
-    String imageurl="";
-    ChatData.Comment couponimagechat = new ChatData.Comment();
+    String imageurl;
+
 
 
     String[] items = {"","나만의 냉장고", "포켓CU"};
@@ -88,6 +88,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         chatRoomUid=intent.getExtras().getString("roomnum");
+        imageurl = null;
 
         //Firebase DB관리 객체
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -191,7 +192,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             case 10:
                 if(resultCode==RESULT_OK){
                     imageuri = data.getData();
-                    //saveData();
+                    saveData();
                 }
                 else if(resultCode == RESULT_CANCELED){
                     Toast.makeText(this,"사진 선택 취소", Toast.LENGTH_SHORT).show();
@@ -202,7 +203,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     void saveData(){
         //Firebase storage에 이미지 저장하기 위해 파일명 만들기(날짜를 기반으로)
         SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
-        String fileName= sdf.format(new Date())+".png";
+        String fileName= chatRoomUid+sdf.format(new Date())+".png";
 
         FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
         final StorageReference imgRef= firebaseStorage.getReference("chatImages/"+fileName);
@@ -220,12 +221,6 @@ public class ChatRoomActivity extends AppCompatActivity {
                         //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
                         imageurl = uri.toString();
                         et.setText(imageurl);
-                        couponimagechat.user_id = String.valueOf(SaveSharedPreference.getId(ChatRoomActivity.this));
-                        couponimagechat.msg = et.getText().toString();
-                        Calendar calendar= Calendar.getInstance();
-                        couponimagechat.timestamp = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
-                        couponimagechat.type = "image";
-
                     }
                 });
 
@@ -297,24 +292,22 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     public void clickSend(View view){
         if(!et.getText().toString().equals("")){
-            if(imageurl.equals("")){
-                ChatData.Comment comment = new ChatData.Comment();
-                comment.user_id = String.valueOf(SaveSharedPreference.getId(this));
-                comment.msg = et.getText().toString();
-                Calendar calendar= Calendar.getInstance();
-                comment.timestamp = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+            ChatData.Comment comment = new ChatData.Comment();
+            comment.user_id = String.valueOf(SaveSharedPreference.getId(this));
+            comment.msg = et.getText().toString();
+            Calendar calendar= Calendar.getInstance();
+            comment.timestamp = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+            if(imageurl != null){
                 comment.type = "text";
-                firebaseDatabase = FirebaseDatabase.getInstance();
-                chatref = firebaseDatabase.getReference();
-                chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(comment);
             }
-           /* else{
-                firebaseDatabase = FirebaseDatabase.getInstance();
-                chatref = firebaseDatabase.getReference();
-                chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(couponimagechat);
-                couponimagechat = null;
-            }*/
+            else{
+                comment.type = "image";
+            }
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            chatref = firebaseDatabase.getReference();
+            chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(comment);
 
+            imageurl = null;
             et.setText("");
             InputMethodManager imm=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);

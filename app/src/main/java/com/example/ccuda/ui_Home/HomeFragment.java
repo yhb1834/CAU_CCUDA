@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
     public ArrayList<ItemData> gs25Item = new ArrayList<>();
     public ArrayList<ItemData> sevenItem = new ArrayList<>();
     Adapter adapter=new Adapter();
-    ArrayList<CouponData> CouponArrayList = new ArrayList<>();
+    private ArrayList<CouponData> CouponArrayList = new ArrayList<>();
     FirebaseDatabase firebaseDatabase;
     DatabaseReference itemRef;
     ListView listView;
@@ -207,7 +207,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                         couponData.setSeller_score(object.getString("seller_score")); // 판매자 평점
 
                         int item_id = Integer.parseInt(object.getString("item_id"));
-                        if(storename == "cu"){
+                        if(storename.equals("cu")){
                             for(int j=0; j<cuItem.size(); j++ ){
                                 if(cuItem.get(j).getItemid()==item_id){
                                     couponData.setItem_name(cuItem.get(j).getItemname());
@@ -216,7 +216,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                                     break;
                                 }
                             }
-                        }else if(storename == "gs25"){
+                        }else if(storename.equals("gs25")){
                             for(int j=0; j<gs25Item.size(); j++ ){
                                 if(gs25Item.get(j).getItemid()==item_id){
                                     couponData.setItem_name(gs25Item.get(j).getItemname());
@@ -241,7 +241,6 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                         //adapter.addItem(couponData.getItem_name(), R.drawable.add, couponData.getStorename());
                     }
                     System.out.println("coupon list: "+CouponArrayList);
-                    // TODO: Need adapter for couponArrayList(=판매글 리스트)
 
 
                     for(CouponData a:CouponArrayList){
@@ -275,15 +274,8 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                     JSONObject jsonObject = new JSONObject(response);
                     String success = jsonObject.getString("success");
                     if(success=="success"){
-                        // 포스팅 성공
-                        Log.d("success","delete success");
-                        int i;
-                        for(i=0; i<CouponArrayList.size(); i++){
-                            if(CouponArrayList.get(i).getCoupon_id() == coupon_id){
-                                CouponArrayList.remove(i);
-                                Toast.makeText(context,"해당 판매글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                        //Log.d("success","delete success");
+                        Toast.makeText(context,"해당 판매글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     }
                 }catch (Exception e){
                     e.printStackTrace();

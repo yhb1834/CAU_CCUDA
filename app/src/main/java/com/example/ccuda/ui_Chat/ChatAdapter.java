@@ -61,7 +61,7 @@ public class ChatAdapter extends BaseAdapter {
         itemView=null;
 
         //메세지가 내 메세지인지??
-        /*
+
         if(Data.type.equals("image")){
             if(Data.user_id.equals(Long.toString(SaveSharedPreference.getId(viewGroup.getContext())))){
                 itemView= layoutInflater.inflate(R.layout.my_imagemsg_box,viewGroup,false);
@@ -98,8 +98,8 @@ public class ChatAdapter extends BaseAdapter {
             ChatRequest chatRequest = new ChatRequest("userinfo",Long.parseLong(Data.user_id), responsListener);
             RequestQueue queue = Volley.newRequestQueue(viewGroup.getContext());
             queue.add(chatRequest);
-        }*/
-        //else{
+        }
+        else{
             if(Data.user_id.equals(Long.toString(SaveSharedPreference.getId(viewGroup.getContext())))){
                 itemView= layoutInflater.inflate(R.layout.my_msg_box,viewGroup,false);
             }else{
@@ -135,7 +135,7 @@ public class ChatAdapter extends BaseAdapter {
             ChatRequest chatRequest = new ChatRequest("userinfo",Long.parseLong(Data.user_id), responsListener);
             RequestQueue queue = Volley.newRequestQueue(viewGroup.getContext());
             queue.add(chatRequest);
-        //}
+        }
 
         return itemView;
     }
