@@ -19,6 +19,7 @@ import com.example.ccuda.R;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.ui_Home.HomeActivity;
+import com.example.ccuda.ui_Home.HomeFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,7 +41,10 @@ public class RecipeRegisterActivity extends AppCompatActivity {
     private ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
 
     ArrayList<Uri> uriList = new ArrayList<>();     // 이미지의 uri를 담을 ArrayList 객체
+    ArrayList<String> urlList = new ArrayList<>();
     ArrayList<String> itemList = new ArrayList<>(); // 고른 상품명 담을 객체
+    ArrayList<String> filenameList = new ArrayList<>();
+    String itemname;
 
 
     RecyclerView recyclerView;  // 이미지를 보여줄 리사이클러뷰
@@ -82,8 +86,12 @@ public class RecipeRegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String title = edit_title.getText().toString();
                 String content = edit_Content.getText().toString();
-                String storename;
-                //clickregister(title, storename, content);
+
+                //TODO: need storename, itemList
+                String storename="cu";  //test
+                itemList.add("1");      //test
+                itemList.add("2");
+                clickregister(title, storename, content);
             }
         });
     }
@@ -170,31 +178,25 @@ public class RecipeRegisterActivity extends AppCompatActivity {
     }*/
 
     private void clickregister(String title, String storename,String content){
-         SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
-        String fileName=sdf.format(new Date())+"";
-        String child = fileName+SaveSharedPreference.getId(this);
+        itemname = "";
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
+        String fileName1=sdf.format(new Date())+"";
+        for(int i =0; i<itemList.size(); i++){
+            if(i==0){
+                itemname = itemname+itemList.get(i);
+            }
+            else{
+                itemname = itemname +", "+itemList.get(i);
+            }
+        }
         for(int j=0; j<uriList.size(); j++){
-            fileName = fileName+j+".png";
-            uploadimg(uriList.get(j),fileName, child);
+            String fileName = fileName1+"-"+j+".png";
+            uploadimg(uriList.get(j),j, fileName, title, storename, content);
         }
-        for(int j=0; j<itemList.size(); j++){
-            firebaseDatabase.getReference().child("Recipe").child(title).child("item").push().setValue(itemList.get(j));
-        }
-        RecipeDTO recipeDTO = new RecipeDTO();
-        recipeDTO.setTitle(title);
-        recipeDTO.setStorename(storename);
-        recipeDTO.setContent(content);
-        recipeDTO.setWriter_id(Long.toString(SaveSharedPreference.getId(this)));
-
-        firebaseDatabase.getReference().child("Recipe").child(child).child("content").push().setValue(recipeDTO);
-
-        //TODO: 레시피 등록 완료 후 동작
-
-
     }
 
     // firebase에 파일 및 이미지 저장
-    private void uploadimg( Uri uri,String fileName,String child) {
+    private void uploadimg( Uri uri,int index,String fileName, String title, String storename,String content) {
         try{
             FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
             final StorageReference imgRef= firebaseStorage.getReference("recipeImages/"+fileName);
@@ -210,7 +212,11 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             //파라미터로 firebase의 저장소에 저장되어 있는
                             //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
-                            firebaseDatabase.getReference().child("Recipe").child(child).child("images").push().setValue(uri.toString());
+                            urlList.add(uri.toString());
+                            filenameList.add(fileName);
+                            if(index == uriList.size()-1){
+                                saverecipe(title, storename, content);
+                            }
                         }
                     });
                 }
@@ -220,4 +226,53 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         }
     }
 
+    private void saverecipe(String title, String storename,String content){
+        RecipeDTO recipeDTO = new RecipeDTO();
+        recipeDTO.setTitle(title);
+        recipeDTO.setStorename(storename);
+        recipeDTO.setContent(content);
+        recipeDTO.setWriter_id(Long.toString(SaveSharedPreference.getId(this)));
+        recipeDTO.setItemname(itemname);
+        recipeDTO.setLike(0);
+
+        for(int j=0; j<urlList.size(); j++){
+            String url = urlList.get(j);
+            String filename = filenameList.get(j);
+            if(j==0){
+                recipeDTO.setImage1(url,filename);
+            }
+            else if(j==1){
+                recipeDTO.setImage2(url,filename);
+            }
+            else if(j==2){
+                recipeDTO.setImage3(url,filename);}
+            else if(j==3){
+                recipeDTO.setImage4(url,filename);
+            }
+            else if(j==4){
+                recipeDTO.setImage5(url,filename);
+            }
+            else if(j==5){
+                recipeDTO.setImage6(url,filename);
+            }
+            else if(j==6){
+                recipeDTO.setImage7(url,filename);
+            }
+            else if (j==7) {
+                recipeDTO.setImage8(url, filename);
+            }
+            else if (j==8) {
+                recipeDTO.setImage9(url, filename);
+            }
+            else{
+                recipeDTO.setImage10(url,filename);
+            }
+        }
+
+        firebaseDatabase.getReference().child("Recipe").push().setValue(recipeDTO);
+
+        //TODO: 레시피 등록 완료 후 동작
+        //getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new RecipeFragment()).commit();
+
+    }
 }

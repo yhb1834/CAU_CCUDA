@@ -210,25 +210,27 @@ public class ChatRoomActivity extends AppCompatActivity {
         FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
         final StorageReference imgRef= firebaseStorage.getReference("chatImages/"+fileName);
 
-        UploadTask uploadTask= imgRef.putFile(imageuri);
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                //이미지 업로드가 성공되었으므로...
-                //곧바로 firebase storage의 이미지 파일 다운로드 URL을 얻어오기
-                imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        //파라미터로 firebase의 저장소에 저장되어 있는
-                        //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
-                        imageurl = uri.toString();
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomActivity.this)
-                                .setTitle("이미지를 전송")
-                                .setMessage("해당 이미지를 전송하시겠습니까?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomActivity.this)
+                .setTitle("이미지를 전송")
+                .setMessage("해당 이미지를 전송하시겠습니까?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        UploadTask uploadTask= imgRef.putFile(imageuri);
+                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                //이미지 업로드가 성공되었으므로...
+                                //곧바로 firebase storage의 이미지 파일 다운로드 URL을 얻어오기
+                                imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                    public void onSuccess(Uri uri) {
+                                        //파라미터로 firebase의 저장소에 저장되어 있는
+                                        //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
+                                        imageurl = uri.toString();
+
                                         ChatData.Comment comment = new ChatData.Comment();
                                         comment.user_id = String.valueOf(SaveSharedPreference.getId(ChatRoomActivity.this));
                                         Calendar calendar= Calendar.getInstance();
@@ -240,22 +242,21 @@ public class ChatRoomActivity extends AppCompatActivity {
                                         firebaseDatabase = FirebaseDatabase.getInstance();
                                         chatref = firebaseDatabase.getReference();
                                         chatref.child("chatrooms").child(chatRoomUid).child("comments").push().setValue(comment);
-
-                                    }
-                                })
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        imageurl=null;
                                     }
                                 });
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        imageurl=null;
                     }
                 });
-
-            }
-        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 

@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 import com.example.ccuda.data.RecipeItem;
 import com.kakao.network.ErrorResult;
@@ -52,7 +53,7 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
         View v = inflater.inflate(R.layout.fragment1_recipe_item, container, false);
         item = getArguments().getParcelable(Global.KEY_DATA);
         if ( item != null) {
-            int isImage = item.getImage();
+            String isImage = item.getImage();
             int islike = item.getLike();
             String isTitle = item.getTitle();
 
@@ -60,7 +61,8 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
             like11 = (TextView) v.findViewById(R.id.likenumber2);
             recipeTitle11 = (TextView) v.findViewById(R.id.recipetitle);
 
-            recipeImage11.setImageResource(isImage);
+            Glide.with(this).load(isImage).into(recipeImage11);
+            //recipeImage11.setImageResource(isImage);
             like11.setText(String.valueOf(islike));
             recipeTitle11.setText(isTitle);
         }
