@@ -11,8 +11,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.ccuda.R;
@@ -45,13 +48,15 @@ public class RecipeRegisterActivity extends AppCompatActivity {
     ArrayList<String> itemList = new ArrayList<>(); // 고른 상품명 담을 객체
     ArrayList<String> filenameList = new ArrayList<>();
     String itemname;
-
+    String[] conv={"선택없음","GS25", "SEVEN11", "CU"};
+    String storename;   // 고른 편의점명
 
     RecyclerView recyclerView;  // 이미지를 보여줄 리사이클러뷰
     MultiImageAdapter adapter;  // 리사이클러뷰에 적용시킬 어댑터
     EditText edit_title;
     EditText edit_Content;
     Button btn_register;
+    Spinner store_spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         edit_title = findViewById(R.id.edit_title);
         edit_Content = findViewById(R.id.edit_Content);
         btn_register = findViewById(R.id.btn_register);
+        store_spinner = findViewById(R.id.spinner1);
 
         // 파이어베이스 인스턴스 생성
         storage = FirebaseStorage.getInstance();
@@ -80,6 +86,36 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.imageRecyclerView);
 
+        //편의점 고르기
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, conv);
+        store_spinner.setAdapter(adapter);
+        store_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+                                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                                                        switch (position) {
+                                                            case 0:
+                                                                storename = "";
+                                                                break;
+                                                            case 1:
+                                                                storename = "gs25";
+                                                                break;
+                                                            case 2:
+                                                                storename = "seven";
+                                                                break;
+                                                            case 3:
+                                                                storename = "cu";
+                                                                break;
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onNothingSelected(AdapterView<?> parent) {
+
+                                                    }
+
+                                                });
+
         // 레시피 등록 버튼
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,12 +124,14 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                 String content = edit_Content.getText().toString();
 
                 //TODO: need storename, itemList
-                String storename="cu";  //test
-                itemList.add("1");      //test
-                itemList.add("2");
+                if(storename.equals("")){
+                    Toast.makeText(getApplicationContext(),"편의점을 선택해주세요",Toast.LENGTH_SHORT).show();
+                }else{
                 clickregister(title, storename, content);
+                }
             }
         });
+
     }
 
     // 앨범에서 액티비티로 돌아온 후 실행되는 메서드
