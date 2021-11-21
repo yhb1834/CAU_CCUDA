@@ -1,4 +1,4 @@
-package com.example.ccuda.ui_Recipe;
+package com.example.ccuda.data;
 
 public class RecipeDTO {
     private String title;

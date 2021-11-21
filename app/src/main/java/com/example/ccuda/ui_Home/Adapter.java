@@ -74,7 +74,7 @@ public class Adapter extends BaseAdapter {
 
 
 
-    public void addItem(String name, String icon, String store, int price, String validity, String coupon_id){
+    public void addItem(String name, String icon, String store, int price, String validity, String coupon_id, String seller_id, String seller_nicname, String seller_score){
         productData product=new productData();
 
         product.setProductName(name);
@@ -82,7 +82,10 @@ public class Adapter extends BaseAdapter {
         product.setPhoto(icon);
         product.setPrice(price);
         product.setValidity(validity);
-        product.setItem_id(coupon_id);
+        product.setCoupon_id(coupon_id);
+        product.setSeller_id(seller_id);
+        product.setSeller_nicname(seller_nicname);
+        product.setSeller_score(seller_score);
 
         listViewProductList.add(product);
     }

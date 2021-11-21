@@ -170,7 +170,10 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                 extras.putString("store", data.getConvenientStore());
                 extras.putInt("price", data.getPrice());
                 extras.putString("validity", data.getValidity());
-                extras.putString("item_id", data.getItem_id());
+                extras.putString("coupon_id", data.getCoupon_id());
+                extras.putString("seller_id",data.getSeller_id());
+                extras.putString("seller_nicname",data.getSeller_nicname());
+                extras.putString("seller_score",data.getSeller_score());
 
                 productItemFragment.setArguments(extras);
 
@@ -255,7 +258,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                     System.out.println("coupon list: "+CouponArrayList);
 
                     for(CouponData a:CouponArrayList){
-                        adapter.addItem(a.getItem_name(), a.getImageurl(), a.getStorename(), a.getPrice(), a.getExpiration_date(), a.getCoupon_id());
+                        adapter.addItem(a.getItem_name(), a.getImageurl(), a.getStorename(), a.getPrice(), a.getExpiration_date(), a.getCoupon_id(),Long.toString(a.getSeller_id()),a.getSeller_name(),a.getSeller_score());
                         System.out.println("itemname: "+a.getItem_name());
                     }
 

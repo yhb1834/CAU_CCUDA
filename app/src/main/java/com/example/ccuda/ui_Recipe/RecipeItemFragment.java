@@ -1,15 +1,10 @@
 package com.example.ccuda.ui_Recipe;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,18 +16,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 import com.example.ccuda.data.RecipeItem;
-import com.kakao.network.ErrorResult;
-import com.kakao.util.KakaoParameterException;
-import com.kakao.util.helper.log.Logger;
-import com.kakao.network.ErrorResult;
-import com.kakao.network.callback.ResponseCallback;
-
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RecipeItemFragment extends Fragment { //implements OnBackPressedListener{
 

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -48,9 +49,10 @@ public class ProductItemFragment extends Fragment {
     Button btn_message;
     Context context;
 
-    String seller_id = "";
-    String coupon_id = "";
-    String star="";
+    String seller_id;
+    String coupon_id;
+    String seller_nicname;
+    String star;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,7 +66,10 @@ public class ProductItemFragment extends Fragment {
         int price = getArguments().getInt("price");
         String date = getArguments().getString("validity");
         context = getActivity();
-        coupon_id = getArguments().getString("item_id");
+        coupon_id = getArguments().getString("coupon_id");
+        seller_id = getArguments().getString("seller_id");
+        seller_nicname = getArguments().getString("seller_nicname");
+        star = getArguments().getString("seller_score");
 
         //수정필요
         find_seller();
@@ -84,7 +89,7 @@ public class ProductItemFragment extends Fragment {
         Store.setText(store);
         Price.setText(price + " 원");
         Date.setText(date);
-        Seller.setText(seller_id);
+        Seller.setText(seller_nicname);
         Star.setText(star);
 
         btn_message.setOnClickListener(new View.OnClickListener() {
@@ -94,8 +99,9 @@ public class ProductItemFragment extends Fragment {
                 // 자신이 올린 게시물이 아닌 경우 메세지보내기 가능
 
                 if(!seller_id.equals(Long.toString(SaveSharedPreference.getId(context)))){
-                    if(seller_id != "")
                         open_chatroom(coupon_id, seller_id);
+                }else{
+                    Toast.makeText(context, "회원님이 작성한 글입니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -106,7 +112,6 @@ public class ProductItemFragment extends Fragment {
     void open_chatroom(String coupon_id, String seller_id){
         String buyer_id = Long.toString(SaveSharedPreference.getId(context));
         String roomnum = coupon_id + seller_id + buyer_id;
-
         //채팅방으로 이동
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override

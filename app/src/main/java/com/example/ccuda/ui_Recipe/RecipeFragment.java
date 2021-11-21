@@ -18,9 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ccuda.R;
-import com.example.ccuda.data.ChatData;
+import com.example.ccuda.data.RecipeDTO;
 import com.example.ccuda.data.RecipeItem;
-import com.example.ccuda.ui_Home.HomeActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;

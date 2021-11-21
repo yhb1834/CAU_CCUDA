@@ -61,6 +61,7 @@
                     android:textSize="16sp"
                     android:text="품목 이름" />
 
+
                 <ImageButton
                     android:id="@+id/imageButton2"
                     android:layout_width="wrap_content"

@@ -46,9 +46,7 @@ import com.example.ccuda.R;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
-import com.example.ccuda.db.CartRequest;
 import com.example.ccuda.db.PostRequest;
-import com.example.ccuda.db.SaveJsoupRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
@@ -60,7 +58,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UploadCoupon extends Fragment {
     FragmentTransaction transaction;
@@ -242,6 +245,9 @@ public class UploadCoupon extends Fragment {
                 finalProduct= (String) searchView.getSelectedItem();
                 finalPrice=editText.getText().toString();
                 finalDate=editText2.getText().toString();
+                // 유효기간 입력형식 검사
+                Pattern p = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+                Matcher m = p.matcher(finalDate);
 
                 //if (finalImage==null){
                 //    Toast.makeText(getContext(),"사진을 업로드해주세요.", Toast.LENGTH_SHORT).show();
@@ -261,36 +267,58 @@ public class UploadCoupon extends Fragment {
                 else if(finalDate.length()==0 || finalDate=="" || finalDate==null){
                     Toast.makeText(getContext(),"유효기간을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
+                else if(!m.matches()){
+                    Toast.makeText(getContext(),"유효기간 형식이 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
+                }
                 else{
-                    BitmapDrawable drawable=(BitmapDrawable)uploadPhoto.getDrawable();
-                    finalImage= drawable.getBitmap();
+                    // 유효기간 만료 검사
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Date current = new Date();
+                    String date = simpleDateFormat.format(current);
+                    int compare = 0;
+                    try {
+                        Date endDate = simpleDateFormat.parse(finalDate);
+                        Date todate = simpleDateFormat.parse(date);
+                        compare= endDate.compareTo(todate);
+                    }catch (ParseException e){
+                        e.printStackTrace();
+                    }
+                    
+                    if(compare<0){
+                        Toast.makeText(getContext(),"유효기간이 지난 쿠폰입니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
 
-                    int item_id = getitem_id(finalConv,finalProduct);
-                    Response.Listener<String> responsListener = new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try{
-                                JSONObject jsonObject = new JSONObject(response);
-                                boolean success = jsonObject.getBoolean("success");
-                                if(success){
-                                    // 포스팅 성공
-                                    Log.d("success","posting success");
-                                    //Toast.makeText(context,"판매글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                                    //System.out.println("picture: "+finalImage);
-                                    Toast.makeText(getContext(), finalConv+" "+finalProduct+" "+finalPrice, Toast.LENGTH_SHORT).show();
+                        BitmapDrawable drawable=(BitmapDrawable)uploadPhoto.getDrawable();
+                        finalImage= drawable.getBitmap();
+
+                        int item_id = getitem_id(finalConv,finalProduct);
+                        Response.Listener<String> responsListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try{
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    boolean success = jsonObject.getBoolean("success");
+                                    if(success){
+                                        // 포스팅 성공
+                                        Log.d("success","posting success");
+                                        //Toast.makeText(context,"판매글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                                        //System.out.println("picture: "+finalImage);
+                                        Toast.makeText(getContext(), finalConv+" "+finalProduct+" "+finalPrice, Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        Log.d("success", "query fail");
+                                    }
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new HomeFragment()).commit();
+                                }catch (Exception e){
+                                    e.printStackTrace();
                                 }
-                                else {
-                                    Log.d("success", "query fail");
-                                }
-                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new HomeFragment()).commit();
-                            }catch (Exception e){
-                                e.printStackTrace();
                             }
-                        }
-                    };
-                    PostRequest postRequest = new PostRequest("posting", SaveSharedPreference.getId(getActivity()), finalConv,"",item_id, Integer.parseInt(finalPrice), finalDate, "", BitmapConverter.BitmapToString(finalImage), 0, responsListener);
-                    RequestQueue queue = Volley.newRequestQueue(getActivity());
-                    queue.add(postRequest);
+                        };
+                        PostRequest postRequest = new PostRequest("posting", SaveSharedPreference.getId(getActivity()), finalConv,"",item_id, Integer.parseInt(finalPrice), finalDate, "", BitmapConverter.BitmapToString(finalImage), 0, responsListener);
+                        RequestQueue queue = Volley.newRequestQueue(getActivity());
+                        queue.add(postRequest);
+                    }
                 }
             }
         });

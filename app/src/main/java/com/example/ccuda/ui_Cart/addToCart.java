@@ -1,24 +1,12 @@
 package com.example.ccuda.ui_Cart;
 
-import android.content.Context;
-import android.content.Intent;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,8 +55,7 @@ public class addToCart extends CartFragment {
     ArrayList<ItemData> cuItem = HomeActivity.cuItem;
     ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
     ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference itemRef;
+
 
     CartItemAdapter adapter;
     ArrayList<CartItemModel> itemList=new ArrayList<>();
