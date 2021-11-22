@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -139,13 +141,13 @@ public class RecipeRegisterActivity extends AppCompatActivity {
             public void run() {
                 try{
                     cuReturn=getProductList("cu","https://pyony.com/brands/cu/");
-                    //cuImageReturn=getProductPicture("cu","https://pyony.com/brands/cu/");
+                    cuImageReturn=getProductPicture("cu","https://pyony.com/brands/cu/");
                     //saveProductList(cuReturn,"cu");
                     gsReturn=getProductList("gs25","https://pyony.com/brands/gs25/");
-                    //gsImageReturn=getProductPicture("gs25","https://pyony.com/brands/gs25/");
+                    gsImageReturn=getProductPicture("gs25","https://pyony.com/brands/gs25/");
                     //saveProductList(gsReturn,"gs25");
                     sevenReturn=getProductList("seven","https://pyony.com/brands/seven/");
-                    //sevenImageReturn=getProductPicture("seven","https://pyony.com/brands/seven/");
+                    sevenImageReturn=getProductPicture("seven","https://pyony.com/brands/seven/");
                     //saveProductList(sevenReturn,"seven");
                     Thread.sleep(1000);
                     //System.out.println("cuReturn: "+cuReturn);
@@ -199,19 +201,19 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                             if(convName == "cu"){
                                 for(int i=0; i<cuItem.size(); i++){
                                     prodList.add(cuItem.get(i).getItemname());
-                                    prodPrice.add(Integer.toString(cuItem.get(i).getItemprice2()));
+                                    //prodPrice.add(Integer.toString(cuItem.get(i).getItemprice2()));
                                 }
                             }
                             else if(convName == "seven"){
                                 for(int i=0; i<sevenItem.size(); i++){
                                     prodList.add(sevenItem.get(i).getItemname());
-                                    prodPrice.add(Integer.toString(sevenItem.get(i).getItemprice2()));
+                                    //prodPrice.add(Integer.toString(sevenItem.get(i).getItemprice2()));
                                 }
                             }
                             if(convName == "gs25"){
                                 for(int i=0; i<gs25Item.size(); i++){
                                     prodList.add(gs25Item.get(i).getItemname());
-                                    prodPrice.add(Integer.toString(gs25Item.get(i).getItemprice2()));
+                                    //prodPrice.add(Integer.toString(gs25Item.get(i).getItemprice2()));
                                 }
                             }
                             //prodList = getProductName(convName, URL); //getProductList(convName, URL);
@@ -270,9 +272,32 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"편의점을 선택해주세요",Toast.LENGTH_SHORT).show();
                 }else{
                 clickregister(title, storename, content);
+                showdialog();
+                //finish();
                 }
+
             }
         });
+
+    }
+
+    void showdialog(){
+        AlertDialog.Builder msgBuilder = new AlertDialog.Builder(this)
+                .setTitle("레시피 등록")
+                .setMessage("등록하시겠습니까?")
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialogInterface, int i) {
+                        //Toast.makeText(, "안 끔", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        AlertDialog msgDlg = msgBuilder.create();
+        msgDlg.show();
+
 
     }
 

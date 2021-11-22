@@ -60,20 +60,19 @@
                 android:layout_gravity="center_horizontal|center_vertical" />
 
 
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/conv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:text="편의점명"
-                    android:textSize="20dp"
-                    android:layout_margin="10dp">
-                </TextView>
+                    android:textSize="20dp"></TextView>
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -89,19 +88,21 @@
                 </FrameLayout>
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/prod_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:text="품목"
-                    android:textSize="20dp"
-                    android:layout_margin="10dp">
-                </TextView>
+                    android:textSize="20dp"></TextView>
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -119,8 +120,18 @@
                     android:id="@+id/resultView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp">
-                </TextView>
+                    android:layout_margin="10dp"></TextView>
+
+                <Button
+                    android:id="@+id/add_r"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="관련 품목 추가" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 
@@ -132,21 +143,21 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
-                android:textSize="20dp"
                 android:text="@string/content"
-                android:textColor="@color/darkgray" />
+                android:textColor="@color/darkgray"
+                android:textSize="20dp" />
 
             <EditText
                 android:id="@+id/edit_Content"
                 android:layout_width="match_parent"
                 android:layout_height="368dp"
                 android:layout_marginBottom="8dp"
+                android:background="@drawable/corner_rec"
                 android:ems="3"
                 android:gravity="start"
                 android:hint="@string/content_input"
                 android:inputType="textMultiLine"
-                android:padding="20dp"
-                android:background="@drawable/corner_rec"/>
+                android:padding="20dp" />
 
             <Button
                 android:id="@+id/btn_register"
