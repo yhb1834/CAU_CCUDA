@@ -34,7 +34,9 @@ import com.example.ccuda.MyPage;
 import com.example.ccuda.R;
 import com.example.ccuda.SideMenu.AppSettingsFragment;
 import com.example.ccuda.SideMenu.GetcouponFragment;
+import com.example.ccuda.SideMenu.LikeRecipeFragment;
 import com.example.ccuda.SideMenu.NotifyFragment;
+import com.example.ccuda.SideMenu.UploadRecipeFragment;
 import com.example.ccuda.SideMenu.UploadarticlesFragment;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
@@ -186,6 +188,12 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     case R.id.get_coupon:
                         getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new GetcouponFragment()).commit();
+                        break;
+                    case R.id.upload_recipe:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new UploadRecipeFragment()).commit();
+                        break;
+                    case R.id.like_recipe:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new LikeRecipeFragment()).commit();
                         break;
                     case R.id.settings:
                         getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new AppSettingsFragment()).commit();

@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,7 @@ import java.util.Date;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatRoomActivity extends AppCompatActivity {
+    private RatingBar ratingBar;
     Button finish;
 
     EditText et;
@@ -83,7 +85,28 @@ public class ChatRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
 
-        et=findViewById(R.id.et);
+        ratingBar = findViewById(R.id.ratingBar);
+        finish = findViewById(R.id.finish);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                float score = ratingBar.getRating();
+                System.out.println(score);
+            }
+        });
+
+        finish.setOnClickListener(new OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  if(ratingBar.getRating() >= 0.5){
+                      showdialog();
+                  }else {
+                      Toast.makeText(getApplicationContext(), "별점을 입력하세요", Toast.LENGTH_SHORT).show();
+                  }
+              }
+        });
+
+        et = findViewById(R.id.et);
         listView=findViewById(R.id.listView);
         adapter=new ChatAdapter(messageItems,getLayoutInflater());
         listView.setAdapter(adapter);
@@ -187,6 +210,28 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
     }
+
+    void showdialog(){
+        android.app.AlertDialog.Builder msgBuilder = new android.app.AlertDialog.Builder(this)
+                .setTitle("구매 완료")
+                .setMessage("별점 " + ratingBar.getRating() + "\n구매를 완료하시겠습니까?")
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialogInterface, int i) {
+                        //score 저장 및 구매완료 전환, 홈에서 삭제
+                        //finish();
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getApplicationContext(), "신고하기를 이용하세요", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        android.app.AlertDialog msgDlg = msgBuilder.create();
+        msgDlg.show();
+
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -341,4 +386,14 @@ public class ChatRoomActivity extends AppCompatActivity {
         }
     }
 
+    /*class Listener implements RatingBar.OnRatingBarChangeListener
+    {
+        @Override
+        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+            //float score = ratingBar.getRating();
+            System.out.println(rating);
+        }
+    }*/
+
 }
+

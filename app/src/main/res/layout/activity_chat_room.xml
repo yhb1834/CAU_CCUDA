@@ -21,6 +21,7 @@
             android:numStars="5"
             android:rating="0"
             android:stepSize="0.5"
+            android:isIndicator="false"
             android:theme="@style/RatingBar"
             tools:ignore="SpeakableTextPresentCheck" />
 
