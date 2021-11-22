@@ -142,7 +142,8 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 //새로 추가된 데이터(값 : ChatData객체) 가져오기
                 RecipeDTO recipeDTO = dataSnapshot.getValue(RecipeDTO.class);
                 ArrayList<String> imageurl = getimageurl(recipeDTO);
-                RecipeItem recipeItem = new RecipeItem(imageurl.get(0),recipeDTO.getLike(),recipeDTO.getTitle(),recipeDTO.getItemname(),imageurl,recipeDTO.getContent());
+                String[] itemname = getitemname(recipeDTO.getItemname());
+                RecipeItem recipeItem = new RecipeItem(imageurl.get(0),recipeDTO.getLike(),recipeDTO.getTitle(),itemname,imageurl,recipeDTO.getContent());
                 RecipeItems.add(recipeItem);
 
                 mRecyclerView.setAdapter(mRecipeAdapter);
@@ -170,6 +171,12 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         });
 
+    }
+
+    private String[] getitemname(String itemnamelist){
+        String[] itemname;
+        itemname = itemnamelist.split(", ");
+        return itemname;
     }
 
     private ArrayList<String> getimageurl(RecipeDTO recipeDTO){
