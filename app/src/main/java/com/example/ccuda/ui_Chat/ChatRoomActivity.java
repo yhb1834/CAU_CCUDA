@@ -234,6 +234,18 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
 
+        //사진 클릭
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final ChatData.Comment data = (ChatData.Comment) adapter.getItem(position);
+                if(data.type.equals("image")){
+                    Toast.makeText(getApplicationContext(), "사진 클릭", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
     }
 
 
