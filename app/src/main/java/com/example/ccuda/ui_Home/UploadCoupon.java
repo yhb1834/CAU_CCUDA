@@ -151,8 +151,6 @@ public class UploadCoupon extends Fragment {
         }).start();
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

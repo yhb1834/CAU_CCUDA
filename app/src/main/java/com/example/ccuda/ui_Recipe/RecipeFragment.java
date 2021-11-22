@@ -55,8 +55,12 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mRecipeAdapter = new RecipeAdapter();
 
         /* initiate recyclerview */
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL,false));
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);//new LinearLayoutManager(getActivity()));
+        //mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL,false));
 
         /* adapt data */
         RecipeItems = new ArrayList<>();
@@ -92,7 +96,7 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
         fabup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mRecyclerView.smoothScrollToPosition(0);
+                mRecyclerView.smoothScrollToPosition(mRecipeAdapter.getItemCount()-1);
             }
         });
 
