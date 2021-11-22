@@ -9,17 +9,19 @@ public class RecipeItem implements Parcelable {
     String resourceId;
     int like;
     String title;
-    String itemname;
+    String itemname;    // 고른 상품명이름 묶음 ex) 우유, 치즈, 컵라면
     ArrayList<String> imageurl;
+    String content;     // 글 내용
 
     public RecipeItem(){}
 
-    public RecipeItem(String resourceId, int like, String title, String itemname, ArrayList<String> imageurl) {
+    public RecipeItem(String resourceId, int like, String title, String itemname, ArrayList<String> imageurl, String content) {
         this.resourceId = resourceId;
         this.like = like;
         this.title = title;
         this.itemname = itemname;
         this.imageurl = imageurl;
+        this.content = content;
     }
 
     protected RecipeItem(Parcel in) {
@@ -39,6 +41,18 @@ public class RecipeItem implements Parcelable {
             return new RecipeItem[size];
         }
     };
+
+    public String getItemname() {
+        return itemname;
+    }
+
+    public ArrayList<String> getImageurl() {
+        return imageurl;
+    }
+
+    public String getContent() {
+        return content;
+    }
 
     public String getImage() {return resourceId;}
     public int getLike() { return like; }

@@ -19,7 +19,7 @@ import com.example.ccuda.data.RecipeItem;
 
 public class RecipeItemFragment extends Fragment { //implements OnBackPressedListener{
 
-    private TextView like11, recipeTitle11;
+    private TextView like11, recipeTitle11, recipecontent;
     private ImageView recipeImage11;
     private RecipeItem item;
 
@@ -39,15 +39,18 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
             String isImage = item.getImage();
             int islike = item.getLike();
             String isTitle = item.getTitle();
+            String content = item.getContent();
 
             recipeImage11 = (ImageView) v.findViewById(R.id.recipeImage2);
             like11 = (TextView) v.findViewById(R.id.likenumber2);
             recipeTitle11 = (TextView) v.findViewById(R.id.recipetitle);
+            recipecontent = v.findViewById(R.id.recipecontent);
 
             Glide.with(this).load(isImage).into(recipeImage11);
             //recipeImage11.setImageResource(isImage);
             like11.setText(String.valueOf(islike));
             recipeTitle11.setText(isTitle);
+            recipecontent.setText(content);
         }
 
         //다른 앱 이용해서 공유하기
