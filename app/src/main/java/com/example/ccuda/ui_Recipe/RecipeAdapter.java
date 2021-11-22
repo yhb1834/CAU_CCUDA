@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 import com.example.ccuda.data.RecipeItem;
 
@@ -87,7 +88,8 @@ class ViewHolder extends RecyclerView.ViewHolder {
 
 
     void onBindRecipe(RecipeItem item){
-        image.setImageResource(item.getImage());
+        Glide.with(itemView.getContext()).load(item.getImage()).into(image);
+        //image.setImageResource(item.getImage());
         like.setText(String.valueOf(item.getLike()));
         title.setText(item.getTitle());
     }

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +18,11 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.SaveSharedPreference;
 
 import com.example.ccuda.R;
 import com.example.ccuda.db.ChatRequest;
 import com.example.ccuda.db.ReportRequest;
-import com.google.firebase.database.core.Repo;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -100,7 +96,7 @@ public class NotifyFragment extends Fragment {
         getcheaterlist();
 
         arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, cheaterlist);
-        Spinner btn_report = (Spinner) v.findViewById(R.id.notify_spinner);
+        Spinner btn_report = (Spinner) v.findViewById(R.id.item_spinner_r);
         btn_report.setAdapter(arrayAdapter);
         btn_report.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

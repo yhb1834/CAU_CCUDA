@@ -3,19 +3,27 @@ package com.example.ccuda.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class RecipeItem implements Parcelable {
-    int resourceId;
+    String resourceId;
     int like;
     String title;
+    String itemname;
+    ArrayList<String> imageurl;
 
-    public RecipeItem(int resourceId, int like, String title) {
+    public RecipeItem(){}
+
+    public RecipeItem(String resourceId, int like, String title, String itemname, ArrayList<String> imageurl) {
         this.resourceId = resourceId;
         this.like = like;
         this.title = title;
+        this.itemname = itemname;
+        this.imageurl = imageurl;
     }
 
     protected RecipeItem(Parcel in) {
-        resourceId = in.readInt();
+        resourceId = in.readString();
         like = in.readInt();
         title = in.readString();
     }
@@ -32,11 +40,11 @@ public class RecipeItem implements Parcelable {
         }
     };
 
-    public int getImage() {return resourceId;}
+    public String getImage() {return resourceId;}
     public int getLike() { return like; }
     public String getTitle() { return title; }
 
-    public void setImage(int resourceId){
+    public void setImage(String  resourceId){
         this.resourceId = resourceId;
     }
     public void setLike(int like) { this.like = like; }
@@ -51,7 +59,7 @@ public class RecipeItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(resourceId);
+        dest.writeString(resourceId);
         dest.writeInt(like);
         dest.writeString(title);
     }

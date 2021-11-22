@@ -1,6 +1,7 @@
 package com.example.ccuda.ui_Home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -127,11 +128,32 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
         View v=inflater.inflate(R.layout.fragment1_home, container, false);
         listView=(ListView) v.findViewById(R.id.listView);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefresh);//새로고침
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        /*mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefresh);//새로고침
+        //맨침 위일 때만 새로고
+        if(listView.canScrollVertically(-1)) {
+            mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefresh);//새로고침
+            mSwipeRefreshLayout.setOnRefreshListener(this);
+            adapter =new Adapter();
+            load_item();
+        }
+        else{
+            mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefresh);//새로고침
+            mSwipeRefreshLayout.setOnRefreshListener(this);
+            adapter =new Adapter();
+            load_item();
+        }*/
 
         adapter =new Adapter();
         load_item();
+
+        //맨 위로 플로팅 버
+        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.scrolltop);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listView.smoothScrollToPosition(0);
+            }
+        });
 
         FloatingActionButton addCuppon= (FloatingActionButton) v.findViewById(R.id.add_article);
         addCuppon.setOnClickListener(new View.OnClickListener() {
@@ -154,17 +176,16 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                 productData data = (productData) parent.getItemAtPosition(position);
 
                 Bundle extras = new Bundle();
-                /*extras.putString("photo", data.getImageurl());
-                extras.putString("productname", data.getItem_name());
-                extras.putString("store", data.getStorename());
-                extras.putInt("price", data.getPrice());
-                extras.putString("seller", data.getSeller_name());*/
 
                 extras.putString("photo", data.getPhoto());
                 extras.putString("productname", data.getProductName());
                 extras.putString("store", data.getConvenientStore());
                 extras.putInt("price", data.getPrice());
-                extras.putString("seller", data.getSellerID());
+                extras.putString("validity", data.getValidity());
+                extras.putString("coupon_id", data.getCoupon_id());
+                extras.putString("seller_id",data.getSeller_id());
+                extras.putString("seller_nicname",data.getSeller_nicname());
+                extras.putString("seller_score",data.getSeller_score());
 
                 productItemFragment.setArguments(extras);
 
@@ -172,6 +193,10 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                 transaction.replace(R.id.innerLayout, productItemFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
+            }
+
+            private String toString(int item_id) {
+                return Integer.toString(item_id);
             }
         });
 
@@ -245,7 +270,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                     System.out.println("coupon list: "+CouponArrayList);
 
                     for(CouponData a:CouponArrayList){
-                        adapter.addItem(a.getItem_name(), a.getImageurl(), a.getStorename());
+                        adapter.addItem(a.getItem_name(), a.getImageurl(), a.getStorename(), a.getPrice(), a.getExpiration_date(), a.getCoupon_id(),Long.toString(a.getSeller_id()),a.getSeller_name(),a.getSeller_score());
                         System.out.println("itemname: "+a.getItem_name());
                     }
 
@@ -350,11 +375,11 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
             @Override
             public void run() {
                 //adapter.init();
-                //adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
                 load_item();
                 listView.setAdapter(adapter);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-        }, 1000);
+        }, 500);
     }
 }

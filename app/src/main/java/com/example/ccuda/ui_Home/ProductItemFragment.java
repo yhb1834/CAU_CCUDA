@@ -16,13 +16,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 import com.example.ccuda.data.ChatData;
 import com.example.ccuda.data.CouponData;
+import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.ChatRequest;
@@ -36,12 +39,20 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class ProductItemFragment extends Fragment {
     private CouponData data;
+    public ArrayList<ItemData> currentItem = new ArrayList<>();
     TextView Productname, Store, Price, Date, Seller, Star, Otheritems;
     ImageView Photo;
     Button btn_message;
     Context context;
+
+    String seller_id;
+    String coupon_id;
+    String seller_nicname;
+    String star;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,8 +64,15 @@ public class ProductItemFragment extends Fragment {
         String productname = getArguments().getString("productname");
         String store = getArguments().getString("store");
         int price = getArguments().getInt("price");
-        String seller = getArguments().getString("seller");
+        String date = getArguments().getString("validity");
         context = getActivity();
+        coupon_id = getArguments().getString("coupon_id");
+        seller_id = getArguments().getString("seller_id");
+        seller_nicname = getArguments().getString("seller_nicname");
+        star = getArguments().getString("seller_score");
+
+        //수정필요
+        find_seller();
 
         Photo = (ImageView) view.findViewById(R.id.photo);
         Productname = (TextView) view.findViewById(R.id.itemname2);
@@ -66,25 +84,24 @@ public class ProductItemFragment extends Fragment {
         btn_message = view.findViewById(R.id.btn_message);
 
 
-        //Photo.setImageResource(StringToBitmap(photo));
+        Glide.with(this).load(photo).into(Photo);
         Productname.setText(productname);
         Store.setText(store);
-        Price.setInputType(price);
-        //Date.setText(date);
-        Seller.setText(seller);
-        //Star.setText(score);
+        Price.setText(price + " 원");
+        Date.setText(date);
+        Seller.setText(seller_nicname);
+        Star.setText(star);
 
         btn_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO: need seller_id, coupon_id
-
-                String seller_id = "";
-                String coupon_id = "";
                 // 자신이 올린 게시물이 아닌 경우 메세지보내기 가능
+
                 if(!seller_id.equals(Long.toString(SaveSharedPreference.getId(context)))){
-                    if(seller_id != "")
                         open_chatroom(coupon_id, seller_id);
+                }else{
+                    Toast.makeText(context, "회원님이 작성한 글입니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -95,7 +112,6 @@ public class ProductItemFragment extends Fragment {
     void open_chatroom(String coupon_id, String seller_id){
         String buyer_id = Long.toString(SaveSharedPreference.getId(context));
         String roomnum = coupon_id + seller_id + buyer_id;
-
         //채팅방으로 이동
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
@@ -111,4 +127,45 @@ public class ProductItemFragment extends Fragment {
 
     }
 
+    void find_seller(){
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("couponlist");
+                    int length = jsonArray.length();
+
+                    for(int i=0; i<length; i++){
+                        CouponData couponData = new CouponData();
+                        JSONObject object = jsonArray.getJSONObject(i);
+
+                        couponData.setCoupon_id(Integer.parseInt(object.getString("coupon_id")));
+                        couponData.setPrice(Integer.parseInt(object.getString("price")));       //쿠폰 가격
+                        couponData.setExpiration_date(object.getString("expiration_date")); // 쿠폰 유효기간 "Y-m-d" 형식
+                        couponData.setContent(object.getString("content")); // 글 내용
+                        String storename = object.getString("storename");
+                        storename = storename.toLowerCase();
+                        couponData.setStorename(storename);
+                        couponData.setPlustype(object.getString("category"));
+                        couponData.setSeller_id(Long.parseLong(object.getString("seller_id"))); // 판매자 확인용 id
+                        couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
+                        couponData.setSeller_name(object.getString("seller_nicname")); // 판매자 닉네임
+                        couponData.setSeller_score(object.getString("seller_score")); // 판매자 평점
+
+                        String item_id = object.getString("item_id");
+                        System.out.println("itemssss"+item_id);
+                        if(item_id.equals(coupon_id)){
+                            seller_id=object.getString("seller_id");
+                            star=object.getString("seller_score");
+
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
 }
+

@@ -2,7 +2,6 @@ package com.example.ccuda;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -26,20 +23,10 @@ import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CartRequest;
 import com.example.ccuda.db.MypageRequest;
-import com.example.ccuda.ui_Cart.CartItemModel;
 import com.example.ccuda.ui_Cart.addToCart;
 import com.example.ccuda.ui_Home.Adapter;
 import com.example.ccuda.ui_Home.HomeActivity;
 import com.example.ccuda.ui_Home.UploadCoupon;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -187,12 +174,6 @@ public class MyPage extends Fragment {
                     e.printStackTrace();
                 }
 
-
-                //adapter.addItem("물건1", "", "gs");
-                //adapter.addItem("물건2", "", "gs");
-                //adapter.addItem("물건3", "", "gs");
-                //adapter.addItem("물건4", "", "gs");
-                //adapter.addItem("물건5", "", "gs");
                 cartList.setAdapter(adapter);
             }
         };

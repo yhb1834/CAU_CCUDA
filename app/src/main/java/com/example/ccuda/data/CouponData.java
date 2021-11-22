@@ -19,9 +19,14 @@ public class CouponData {
     private String imageurl;   // 물품 이미지
     private Bitmap couponimage; // 등록된 쿠폰 이미지 - 마이페이지 등에서 필요시 판매자 본인에게만 공개
 
-    public int getCoupon_id(){
-        return coupon_id;
+    public String getCoupon_id(){
+        return toString(coupon_id);
     }
+
+    private String toString(int coupon_id) {
+        return Integer.toString(coupon_id);
+    }
+
     public long getSeller_id(){
         return seller_id;
     }

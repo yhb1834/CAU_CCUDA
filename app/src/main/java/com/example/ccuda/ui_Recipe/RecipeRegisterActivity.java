@@ -1,30 +1,49 @@
 package com.example.ccuda.ui_Recipe;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.ccuda.R;
 import com.example.ccuda.data.ItemData;
+import com.example.ccuda.data.RecipeDTO;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.ui_Home.HomeActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,18 +55,55 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
     // 각 편의점 상품 객체 리스트
     private ArrayList<ItemData> cuItem = HomeActivity.cuItem;
-    private ArrayList<ItemData> gsItem = HomeActivity.gs25Item;
+    private ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
     private ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
 
-    ArrayList<Uri> uriList = new ArrayList<>();     // 이미지의 uri를 담을 ArrayList 객체
-    ArrayList<String> itemList = new ArrayList<>(); // 고른 상품명 담을 객체
+    public ArrayList<String> cuReturn=new ArrayList<String>();
+    public ArrayList<String> gsReturn=new ArrayList<String>();
+    public ArrayList<String> sevenReturn=new ArrayList<String>();
 
+    ArrayList<String> cuImageReturn = new ArrayList<>();
+    ArrayList<String> gsImageReturn = new ArrayList<>();
+    ArrayList<String> sevenImageReturn = new ArrayList<>();
+
+    DatabaseReference itemRef;
+
+    ArrayList<Uri> uriList = new ArrayList<>();     // 이미지의 uri를 담을 ArrayList 객체
+    ArrayList<String> urlList = new ArrayList<>();
+    ArrayList<String> itemList = new ArrayList<>(); // 고른 상품명 담을 객체
+    ArrayList<String> filenameList = new ArrayList<>();
+    String itemname;
+    String[] conv={"선택없음","GS25", "SEVEN11", "CU"};
+    String storename;   // 고른 편의점명
 
     RecyclerView recyclerView;  // 이미지를 보여줄 리사이클러뷰
     MultiImageAdapter adapter;  // 리사이클러뷰에 적용시킬 어댑터
     EditText edit_title;
     EditText edit_Content;
     Button btn_register;
+    Spinner store_spinner;
+    SearchableSpinner searchView;
+
+    ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                }
+            });
+
+
+    ActivityResultLauncher<Intent> launcher=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Uri data=result.getData().getData();
+                        //uploadPhoto.setImageURI(data);
+                        //System.out.println(data);
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +112,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         edit_title = findViewById(R.id.edit_title);
         edit_Content = findViewById(R.id.edit_Content);
         btn_register = findViewById(R.id.btn_register);
+        store_spinner = findViewById(R.id.spinner_r);
 
         // 파이어베이스 인스턴스 생성
         storage = FirebaseStorage.getInstance();
@@ -75,6 +132,131 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         });
 
         recyclerView = findViewById(R.id.imageRecyclerView);
+        searchView= findViewById(R.id.item_spinner_r);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    cuReturn=getProductList("cu","https://pyony.com/brands/cu/");
+                    //cuImageReturn=getProductPicture("cu","https://pyony.com/brands/cu/");
+                    //saveProductList(cuReturn,"cu");
+                    gsReturn=getProductList("gs25","https://pyony.com/brands/gs25/");
+                    //gsImageReturn=getProductPicture("gs25","https://pyony.com/brands/gs25/");
+                    //saveProductList(gsReturn,"gs25");
+                    sevenReturn=getProductList("seven","https://pyony.com/brands/seven/");
+                    //sevenImageReturn=getProductPicture("seven","https://pyony.com/brands/seven/");
+                    //saveProductList(sevenReturn,"seven");
+                    Thread.sleep(1000);
+                    //System.out.println("cuReturn: "+cuReturn);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //편의점 고르기
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, conv);
+        store_spinner.setAdapter(adapter);
+        store_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String URL = "";
+                switch (position) {
+                    case 0:
+                        storename = "";
+                        break;
+                    case 1:
+                        storename = "gs25";
+                        URL="https://pyony.com/brands/gs25/";
+                        break;
+                    case 2:
+                        storename = "seven";
+                        URL="https://pyony.com/brands/seven/";
+                        break;
+                    case 3:
+                        storename = "cu";
+                        URL="https://pyony.com/brands/cu/";
+                        break;
+                }
+                runThread(storename,URL);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+            public void runThread(String convName, String URL){
+                new Thread(new Runnable() {
+                    ArrayList<String> prodList=new ArrayList<>();
+                    ArrayList<String> prodPrice=new ArrayList<>();
+                    Handler mHandler=new Handler();
+                    Elements elements=new Elements();
+                    @Override
+                    public void run() {
+                        try {
+                            if(convName == "cu"){
+                                for(int i=0; i<cuItem.size(); i++){
+                                    prodList.add(cuItem.get(i).getItemname());
+                                    prodPrice.add(Integer.toString(cuItem.get(i).getItemprice2()));
+                                }
+                            }
+                            else if(convName == "seven"){
+                                for(int i=0; i<sevenItem.size(); i++){
+                                    prodList.add(sevenItem.get(i).getItemname());
+                                    prodPrice.add(Integer.toString(sevenItem.get(i).getItemprice2()));
+                                }
+                            }
+                            if(convName == "gs25"){
+                                for(int i=0; i<gs25Item.size(); i++){
+                                    prodList.add(gs25Item.get(i).getItemname());
+                                    prodPrice.add(Integer.toString(gs25Item.get(i).getItemprice2()));
+                                }
+                            }
+                            //prodList = getProductName(convName, URL); //getProductList(convName, URL);
+                            // prodPrice = getProductPrice(convName, URL);
+                            Thread.sleep(1000);
+
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ArrayAdapter<String> arrayList=new ArrayAdapter<>(
+                                            getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, prodList
+                                    );
+
+                                    searchView.setAdapter(arrayList);
+
+                                    searchView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                        @Override
+                                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                            if(position==0){
+                                                Toast.makeText(getApplicationContext(), prodList.get(position), Toast.LENGTH_SHORT).show();
+                                            }
+                                            else {
+                                                String sNumber=parent.getItemAtPosition(position).toString();
+                                                Toast.makeText(getApplicationContext(), sNumber,Toast.LENGTH_SHORT);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onNothingSelected(AdapterView<?> parent) {
+
+                                        }
+                                    });
+
+
+
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+
+        });
 
         // 레시피 등록 버튼
         btn_register.setOnClickListener(new View.OnClickListener() {
@@ -82,10 +264,135 @@ public class RecipeRegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String title = edit_title.getText().toString();
                 String content = edit_Content.getText().toString();
-                String storename;
-                //clickregister(title, storename, content);
+
+                //TODO: need storename, itemList
+                if(storename.equals("")){
+                    Toast.makeText(getApplicationContext(),"편의점을 선택해주세요",Toast.LENGTH_SHORT).show();
+                }else{
+                clickregister(title, storename, content);
+                }
             }
         });
+
+    }
+
+    public ArrayList<String> getProductList(String convName, String url) throws IOException {
+        Document doc=Jsoup.connect(url).get();
+        Elements link=doc.select("a.page-link");
+        ArrayList<String> result=new ArrayList<String>();
+
+        String lastSize=link.get(link.size()-1).attr("href").replace("?page=","");
+        int lastPage=Integer.parseInt(lastSize);
+        for(int i=1;i<=lastPage;i++){
+            String URL=url+"?page="+Integer.toString(i);
+            Document docPage=Jsoup.connect(URL).get();
+            Elements elements=docPage.select("div.card-body.px-2.py-2");
+            for(Element element:elements){
+                String a=element.select("strong").text()+" "+element.select("span.badge.bg-"+convName).text()+" "+element.select("span.text-muted").text();
+                //System.out.println(a);
+                result.add(a);
+            }
+        }
+
+        return result;
+    }
+
+    public ArrayList<String> getProductPicture(String convName, String url) throws IOException {
+        Document doc=Jsoup.connect(url).get();
+        Elements link=doc.select("a.page-link");
+        ArrayList<String> result=new ArrayList<String>();
+
+        String lastSize=link.get(link.size()-1).attr("href").replace("?page=","");
+        int lastPage=Integer.parseInt(lastSize);
+        for(int i=1;i<=lastPage;i++){
+            String URL=url+"?page="+Integer.toString(i);
+            Document docPage=Jsoup.connect(URL).get();
+            Elements elements=docPage.select("div.card-body img");
+            for(Element element:elements){
+                String imageURL=element.getElementsByAttribute("src").attr("src");
+                result.add(imageURL);
+            }
+        }
+
+        return result;
+    }
+
+    public ArrayList<String> getProductName(String convName, String url) throws IOException {
+        Document doc= Jsoup.connect(url).get();
+        Elements link=doc.select("a.page-link");
+        ArrayList<String> result=new ArrayList<String>();
+        Elements elements=new Elements();
+
+        String lastSize=link.get(link.size()-1).attr("href").replace("?page=","");
+        int lastPage=Integer.parseInt(lastSize);
+        for(int i=1;i<=lastPage;i++){
+            String URL=url+"?page="+Integer.toString(i);
+            Document docPage=Jsoup.connect(URL).get();
+            elements=docPage.select("div.card-body.px-2.py-2 strong"); //div.card-body strong
+            for(Element element:elements){
+                result.add(element.text());
+            }
+        }
+
+        return result;
+    }
+
+    // 크롤링한 데이터 arraylist를 JSONarray로 변환 후 저장
+    public void saveProductList(ArrayList<String> returnlist, String storename){
+
+        firebaseDatabase= FirebaseDatabase.getInstance();
+        itemRef= firebaseDatabase.getReference().child("item").child(storename);
+
+        for(int i=0; i< returnlist.size(); i++){
+            ItemData itemData = new ItemData();
+            itemData.setItemid(i);
+            itemData.setItemname(returnlist.get(i).split(" ")[0]);
+            itemData.setPlustype(returnlist.get(i).split(" ")[1]);
+            itemData.setStorename(storename);
+
+            if(storename=="cu"){
+                itemData.setImage(cuImageReturn.get(i));
+            }else if(storename == "gs25"){
+                itemData.setImage(gsImageReturn.get(i));
+            }else{
+                itemData.setImage(sevenImageReturn.get(i));
+            }
+            itemData.setCategory("");
+
+            itemRef.push().setValue(itemData);
+        }
+
+    }
+
+
+
+    protected int getitem_id(String storename,String itemname){
+        int itemid=0;
+        if(storename == "CU"){
+            for(int i=0; i<cuItem.size(); i++){
+                if(cuItem.get(i).getItemname() == itemname){
+                    itemid = cuItem.get(i).getItemid();
+                    break;
+                }
+            }
+        }
+        else if(storename == "GS25"){
+            for(int i=0; i<gs25Item.size(); i++){
+                if(gs25Item.get(i).getItemname() == itemname){
+                    itemid = gs25Item.get(i).getItemid();
+                    break;
+                }
+            }
+        }
+        else{
+            for(int i=0; i<sevenItem.size(); i++){
+                if(sevenItem.get(i).getItemname() == itemname){
+                    itemid = sevenItem.get(i).getItemid();
+                    break;
+                }
+            }
+        }
+        return itemid;
     }
 
     // 앨범에서 액티비티로 돌아온 후 실행되는 메서드
@@ -170,31 +477,25 @@ public class RecipeRegisterActivity extends AppCompatActivity {
     }*/
 
     private void clickregister(String title, String storename,String content){
-         SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
-        String fileName=sdf.format(new Date())+"";
-        String child = fileName+SaveSharedPreference.getId(this);
+        itemname = "";
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
+        String fileName1=sdf.format(new Date())+"";
+        for(int i =0; i<itemList.size(); i++){
+            if(i==0){
+                itemname = itemname+itemList.get(i);
+            }
+            else{
+                itemname = itemname +", "+itemList.get(i);
+            }
+        }
         for(int j=0; j<uriList.size(); j++){
-            fileName = fileName+j+".png";
-            uploadimg(uriList.get(j),fileName, child);
+            String fileName = fileName1+"-"+j+".png";
+            uploadimg(uriList.get(j),j, fileName, title, storename, content);
         }
-        for(int j=0; j<itemList.size(); j++){
-            firebaseDatabase.getReference().child("Recipe").child(title).child("item").push().setValue(itemList.get(j));
-        }
-        RecipeDTO recipeDTO = new RecipeDTO();
-        recipeDTO.setTitle(title);
-        recipeDTO.setStorename(storename);
-        recipeDTO.setContent(content);
-        recipeDTO.setWriter_id(Long.toString(SaveSharedPreference.getId(this)));
-
-        firebaseDatabase.getReference().child("Recipe").child(child).child("content").push().setValue(recipeDTO);
-
-        //TODO: 레시피 등록 완료 후 동작
-
-
     }
 
     // firebase에 파일 및 이미지 저장
-    private void uploadimg( Uri uri,String fileName,String child) {
+    private void uploadimg( Uri uri,int index,String fileName, String title, String storename,String content) {
         try{
             FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
             final StorageReference imgRef= firebaseStorage.getReference("recipeImages/"+fileName);
@@ -210,7 +511,11 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             //파라미터로 firebase의 저장소에 저장되어 있는
                             //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
-                            firebaseDatabase.getReference().child("Recipe").child(child).child("images").push().setValue(uri.toString());
+                            urlList.add(uri.toString());
+                            filenameList.add(fileName);
+                            if(index == uriList.size()-1){
+                                saverecipe(title, storename, content);
+                            }
                         }
                     });
                 }
@@ -220,4 +525,53 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         }
     }
 
+    private void saverecipe(String title, String storename,String content){
+        RecipeDTO recipeDTO = new RecipeDTO();
+        recipeDTO.setTitle(title);
+        recipeDTO.setStorename(storename);
+        recipeDTO.setContent(content);
+        recipeDTO.setWriter_id(Long.toString(SaveSharedPreference.getId(this)));
+        recipeDTO.setItemname(itemname);
+        recipeDTO.setLike(0);
+
+        for(int j=0; j<urlList.size(); j++){
+            String url = urlList.get(j);
+            String filename = filenameList.get(j);
+            if(j==0){
+                recipeDTO.setImage1(url,filename);
+            }
+            else if(j==1){
+                recipeDTO.setImage2(url,filename);
+            }
+            else if(j==2){
+                recipeDTO.setImage3(url,filename);}
+            else if(j==3){
+                recipeDTO.setImage4(url,filename);
+            }
+            else if(j==4){
+                recipeDTO.setImage5(url,filename);
+            }
+            else if(j==5){
+                recipeDTO.setImage6(url,filename);
+            }
+            else if(j==6){
+                recipeDTO.setImage7(url,filename);
+            }
+            else if (j==7) {
+                recipeDTO.setImage8(url, filename);
+            }
+            else if (j==8) {
+                recipeDTO.setImage9(url, filename);
+            }
+            else{
+                recipeDTO.setImage10(url,filename);
+            }
+        }
+
+        firebaseDatabase.getReference().child("Recipe").push().setValue(recipeDTO);
+
+        //TODO: 레시피 등록 완료 후 동작
+        //getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new RecipeFragment()).commit();
+
+    }
 }
