@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
-            android:text="구매 완료"
+            android:text="거래 완료"
             android:textSize="12sp" />
 
         <Spinner

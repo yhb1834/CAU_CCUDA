@@ -32,13 +32,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 import com.example.ccuda.data.ChatData;
 import com.example.ccuda.data.CouponData;
+import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.SaveSharedPreference;
+import com.example.ccuda.db.ChatRequest;
+import com.example.ccuda.db.DealManager;
+import com.example.ccuda.login_ui.LoginActivity;
 import com.example.ccuda.ui_Home.HomeActivity;
 import com.example.ccuda.ui_Recipe.MultiImageAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,6 +60,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,9 +86,11 @@ public class ChatRoomActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference chatref;
     String chatRoomUid;
+    String seller_id;
+    String buyer_id;
+    String coupon_id;
     Uri imageuri;
     String imageurl;
-
 
 
     String[] items = {"","나만의 냉장고", "포켓CU"};
@@ -96,14 +112,14 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
 
         finish.setOnClickListener(new OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  if(ratingBar.getRating() >= 0.5){
-                      showdialog();
-                  }else {
-                      Toast.makeText(getApplicationContext(), "별점을 입력하세요", Toast.LENGTH_SHORT).show();
-                  }
-              }
+            @Override
+            public void onClick(View v) {
+                if(ratingBar.getRating() >= 0.5){
+                    clickfinish();
+                }else {
+                    Toast.makeText(getApplicationContext(), "별점을 입력하세요", Toast.LENGTH_SHORT).show();
+                }
+            }
         });
 
         et = findViewById(R.id.et);
@@ -113,7 +129,15 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         chatRoomUid=intent.getExtras().getString("roomnum");
+        seller_id = intent.getExtras().getString("seller_id");
+        buyer_id = intent.getExtras().getString("buyer_id");
+        coupon_id = intent.getExtras().getString("coupon_id");
         imageurl = null;
+
+        // 거래완료 버튼활성화 조건
+        finish = findViewById(R.id.finish);
+        ratingBar = findViewById(R.id.ratingBar);
+        setbuttonenable();
 
         //Firebase DB관리 객체
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -209,28 +233,9 @@ public class ChatRoomActivity extends AppCompatActivity {
                 startActivityForResult(intent,10);
             }
         });
-    }
-
-    void showdialog(){
-        android.app.AlertDialog.Builder msgBuilder = new android.app.AlertDialog.Builder(this)
-                .setTitle("구매 완료")
-                .setMessage("별점 " + ratingBar.getRating() + "\n구매를 완료하시겠습니까?")
-                .setPositiveButton("네", new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialogInterface, int i) {
-                        //score 저장 및 구매완료 전환, 홈에서 삭제
-                        //finish();
-                    }
-                })
-                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getApplicationContext(), "신고하기를 이용하세요", Toast.LENGTH_SHORT).show();
-                    }
-                });
-        android.app.AlertDialog msgDlg = msgBuilder.create();
-        msgDlg.show();
-
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -336,7 +341,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         finish.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-              // TODO: 거래완료
+              //
             }
         });
 
@@ -386,14 +391,106 @@ public class ChatRoomActivity extends AppCompatActivity {
         }
     }
 
-    /*class Listener implements RatingBar.OnRatingBarChangeListener
-    {
-        @Override
-        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-            //float score = ratingBar.getRating();
-            System.out.println(rating);
+    private void setbuttonenable(){
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String msgisdeal = jsonObject.getString("msgisdeal");
+                    String postisdeal = jsonObject.getString("postisdeal");
+
+                    if(buyer_id.equals(Long.toString(SaveSharedPreference.getId(ChatRoomActivity.this)))){
+                        if(postisdeal.equals("0")){     // 거래전
+                            finish.setEnabled(false);
+                        }
+                        else{
+                            if(msgisdeal.equals("0")){  // 다른사람과 거래완료
+                                finish.setEnabled(false);
+                                et.setHint("거래완료");
+                                et.setClickable(false);
+                                et.setFocusable(false);
+                            }
+                            else if(msgisdeal.equals("1")){  // 리뷰 전
+                                finish.setEnabled(true);
+                            }
+                            else{ // 리뷰 후
+                                finish.setEnabled(false);
+                                et.setHint("거래완료");
+                                et.setClickable(false);
+                                et.setFocusable(false);
+                            }
+                        }
+
+                    }
+                    else{
+                        if(postisdeal.equals("0"))      // 거래전
+                            finish.setEnabled(true);
+                        else {                            // 거래완료
+                            finish.setEnabled(false);
+                            et.setHint("거래완료");
+                            et.setClickable(false);
+                            et.setFocusable(false);
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        DealManager dealManager = new DealManager("isdealdone", seller_id, buyer_id, coupon_id,"",responsListener);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(dealManager);
+    }
+
+    private void clickfinish(){
+        float star = ratingBar.getRating();
+        String option;
+        if(seller_id.equals(Long.toString(SaveSharedPreference.getId(this)))){
+            option = "dealdone";
+        }else{
+            option = "eval_seller";
         }
-    }*/
+
+        if(star == 0.0){
+            Toast.makeText(this,"별점을 부여해주세요.",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomActivity.this)
+                .setTitle("거래 완료")
+                .setMessage("별점: "+star+"\n"+"거래완료 후 상대방에게 해당 별점을 부여하시겠습니까?")
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Response.Listener<String> responsListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    Toast.makeText(ChatRoomActivity.this, "거래완료", Toast.LENGTH_SHORT).show();
+                                    finish.setEnabled(false);
+                                    et.setHint("거래완료");
+                                    et.setClickable(false);
+                                    et.setFocusable(false);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        DealManager dealManager = new DealManager(option, seller_id, buyer_id, coupon_id,Float.toString(star),responsListener);
+                        RequestQueue queue = Volley.newRequestQueue(ChatRoomActivity.this);
+                        queue.add(dealManager);
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getApplicationContext(), "*신고하기를 이용하실 수 있습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 }
-

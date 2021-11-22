@@ -118,6 +118,9 @@ public class ProductItemFragment extends Fragment {
             public void onResponse(String response) {
                 Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
                 intent.putExtra("roomnum",roomnum);
+                intent.putExtra("seller_id",seller_id);
+                intent.putExtra("buyer_id",buyer_id);
+                intent.putExtra("coupon_id",coupon_id);
                 startActivity(intent);
             }
         };
