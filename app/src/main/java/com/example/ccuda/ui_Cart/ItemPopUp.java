@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
@@ -65,10 +68,14 @@ public class ItemPopUp extends Activity {
                 if (clickedWhere=="MAIN_CART"){
                     intent=new Intent(getApplicationContext(), addToCart.class);
                     intent.putExtra("result", 0);
+                    //getParent().;
+
+                    //getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new addToCart()).commit();
                 }
                 if(clickedWhere=="ALL_CART"){
                     intent=new Intent(getApplicationContext(), AllCartFragment.class);
                     intent.putExtra("result",1);
+                    //getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new AllCartFragment()).commit();
                 }
                 setResult(RESULT_OK, intent);
 

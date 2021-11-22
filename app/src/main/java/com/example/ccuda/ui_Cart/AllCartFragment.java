@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.ccuda.R;
 
@@ -37,7 +38,9 @@ public class AllCartFragment extends CartFragment {
         if(bundle!=null){
             itemList=bundle.getParcelableArrayList("itemlist");
         }
-        System.out.println("itemList2"+itemList);
+        for(ItemParccelable e:itemList){
+            System.out.print(e.getProdName());
+        }
         for(int i=0;i<itemList.size();i++){
             adapter.addItem(new CartItemModel(itemList.get(i).getImgUrl(),itemList.get(i).getProdName(),itemList.get(i).getConvName(),itemList.get(i).getId()));
         }
@@ -56,22 +59,9 @@ public class AllCartFragment extends CartFragment {
     @Override
     public void onResume() {
         super.onResume();
-        adapter.removeAll();
-        for(int i=0;i<itemList.size();i++){
-            adapter.addItem(new CartItemModel(itemList.get(i).getImgUrl(),itemList.get(i).getProdName(),itemList.get(i).getConvName(),itemList.get(i).getId()));
-        }
-        cartItemList.setAdapter(adapter);
-        cartItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CartItemModel item=(CartItemModel) adapter.getItem(position);
-                click_cart_item_in_all(getActivity(), item);
-                //adapter.notifyDataSetChanged();
-            }
-        });
-        adapter.notifyDataSetChanged();
-
-        System.out.println("hihihihihihihihihihi");
+        System.out.println("onResume");
+        //FragmentTransaction ft= getParentFragmentManager().beginTransaction();
+        //ft.detach(this).attach(this).commit();
     }
 
 }

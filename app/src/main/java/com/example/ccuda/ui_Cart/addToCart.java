@@ -117,7 +117,7 @@ public class addToCart extends CartFragment {
             }
         });
 
-
+        //cartList.clear();
         load_MyCartList();
         //System.out.println("cart item: "+cartList);
         emptyCartText=view.findViewById(R.id.emptyCartText);
@@ -208,21 +208,6 @@ public class addToCart extends CartFragment {
         recyclerView.addItemDecoration(dividerItemDecoration);
 
 
-        //itemList.add(new CartItemModel(R.drawable.add, "One", "Ten"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Two", "Eleven"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Three", "Twelve"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Four", "Thirteen"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Five", "Fourteen"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Six", "Fifteen"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Seven", "Sixteen"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Eight", "Seventeen"));
-        //itemList.add(new CartItemModel(R.drawable.add, "Nine", "Eighteen"));
-
-
-        //데이터셋변경시
-        //adapter.dataSetChanged(exampleList);
-
-        //어댑터의 리스너 호출
         adapter.setOnClickListener(this::onItemClicked);
     }
 
@@ -279,11 +264,11 @@ public class addToCart extends CartFragment {
 
     private void load_MyCartList(){
         //cartList=new ArrayList<>();
-        //cartList.clear();
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try{
+                    cartList.clear();
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("mycartlist");
                     int length = jsonArray.length();
@@ -352,60 +337,33 @@ public class addToCart extends CartFragment {
     @Override
     public void onResume() {
         super.onResume();
-        /*
-        //for(i=0;i<5;i++){
-        //   imageViews[i].setImageResource(0);
-        //}
-        //System.out.println(cartList);
-        System.out.println("before"+cartList);
-        ArrayList<CartItemModel> reloadCart=new ArrayList<>();
-        cartList.clear();
-        load_MyCartList();
-        System.out.println("after"+cartList);
-
-        if(cartList.size()<=5){
-            for (i=0;i<cartList.size();i++){
-                CartItemModel item=cartList.get(i);
-                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
-                imageViews[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        click_cart_item(getContext(),item);
-                    }
-                });
-            }
-        }else {
-            for (i=0;i<5;i++){
-                CartItemModel item=cartList.get(i);
-                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).into(imageViews[i]);
-                imageViews[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        click_cart_item(getContext(),item);
-
-                    }
-                });
-            }
-        }
-
-        */
-
-        //Intent intent=new Intent(getActivity(), addToCart.class);
-        //startActivity(this);
-
-
+        resetImageview();
     }
 
     private void resetImageview(){
+        for(CartItemModel e:cartList){
+            System.out.print(e.getText1());
+        }
+        for(int i=0;i<5;i++){
+            imageViews[i].setImageResource(0);
+            imageViews[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
+        //adapter.notifyDataSetChanged();
         if(cartList.size()<=5){
             for (i=0;i<cartList.size();i++){
                 CartItemModel item=cartList.get(i);
-                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).apply(new RequestOptions()
+                Glide.with(getContext()).load(cartList.get(i).getImageUrl()).apply(new RequestOptions()
                         .signature(new ObjectKey("signature string"))
                         .skipMemoryCache(true)
                         .diskCacheStrategy(DiskCacheStrategy.NONE))
-                        .into(imageViews[cartList.size()-1-i]);
-                imageViews[cartList.size()-1-i].setOnClickListener(new View.OnClickListener() {
+                        .into(imageViews[i]); //cartList.size()-1-i
+                imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         click_cart_item(getContext(),item);
@@ -415,12 +373,12 @@ public class addToCart extends CartFragment {
         }else {
             for (i=0;i<5;i++){
                 CartItemModel item=cartList.get(i);
-                Glide.with(getActivity()).load(cartList.get(i).getImageUrl()).apply(new RequestOptions()
+                Glide.with(getContext()).load(cartList.get(i).getImageUrl()).apply(new RequestOptions()
                         .signature(new ObjectKey("signature string"))
                         .skipMemoryCache(true)
                         .diskCacheStrategy(DiskCacheStrategy.NONE))
-                        .into(imageViews[4-i]);
-                imageViews[4-i].setOnClickListener(new View.OnClickListener() {
+                        .into(imageViews[i]);
+                imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         click_cart_item(getContext(),item);
