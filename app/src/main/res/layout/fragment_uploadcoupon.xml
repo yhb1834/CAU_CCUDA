@@ -43,7 +43,7 @@
             android:background="@drawable/corner_shape">
 
             <Spinner
-                android:id="@+id/spinner1"
+                android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_margin="10dp"
@@ -70,7 +70,7 @@
             android:background="@drawable/corner_shape">
 
             <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                android:id="@+id/notify_spinner"
+                android:id="@+id/item_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_margin="10dp"

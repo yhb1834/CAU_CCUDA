@@ -160,7 +160,7 @@ public class UploadCoupon extends Fragment {
 
 
         convName=v.findViewById(R.id.conv_name);
-        Spinner spinner1=v.findViewById(R.id.spinner1);
+        Spinner spinner1=v.findViewById(R.id.spinner);
         editText=v.findViewById(R.id.prodPrice);
         editText2=v.findViewById(R.id.proddate);
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, conv);
@@ -198,7 +198,7 @@ public class UploadCoupon extends Fragment {
         });
 
 
-        searchView=v.findViewById(R.id.notify_spinner);
+        searchView=v.findViewById(R.id.item_spinner);
 
 
         uploadPhoto=(ImageView) v.findViewById(R.id.upload_photo);
@@ -322,7 +322,6 @@ public class UploadCoupon extends Fragment {
                 }
             }
         });
-
 
         return v;
     }

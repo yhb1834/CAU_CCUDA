@@ -65,7 +65,7 @@
                 android:background="@drawable/corner_shape">
 
                 <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                    android:id="@+id/notify_spinner"
+                    android:id="@+id/item_spinner_r"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_margin="10dp"

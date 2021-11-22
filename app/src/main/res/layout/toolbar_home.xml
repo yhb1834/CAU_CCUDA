@@ -22,7 +22,11 @@
             android:layout_marginBottom="10dp"
             app:headerLayout="@layout/nav_header_main"
             app:srcCompat="@drawable/menu" />
-
+<!--
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/ccuda_logo"></ImageView>-->
 
 
     </RelativeLayout>

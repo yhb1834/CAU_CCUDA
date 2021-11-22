@@ -128,8 +128,20 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
         View v=inflater.inflate(R.layout.fragment1_home, container, false);
         listView=(ListView) v.findViewById(R.id.listView);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefresh);//새로고침
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        /*mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefresh);//새로고침
+        //맨침 위일 때만 새로고
+        if(listView.canScrollVertically(-1)) {
+            mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefresh);//새로고침
+            mSwipeRefreshLayout.setOnRefreshListener(this);
+            adapter =new Adapter();
+            load_item();
+        }
+        else{
+            mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefresh);//새로고침
+            mSwipeRefreshLayout.setOnRefreshListener(this);
+            adapter =new Adapter();
+            load_item();
+        }*/
 
         adapter =new Adapter();
         load_item();
