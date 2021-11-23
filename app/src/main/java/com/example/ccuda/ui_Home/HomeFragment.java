@@ -156,8 +156,6 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
         adapter =new Adapter();
         load_item();
 
-        //권한요청하기
-        chck_permission();
 
         //맨 위로 플로팅 버
         FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.scrolltop);
@@ -394,54 +392,6 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 500);
-    }
-
-
-    private void chck_permission(){
-        int permission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int permission2 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        if(permission == PackageManager.PERMISSION_DENIED || permission2 == PackageManager.PERMISSION_DENIED){
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE},1000);
-            return;
-        }
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1000: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-                    //권한 거절시
-                    denialDialog();
-                }
-                return;
-            }
-        }
-    }
-
-    public void denialDialog() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle("알림")
-                .setMessage("저장소 권한이 필요합니다. 환경 설정에서 저장소 권한을 허가해주세요.")
-                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent();
-                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package",
-                                BuildConfig.APPLICATION_ID, null);
-                        intent.setData(uri);
-                        intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent); //확인버튼:설정 창으로 이동
-                    }
-                })
-                .create()
-                .show();
     }
 
 }

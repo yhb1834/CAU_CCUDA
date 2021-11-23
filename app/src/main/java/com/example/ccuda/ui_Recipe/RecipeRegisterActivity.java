@@ -595,7 +595,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
         firebaseDatabase.getReference().child("Recipe").push().setValue(recipeDTO);
 
-        //TODO: 레시피 등록 완료 후 동작
         //getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new RecipeFragment()).commit();
 
     }

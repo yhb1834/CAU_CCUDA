@@ -17,11 +17,14 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.ccuda.R;
 import com.example.ccuda.data.RecipeDTO;
 import com.example.ccuda.data.RecipeItem;
 import com.example.ccuda.data.SaveSharedPreference;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +33,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -39,6 +45,7 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private ArrayList<RecipeItem> RecipeItems;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     SwipeRefreshLayout mSwipeRefreshLayout;//새로고침
+
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference recipeRef;
     Context context;
@@ -57,6 +64,9 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh2);//새로고침
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        recipeRef = firebaseDatabase.getReference().child("Recipe");
+
         /* initiate adapter */
         mRecipeAdapter = new RecipeAdapter();
 
@@ -73,8 +83,11 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
         //for(int i=1;i<=10;i++){
         //    RecipeItems.add(new RecipeItem(R.drawable.person,i,i+"조합 "));
         //}
-        load_Recipelist();
+
         mRecipeAdapter.setRecipeList(RecipeItems);
+        mRecyclerView.setAdapter(mRecipeAdapter);
+
+        load_Recipelist();
 
         //레시피 개별 페이지 클릭
         mRecipeAdapter.setOnItemClickListener(new RecipeAdapter.OnItemClickEventListener(){
@@ -93,6 +106,16 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 transaction.replace(R.id.innerLayout, fragmentRecipeItem);
                 transaction.addToBackStack(null);
                 transaction.commit();
+            }
+        });
+
+        //좋아요 클릭
+        mRecipeAdapter.setOnLikeClickEventListener(new RecipeAdapter.OnLikeClickEventListener() {
+            @Override
+            public void onLikeClick(View view, int position) {
+                final RecipeItem item = RecipeItems.get(position);
+
+                likeClicked(recipeRef,item.getImageurl().get(0),context);
             }
         });
 
@@ -138,43 +161,27 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void load_Recipelist(){
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        recipeRef = firebaseDatabase.getReference();
-
-        recipeRef.child("Recipe").addChildEventListener(new ChildEventListener() {
-            //새로 추가된 것만 줌 ValueListener는 하나의 값만 바뀌어도 처음부터 다시 값을 줌
+        recipeRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                //새로 추가된 데이터(값 : ChatData객체) 가져오기
-                RecipeDTO recipeDTO = dataSnapshot.getValue(RecipeDTO.class);
-                ArrayList<String> imageurl = getimageurl(recipeDTO);
-                String[] itemname = getitemname(recipeDTO.getItemname());
-                RecipeItem recipeItem = new RecipeItem(imageurl.get(0),recipeDTO.getLike(),recipeDTO.getTitle(),itemname,imageurl,recipeDTO.getContent());
-                RecipeItems.add(recipeItem);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                RecipeItems.clear();
+                for(DataSnapshot ds: snapshot.getChildren())
+                {
+                    //새 데이터(값 : ChatData객체) 가져오기
+                    RecipeDTO recipeDTO = ds.getValue(RecipeDTO.class);
+                    ArrayList<String> imageurl = getimageurl(recipeDTO);
+                    String[] itemname = getitemname(recipeDTO.getItemname());
+                    RecipeItem recipeItem = new RecipeItem(imageurl.get(0),recipeDTO.getLike(),recipeDTO.getTitle(),itemname,imageurl,recipeDTO.getContent(),recipeDTO.getLikes());
+                    RecipeItems.add(recipeItem);
+                }
 
-                mRecyclerView.setAdapter(mRecipeAdapter);
+                mRecipeAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
         });
 
     }
@@ -223,8 +230,24 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     //좋아요 데이터베이스 트랜잭션 저장
-    private void likeClicked(DatabaseReference recipeRef) {
-        recipeRef.runTransaction(new Transaction.Handler() {
+    public void likeClicked(DatabaseReference recipeRef, String data, Context context) {
+        recipeRef.orderByChild("image1").equalTo(data).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot:snapshot.getChildren()) {
+                    String key = dataSnapshot.getKey();
+                    resetlike(recipeRef, key, context);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void resetlike(DatabaseReference recipeRef, String key, Context context){
+        recipeRef.child(key).runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 RecipeDTO recipeDTO = mutableData.getValue(RecipeDTO.class);
@@ -254,6 +277,48 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
             public void onComplete(DatabaseError databaseError, boolean committed,
                                    DataSnapshot currentData) {
                 // Transaction completed
+            }
+        });
+    }
+
+
+    /*삭제버튼 생성후 삽입*/
+    // 이미지 storage삭제
+    public void onDeleteImage(String fileName)
+    {
+        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+        StorageReference desertRef = firebaseStorage.getReference("recipeImages/"+ fileName);
+        desertRef.delete();
+    }
+
+    public void getfirebasekey(String data){
+        firebaseDatabase.getReference().child("Recipe").orderByChild("image1").equalTo(data).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot:snapshot.getChildren()) {
+                    String key = dataSnapshot.getKey();
+                    deleteRecipe(key);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    // 게시글 삭제
+    public void deleteRecipe(String key){
+        firebaseDatabase.getReference().child("Recipe").child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(getActivity(), "삭제 성공", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("error: "+e.getMessage());
+                Toast.makeText(getActivity(), "삭제 실패", Toast.LENGTH_SHORT).show();
             }
         });
     }

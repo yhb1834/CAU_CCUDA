@@ -520,10 +520,11 @@ public class ChatRoomActivity extends AppCompatActivity {
                             public void onResponse(String response) {
                                 try {
                                     Toast.makeText(ChatRoomActivity.this, "거래완료", Toast.LENGTH_SHORT).show();
-                                    finish.setEnabled(false);
-                                    et.setHint("거래완료");
-                                    et.setClickable(false);
-                                    et.setFocusable(false);
+                                    //finish.setEnabled(false);
+                                    //et.setHint("거래완료");
+                                    //et.setClickable(false);
+                                    //et.setFocusable(false);
+                                    finish();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -600,4 +601,5 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         return myDir;
     }
+
 }
