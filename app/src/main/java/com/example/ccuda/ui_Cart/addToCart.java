@@ -76,7 +76,6 @@ public class addToCart extends CartFragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //System.out.println("onCreate");
         fillData();
     }
 
@@ -87,7 +86,6 @@ public class addToCart extends CartFragment {
         View view = inflater.inflate(R.layout.fragment_add_to_cartlist, container, false);
         searchView=view.findViewById(R.id.searchView);
         recyclerView=view.findViewById(R.id.recyclerView);
-        //System.out.println("onCreateView");
         setUpRecyclerView();
 
 
@@ -104,9 +102,9 @@ public class addToCart extends CartFragment {
             }
         });
 
-        //cartList.clear();
+
         load_MyCartList();
-        //System.out.println("cart item: "+cartList);
+
         emptyCartText=view.findViewById(R.id.emptyCartText);
         viewAll=view.findViewById(R.id.view_all);
 
@@ -115,7 +113,7 @@ public class addToCart extends CartFragment {
         imageViews[2]=view.findViewById(R.id.image3);
         imageViews[3]=view.findViewById(R.id.image4);
         imageViews[4]=view.findViewById(R.id.image5);
-        //ImageView[] imageViews=new ImageView[5];
+
 
         if(cartList.size()!=0){
             emptyCartText.setText("");
@@ -151,6 +149,14 @@ public class addToCart extends CartFragment {
         //itemList = new ArrayList<>(); //샘플테이터
         for(int i=0;i<cuItem.size();i++){
             itemList.add(new CartItemModel(cuItem.get(i).getImage(), cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
+
+        }
+        for(int i=0;i<gs25Item.size();i++){
+            itemList.add(new CartItemModel(gs25Item.get(i).getImage(), gs25Item.get(i).getItemname(), gs25Item.get(i).getStorename(), gs25Item.get(i).getItemid()));
+
+        }
+        for(int i=0;i<sevenItem.size();i++){
+            itemList.add(new CartItemModel(sevenItem.get(i).getImage(), sevenItem.get(i).getItemname(), sevenItem.get(i).getStorename(), sevenItem.get(i).getItemid()));
 
         }
     }
@@ -242,9 +248,16 @@ public class addToCart extends CartFragment {
         CartRequest cartRequest = new CartRequest("addTocart", SaveSharedPreference.getId(getActivity()), item_id,storename, responsListener);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(cartRequest);
+        adapter.notifyDataSetChanged();
+        //adapterCart.notifyDataSetChanged();
 
-
-
+        //resetImageview();
+        cartList.add(cartItemModel);
+        ItemParccelable item=new ItemParccelable();
+        item.setProdName(cartItemModel.getText1());
+        item.setConvName(cartItemModel.getText2());
+        item.setImgUrl(cartItemModel.getImageUrl());
+        sendToFramgent.add(item);
         resetImageview();
     }
 
@@ -254,12 +267,13 @@ public class addToCart extends CartFragment {
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                cartList.clear();
                 try{
                     cartList.clear();
+                    sendToFramgent.clear();
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("mycartlist");
                     int length = jsonArray.length();
-
                     for(int i=0; i<length; i++){
                         JSONObject object = jsonArray.getJSONObject(i);
                         String item_id = object.getString("item_id");
@@ -274,7 +288,9 @@ public class addToCart extends CartFragment {
                                     item.setConvName(storename);
                                     item.setImgUrl(cuItem.get(j).getImage());
                                     sendToFramgent.add(item);
+                                    break;
                                 }
+
                             }
                         }else if(storename.equals("gs25")){
                             for(int j=0; j<gs25Item.size(); j++){
@@ -285,6 +301,7 @@ public class addToCart extends CartFragment {
                                     item.setConvName(storename);
                                     item.setImgUrl(gs25Item.get(j).getImage());
                                     sendToFramgent.add(item);
+                                    break;
                                 }
                             }
                         }else {
@@ -296,6 +313,7 @@ public class addToCart extends CartFragment {
                                     item.setConvName(storename);
                                     item.setImgUrl(sevenItem.get(j).getImage());
                                     sendToFramgent.add(item);
+                                    break;
                                 }
                             }
                         }
@@ -304,9 +322,6 @@ public class addToCart extends CartFragment {
                     e.printStackTrace();
                 }
 
-                for(CartItemModel a : cartList){
-                   // System.out.println(a.getImageUrl());
-                }
 
                 //adapter.addItem("물건1", "", "gs");
                 //adapter.addItem("물건2", "", "gs");
@@ -328,9 +343,6 @@ public class addToCart extends CartFragment {
     }
 
     private void resetImageview(){
-        for(CartItemModel e:cartList){
-            System.out.print(e.getText1());
-        }
         for(int i=0;i<5;i++){
             imageViews[i].setImageResource(0);
             imageViews[i].setOnClickListener(new View.OnClickListener() {
@@ -344,11 +356,8 @@ public class addToCart extends CartFragment {
         //adapter.notifyDataSetChanged();
         if(cartList.size()<=5){
             for (i=0;i<cartList.size();i++){
-                CartItemModel item=cartList.get(i);
-                Glide.with(getContext()).load(cartList.get(i).getImageUrl()).apply(new RequestOptions()
-                        .signature(new ObjectKey("signature string"))
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE))
+                CartItemModel item=cartList.get(cartList.size()-1-i);
+                Glide.with(getContext()).load(cartList.get(cartList.size()-1-i).getImageUrl())
                         .into(imageViews[i]); //cartList.size()-1-i
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -359,18 +368,12 @@ public class addToCart extends CartFragment {
             }
         }else {
             for (i=0;i<5;i++){
-                CartItemModel item=cartList.get(i);
-                Glide.with(getContext()).load(cartList.get(i).getImageUrl()).apply(new RequestOptions()
-                        .signature(new ObjectKey("signature string"))
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE))
+                CartItemModel item=cartList.get(cartList.size()-1-i);
+                Glide.with(getContext()).load(cartList.get(cartList.size()-1-i).getImageUrl())
                         .into(imageViews[i]);
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        click_cart_item(getContext(),item);
-
-                    }
+                    public void onClick(View v) { click_cart_item(getContext(),item); }
                 });
             }
         }

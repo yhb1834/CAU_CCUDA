@@ -60,24 +60,23 @@ public class ItemPopUp extends Activity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("id: "+prodId+" conv: "+prodConv);
                 removeFromcart(prodId, prodConv);
-                System.out.println("getParent: "+getParent());
-                System.out.println("getParentActivity: "+getParentActivityIntent());
                 Intent intent=new Intent();
                 if (clickedWhere=="MAIN_CART"){
                     intent=new Intent(getApplicationContext(), addToCart.class);
                     intent.putExtra("result", 0);
-                    //getParent().;
-
-                    //getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new addToCart()).commit();
                 }
                 if(clickedWhere=="ALL_CART"){
                     intent=new Intent(getApplicationContext(), AllCartFragment.class);
                     intent.putExtra("result",1);
-                    //getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new AllCartFragment()).commit();
+
                 }
                 setResult(RESULT_OK, intent);
+                try{
+                    startActivity(intent);
+                }catch (Exception e){
+
+                }
 
                 finish(); // 팝업 닫기
 

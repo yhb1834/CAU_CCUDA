@@ -34,27 +34,6 @@ import java.util.ArrayList;
 public class CartFragment extends Fragment {
     private Context context;
 
-    ActivityResultLauncher<Intent> startForResult_main=registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if(result.getResultCode()==getActivity().RESULT_OK){
-                    System.out.println("메인에서 눌렀어");
-                    Intent intent=result.getData();
-                    getView().invalidate();
-                    
-                }
-            }
-    );
-    ActivityResultLauncher<Intent> startForResult_cart=registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if(result.getResultCode()==getActivity().RESULT_OK){
-                    Intent intent=result.getData();
-                    System.out.println("전체보기에서 눌렀어");
-                    getView().invalidate();
-                }
-            }
-    );
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +58,7 @@ public class CartFragment extends Fragment {
                 try{
                     // 성공
                     Toast.makeText(context,"장바구니에서 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -109,4 +89,20 @@ public class CartFragment extends Fragment {
         //startActivity(intent);
         startForResult_cart.launch(intent);
     }
+
+    ActivityResultLauncher<Intent> startForResult_main=registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if(result.getResultCode()==getActivity().RESULT_OK){
+                }
+            }
+    );
+    ActivityResultLauncher<Intent> startForResult_cart=registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if(result.getResultCode()==getActivity().RESULT_OK){
+                }
+            }
+    );
+
 }

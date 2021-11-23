@@ -44,13 +44,14 @@ public class AllCartFragment extends CartFragment {
         for(int i=0;i<itemList.size();i++){
             adapter.addItem(new CartItemModel(itemList.get(i).getImgUrl(),itemList.get(i).getProdName(),itemList.get(i).getConvName(),itemList.get(i).getId()));
         }
+        System.out.println("adapter length: "+adapter.getCount());
         cartItemList.setAdapter(adapter);
         cartItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CartItemModel item=(CartItemModel) adapter.getItem(position);
+                System.out.println("position: "+position);
+                CartItemModel item=new CartItemModel(itemList.get(position).getImgUrl(), itemList.get(position).getProdName(), itemList.get(position).getConvName(), itemList.get(position).getId());
                 click_cart_item_in_all(getActivity(), item);
-                //adapter.notifyDataSetChanged();
             }
         });
         return view;
@@ -60,8 +61,10 @@ public class AllCartFragment extends CartFragment {
     public void onResume() {
         super.onResume();
         System.out.println("onResume");
-        //FragmentTransaction ft= getParentFragmentManager().beginTransaction();
-        //ft.detach(this).attach(this).commit();
+        adapter=new AllCartListAdapter();
+        adapter.notifyDataSetChanged();
     }
+
+
 
 }
