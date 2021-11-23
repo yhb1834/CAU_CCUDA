@@ -40,13 +40,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-public class LikeRecipeFragment extends Fragment {
+public class LikeRecipeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView mRecyclerView;
     private RecipeAdapter mRecipeAdapter;
     private ArrayList<RecipeItem> RecipeItems;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference recipeRef;
     Context context;
+    SwipeRefreshLayout mSwipeRefreshLayout;//새로고침
 
 
     public LikeRecipeFragment() {
@@ -64,6 +65,9 @@ public class LikeRecipeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment1_recipe, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.RecipeRecyclerView);
         context = getActivity();
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh2);//새로고침
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         recipeRef = firebaseDatabase.getReference().child("Recipe");
@@ -117,25 +121,10 @@ public class LikeRecipeFragment extends Fragment {
         });
 
 
-        //맨 위로 플로팅 버
-        FloatingActionButton fabup = (FloatingActionButton) view.findViewById(R.id.scrolltop2);
-        fabup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mRecyclerView.smoothScrollToPosition(mRecipeAdapter.getItemCount() - 1);
-            }
-        });
-
-        FloatingActionButton fab = view.findViewById(R.id.add_recipe);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), RecipeRegisterActivity.class);
-                startActivity(intent);
-            }
-        });
         return view;
     }
+
+
 
 
     private void load_LikeRecipelist() {
@@ -164,4 +153,19 @@ public class LikeRecipeFragment extends Fragment {
 
     }
 
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                //adapter.notifyDataSetChanged();
+                //GettingPHP gPHP = new GettingPHP();
+                //gPHP.execute(url_showPrescription);
+                //listView.setAdapter(adapter);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1000);
+    }
 }

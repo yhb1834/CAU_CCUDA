@@ -258,7 +258,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                     String fileName = coupon_id + seller_id + buyer_id + data.date;
                     AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomActivity.this)
                             .setTitle("이미지 다운로드")
-                            .setMessage("해당 이미지 로컬저장소에 다운로드 하시겠습니까?")
+                            .setMessage("해당 이미지를 로컬저장소에 저장하시겠습니까?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {

@@ -167,15 +167,13 @@ public class AppSettingsFragment extends Fragment {
                                         }
                                     }else {
                                         String check = jsonObject.getString("check");
-
-                                        // TODO: 탈퇴불가 이후 동작
                                         if(check.equals("report")){
-                                            Log.d("exit",": "+jsonObject.getString("reportdate")+" 자로 신고된 건 처리중 탈퇴 불가");
-                                            //
+                                            //Log.d("exit",": "+jsonObject.getString("reportdate")+" 자로 신고된 건 처리중 탈퇴 불가");
+                                            Toast.makeText(context,jsonObject.getString("repostdate")+"자로 신고된 건이 처리중으로 탈퇴 불가",Toast.LENGTH_SHORT).show();
                                         }
                                         else if(check.equals("deal")){
-                                            Log.d("exit",": 거래중 탈퇴 불가");
-                                            //
+                                            //Log.d("exit",": 거래중 탈퇴 불가");
+                                            Toast.makeText(context,"거래중인 쿠폰이 있어 탈퇴 불가",Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 } catch (Exception e) {
