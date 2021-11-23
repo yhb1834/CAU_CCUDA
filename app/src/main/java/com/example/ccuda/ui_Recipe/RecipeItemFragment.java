@@ -3,6 +3,7 @@ package com.example.ccuda.ui_Recipe;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,10 +13,22 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
+import com.example.ccuda.data.RecipeDTO;
 import com.example.ccuda.data.RecipeItem;
+import com.example.ccuda.data.SaveSharedPreference;
+import com.example.ccuda.ui_Home.HomeActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class RecipeItemFragment extends Fragment { //implements OnBackPressedListener{
 
@@ -23,6 +36,7 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
     private ImageView recipeImage11;
     private RecipeItem item;
 
+    FirebaseDatabase firebaseDatabase;
     ImageButton share;
 
     public RecipeItemFragment() {
@@ -40,6 +54,9 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
             int islike = item.getLike();
             String isTitle = item.getTitle();
             String content = item.getContent();
+
+            //파이어베이스 데이터베이스 생성
+            firebaseDatabase = FirebaseDatabase.getInstance();
 
             recipeImage11 = (ImageView) v.findViewById(R.id.recipeImage2);
             like11 = (TextView) v.findViewById(R.id.likenumber2);
@@ -74,6 +91,46 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
             }
         });
         return v;
+    }
+
+    // 이미지 storage삭제
+    private void onDeleteImage(String fileName)
+    {
+        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+        StorageReference desertRef = firebaseStorage.getReference("recipeImages/"+ fileName);
+        desertRef.delete();
+    }
+
+    private void getfirebasekey(String data){
+        firebaseDatabase.getReference().child("Recipe").orderByChild("image1").equalTo(data).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot:snapshot.getChildren()) {
+                    String key = dataSnapshot.getKey();
+                    deleteRecipe(key);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    // 게시글 삭제
+    private void deleteRecipe(String key){
+        firebaseDatabase.getReference().child("Recipe").child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(getActivity(), "삭제 성공", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("error: "+e.getMessage());
+                Toast.makeText(getActivity(), "삭제 실패", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //@Override

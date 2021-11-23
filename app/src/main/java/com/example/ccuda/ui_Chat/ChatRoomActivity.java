@@ -3,13 +3,17 @@ package com.example.ccuda.ui_Chat;
 import static android.view.View.*;
 
 import android.content.ClipData;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +37,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.loader.content.AsyncTaskLoader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,16 +45,19 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.ccuda.BuildConfig;
 import com.example.ccuda.R;
 import com.example.ccuda.data.ChatData;
 import com.example.ccuda.data.CouponData;
 import com.example.ccuda.data.PeopleItem;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.ChatRequest;
+import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.db.DealManager;
 import com.example.ccuda.login_ui.LoginActivity;
 import com.example.ccuda.ui_Home.HomeActivity;
 import com.example.ccuda.ui_Recipe.MultiImageAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -57,6 +65,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -66,6 +75,12 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -240,11 +255,29 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final ChatData.Comment data = (ChatData.Comment) adapter.getItem(position);
                 if(data.type.equals("image")){
-                    Toast.makeText(getApplicationContext(), "사진 클릭", Toast.LENGTH_SHORT).show();
+                    String fileName = coupon_id + seller_id + buyer_id + data.date;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomActivity.this)
+                            .setTitle("이미지 다운로드")
+                            .setMessage("해당 이미지 로컬저장소에 다운로드 하시겠습니까?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    imagedownload(fileName);
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
                 }
 
             }
         });
+
 
     }
 
@@ -267,7 +300,8 @@ public class ChatRoomActivity extends AppCompatActivity {
     void saveData(){
         //Firebase storage에 이미지 저장하기 위해 파일명 만들기(날짜를 기반으로)
         SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
-        String fileName= chatRoomUid+sdf.format(new Date())+".png";
+        String date = sdf.format(new Date());
+        String fileName= chatRoomUid+date+".png";
 
         FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
         final StorageReference imgRef= firebaseStorage.getReference("chatImages/"+fileName);
@@ -292,7 +326,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                                         //파라미터로 firebase의 저장소에 저장되어 있는
                                         //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
                                         imageurl = uri.toString();
-
+                                        openchat();
                                         ChatData.Comment comment = new ChatData.Comment();
                                         comment.user_id = String.valueOf(SaveSharedPreference.getId(ChatRoomActivity.this));
                                         Calendar calendar= Calendar.getInstance();
@@ -300,6 +334,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
                                         comment.msg = imageurl;
                                         comment.type = "image";
+                                        comment.date = date;
 
                                         firebaseDatabase = FirebaseDatabase.getInstance();
                                         chatref = firebaseDatabase.getReference();
@@ -385,6 +420,9 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     public void clickSend(View view){
         if(!et.getText().toString().equals("")){
+            openchat();
+            SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
+            String date = sdf.format(new Date());
             ChatData.Comment comment = new ChatData.Comment();
             comment.user_id = String.valueOf(SaveSharedPreference.getId(this));
             Calendar calendar= Calendar.getInstance();
@@ -392,6 +430,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
             comment.msg = et.getText().toString();
             comment.type = "text";
+            comment.date = date;
 
             firebaseDatabase = FirebaseDatabase.getInstance();
             chatref = firebaseDatabase.getReference();
@@ -504,5 +543,61 @@ public class ChatRoomActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+    private void openchat(){
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+            }
+        };
+        CouponpageRequest couponpageRequest = new CouponpageRequest("openchat",buyer_id,seller_id,coupon_id,responsListener);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(couponpageRequest);
+    }
 
+    private void imagedownload(String fileName) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+
+        //다운로드할 파일을 가르키는 참조 만들기
+        StorageReference pathReference = storageReference.child("chatImages/" + fileName + ".png");
+
+        //휴대폰 로컬 영역에 저장하기
+
+        File rootPath = makeDir();
+
+        final File localFile = new File(rootPath,fileName+".png");
+        pathReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                intent.setData(Uri.fromFile(localFile));
+                sendBroadcast(intent);
+                Toast.makeText(getApplicationContext(), "파일 저장 성공", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "저장 실패", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    public File makeDir() {
+        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(); //내장에 만든다
+        String directoryName = "PPLUSONE";
+        final File myDir = new File(root + "/" + directoryName);
+        if (!myDir.exists()) {
+            boolean wasSuccessful = myDir.mkdir();
+            if (!wasSuccessful) {
+                System.out.println("file: was not successful.");
+            } else {
+                System.out.println("file: 최초로 앨범파일만듬." + root + "/" + directoryName);
+            }
+        } else {
+            System.out.println("file: " + root + "/" + directoryName +"이미 파일있음");
+        }
+
+        return myDir;
+    }
 }

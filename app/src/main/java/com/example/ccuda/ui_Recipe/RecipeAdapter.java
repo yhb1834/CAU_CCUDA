@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -67,6 +68,7 @@ class ViewHolder extends RecyclerView.ViewHolder {
     ImageView image;
     TextView like;
     TextView title;
+    //ImageButton likebutton
 
     public ViewHolder(@NonNull View itemView, final RecipeAdapter.OnItemClickEventListener itemClickListener) {
         super(itemView);

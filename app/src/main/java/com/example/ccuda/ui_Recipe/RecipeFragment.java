@@ -1,5 +1,6 @@
 package com.example.ccuda.ui_Recipe;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -20,12 +21,15 @@ import android.view.ViewGroup;
 import com.example.ccuda.R;
 import com.example.ccuda.data.RecipeDTO;
 import com.example.ccuda.data.RecipeItem;
+import com.example.ccuda.data.SaveSharedPreference;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 
 import java.util.ArrayList;
 
@@ -37,6 +41,7 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
     SwipeRefreshLayout mSwipeRefreshLayout;//새로고침
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference recipeRef;
+    Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -47,6 +52,7 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
                              @Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment1_recipe, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.RecipeRecyclerView);
+        context = getActivity();
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh2);//새로고침
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -214,5 +220,41 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
         return imageurl;
 
+    }
+
+    //좋아요 데이터베이스 트랜잭션 저장
+    private void likeClicked(DatabaseReference recipeRef) {
+        recipeRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                RecipeDTO recipeDTO = mutableData.getValue(RecipeDTO.class);
+                String me = Long.toString(SaveSharedPreference.getId(context));
+                if (recipeDTO == null) {
+                    return Transaction.success(mutableData);
+                }
+
+                //좋아요 누른 사람을 확인
+                if (recipeDTO.getLikes().containsKey(me))
+                {
+                    //좋아요 취소
+                    recipeDTO.setLike(recipeDTO.getLike() - 1);
+                    recipeDTO.getLikes().remove(me);
+                } else {
+                    // 좋아요
+                    recipeDTO.setLike(recipeDTO.getLike() + 1);
+                    recipeDTO.getLikes().put(me, true);
+                }
+
+                // Set value and report transaction success
+                mutableData.setValue(recipeDTO);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean committed,
+                                   DataSnapshot currentData) {
+                // Transaction completed
+            }
+        });
     }
 }

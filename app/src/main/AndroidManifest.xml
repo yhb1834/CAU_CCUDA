@@ -8,6 +8,7 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:name=".login_ui.GlobalApplication"
         android:allowBackup="true"
@@ -16,6 +17,7 @@
         android:roundIcon="@mipmap/ccuda_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".ui_Recipe.RecipeRegisterActivity"

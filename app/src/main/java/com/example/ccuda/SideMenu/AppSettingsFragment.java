@@ -122,7 +122,6 @@ public class AppSettingsFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         if(SaveSharedPreference.getPassword(context).equals("")){
                             Toast.makeText(context, "로그아웃", Toast.LENGTH_SHORT).show();
-                            SaveSharedPreference.setPrefUserEmail(context,"");
                             UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
                                 @Override
                                 public void onCompleteLogout() {
