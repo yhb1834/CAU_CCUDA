@@ -35,9 +35,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:maxLines="1"
-            android:text="별점"
             android:textColor="#444"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:drawableLeft="@drawable/ic_baseline_star_24"
+            android:drawablePadding="2dp"
+            />
 
     </LinearLayout>
 

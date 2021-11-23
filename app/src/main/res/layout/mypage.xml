@@ -36,9 +36,17 @@
                 android:layout_weight="1">
             </TextView>
             <TextView
+                android:id="@+id/star"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="꾸다에 오신 걸 환영합니다!">
+                android:hint="textview"
+                android:drawableLeft="@drawable/ic_baseline_star_24"
+                android:drawablePadding="2dp">
+            </TextView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="쁠원에 오신 걸 환영합니다!">
             </TextView>
         </LinearLayout>
     </LinearLayout>

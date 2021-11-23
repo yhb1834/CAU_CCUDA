@@ -186,13 +186,13 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     }
 
-    private String[] getitemname(String itemnamelist){
+    public String[] getitemname(String itemnamelist){
         String[] itemname;
         itemname = itemnamelist.split(", ");
         return itemname;
     }
 
-    private ArrayList<String> getimageurl(RecipeDTO recipeDTO){
+    public ArrayList<String> getimageurl(RecipeDTO recipeDTO){
         ArrayList<String> imageurl = new ArrayList<>();
 
         if(recipeDTO.getImage1() != null){
