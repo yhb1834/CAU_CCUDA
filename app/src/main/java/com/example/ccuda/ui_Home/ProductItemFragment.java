@@ -71,8 +71,6 @@ public class ProductItemFragment extends Fragment {
         seller_nicname = getArguments().getString("seller_nicname");
         star = getArguments().getString("seller_score");
 
-        //수정필요
-        find_seller();
 
         Photo = (ImageView) view.findViewById(R.id.photo);
         Productname = (TextView) view.findViewById(R.id.itemname2);
@@ -112,21 +110,17 @@ public class ProductItemFragment extends Fragment {
     void open_chatroom(String coupon_id, String seller_id){
         String buyer_id = Long.toString(SaveSharedPreference.getId(context));
         String roomnum = coupon_id + seller_id + buyer_id;
-        //채팅방으로 이동
-        Response.Listener<String> responsListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
-                intent.putExtra("roomnum",roomnum);
-                startActivity(intent);
-            }
-        };
-        CouponpageRequest couponpageRequest = new CouponpageRequest("openchat",buyer_id,seller_id,coupon_id,responsListener);
-        RequestQueue queue = Volley.newRequestQueue(context);
-        queue.add(couponpageRequest);
 
+        // 채팅방으로 이동
+        Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
+        intent.putExtra("roomnum",roomnum);
+        intent.putExtra("seller_id",seller_id);
+        intent.putExtra("buyer_id",buyer_id);
+        intent.putExtra("coupon_id",coupon_id);
+        startActivity(intent);
     }
 
+    /*
     void find_seller(){
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
@@ -167,5 +161,7 @@ public class ProductItemFragment extends Fragment {
             }
         };
     }
+
+     */
 }
 

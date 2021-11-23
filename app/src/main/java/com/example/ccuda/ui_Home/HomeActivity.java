@@ -1,9 +1,12 @@
 package com.example.ccuda.ui_Home;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
@@ -30,11 +34,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.ccuda.BuildConfig;
 import com.example.ccuda.MyPage;
 import com.example.ccuda.R;
 import com.example.ccuda.SideMenu.AppSettingsFragment;
 import com.example.ccuda.SideMenu.GetcouponFragment;
+import com.example.ccuda.SideMenu.LikeRecipeFragment;
 import com.example.ccuda.SideMenu.NotifyFragment;
+import com.example.ccuda.SideMenu.UploadRecipeFragment;
 import com.example.ccuda.SideMenu.UploadarticlesFragment;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
@@ -127,6 +134,9 @@ public class HomeActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById((R.id.bottom_navigation));
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        //권한요청하기
+        chck_permission();
+
         load_item();
 
         fragmentHome = new HomeFragment();
@@ -186,6 +196,12 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     case R.id.get_coupon:
                         getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new GetcouponFragment()).commit();
+                        break;
+                    case R.id.upload_recipe:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new UploadRecipeFragment()).commit();
+                        break;
+                    case R.id.like_recipe:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new LikeRecipeFragment()).commit();
                         break;
                     case R.id.settings:
                         getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new AppSettingsFragment()).commit();
@@ -423,6 +439,54 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    private void chck_permission(){
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        if(permission == PackageManager.PERMISSION_DENIED || permission2 == PackageManager.PERMISSION_DENIED){
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE},1000);
+            return;
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1000: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    //권한 거절시
+                    denialDialog();
+                }
+                return;
+            }
+        }
+    }
+
+    public void denialDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("알림")
+                .setMessage("저장소 권한이 필요합니다. 환경 설정에서 저장소 권한을 허가해주세요.")
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package",
+                                BuildConfig.APPLICATION_ID, null);
+                        intent.setData(uri);
+                        intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent); //확인버튼:설정 창으로 이동
+                    }
+                })
+                .create()
+                .show();
     }
 }
 

@@ -4,22 +4,28 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RecipeItem implements Parcelable {
     String resourceId;
     int like;
+    Map<String, Boolean> likes = new HashMap<>();
     String title;
-    String itemname;
+    String[] itemname;    // 고른 상품명이름
     ArrayList<String> imageurl;
+    String content;     // 글 내용
 
     public RecipeItem(){}
 
-    public RecipeItem(String resourceId, int like, String title, String itemname, ArrayList<String> imageurl) {
+    public RecipeItem(String resourceId, int like, String title, String[] itemname, ArrayList<String> imageurl, String content, Map<String,Boolean> likes) {
         this.resourceId = resourceId;
         this.like = like;
         this.title = title;
         this.itemname = itemname;
         this.imageurl = imageurl;
+        this.content = content;
+        this.likes = likes;
     }
 
     protected RecipeItem(Parcel in) {
@@ -40,8 +46,23 @@ public class RecipeItem implements Parcelable {
         }
     };
 
+    public String[] getItemname() {
+        return itemname;
+    }
+
+    public ArrayList<String> getImageurl() {
+        return imageurl;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
     public String getImage() {return resourceId;}
     public int getLike() { return like; }
+    public Map<String, Boolean> getLikes() {
+        return likes;
+    }
     public String getTitle() { return title; }
 
     public void setImage(String  resourceId){

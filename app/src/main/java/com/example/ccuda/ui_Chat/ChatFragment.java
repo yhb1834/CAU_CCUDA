@@ -36,7 +36,6 @@ public class ChatFragment extends Fragment{
     private RecyclerView mRecyclerView;
     private ChatPeopleAdapter mChatPeopleAdapter;
     private ArrayList<PeopleItem> PeopleItems;
-    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     Context context;
     String destid;
     String roomnum;
@@ -69,6 +68,9 @@ public class ChatFragment extends Fragment{
                 final PeopleItem item = PeopleItems.get(a_position);
                 Intent intent = new Intent(getActivity(),ChatRoomActivity.class);
                 intent.putExtra("roomnum",item.getRoomnum());
+                intent.putExtra("seller_id",item.getSeller_id());
+                intent.putExtra("buyer_id",item.getBuyer_id());
+                intent.putExtra("coupon_id",item.getCoupon_id());
                 startActivity(intent);
             }
         });
@@ -77,6 +79,7 @@ public class ChatFragment extends Fragment{
     }
 
     protected void load_chatlist(Context context){
+        PeopleItems.clear();
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -97,14 +100,14 @@ public class ChatFragment extends Fragment{
                             roomnum = Integer.toString(coupon_id)+SaveSharedPreference.getId(context)+buyer_id;
                             destid = buyer_id;
                             double buyer_score = Double.parseDouble(object.getString("buyer_score"));
-                            PeopleItems.add(new PeopleItem(R.drawable.person, buyer_nicname, "별점" + buyer_score + "점",buyer_id,coupon_id+"",roomnum));
+                            PeopleItems.add(new PeopleItem(R.drawable.person, buyer_nicname, "" + buyer_score + "점",buyer_id,coupon_id+"",roomnum, seller_id, buyer_id));
 
                         } else {
                             // 구매자일때 챗상대방
                             roomnum = Integer.toString(coupon_id)+seller_id+SaveSharedPreference.getId(context);
                             destid = seller_id;
                             double seller_score = Double.parseDouble(object.getString("seller_score"));
-                            PeopleItems.add(new PeopleItem(R.drawable.person, seller_nicname, "별점" + seller_score + "점",seller_id,coupon_id+"",roomnum));
+                            PeopleItems.add(new PeopleItem(R.drawable.person, seller_nicname, "" + seller_score + "점",seller_id,coupon_id+"",roomnum, seller_id, buyer_id));
                         }
 
                         //ChatData chatData = new ChatData();
@@ -133,4 +136,5 @@ public class ChatFragment extends Fragment{
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(chatRequest);
     }
+
 }

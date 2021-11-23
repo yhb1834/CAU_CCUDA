@@ -1,17 +1,25 @@
 package com.example.ccuda.ui_Home;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +31,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.ccuda.BuildConfig;
 import com.example.ccuda.R;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.ui_Home.UploadCoupon;
@@ -45,6 +54,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -145,6 +155,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
 
         adapter =new Adapter();
         load_item();
+
 
         //맨 위로 플로팅 버
         FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.scrolltop);
@@ -382,4 +393,5 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
             }
         }, 500);
     }
+
 }

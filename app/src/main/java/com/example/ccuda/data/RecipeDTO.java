@@ -1,5 +1,8 @@
 package com.example.ccuda.data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RecipeDTO {
     private String title;
     private String storename;
@@ -7,6 +10,7 @@ public class RecipeDTO {
     private String writer_id;
     private String itemname;
     private int like;
+    private Map<String, Boolean> likes = new HashMap<>();
 
     public int getLike() {
         return like;
@@ -14,6 +18,10 @@ public class RecipeDTO {
 
     public void setLike(int like) {
         this.like = like;
+    }
+
+    public Map<String, Boolean> getLikes() {
+        return likes;
     }
 
     public String getItemname() {

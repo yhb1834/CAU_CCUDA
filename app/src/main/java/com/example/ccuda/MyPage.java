@@ -39,6 +39,7 @@ public class MyPage extends Fragment {
     private ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
     private TextView mypagetv;
     private ImageView mypageiv;
+    private TextView star;
     Context context;
 
     Button upload;
@@ -60,6 +61,7 @@ public class MyPage extends Fragment {
         mypageiv = view.findViewById(R.id.mypageiv);
         upload=view.findViewById(R.id.mypage_coupon_upload);
         cartList=view.findViewById(R.id.cartList);
+        star=view.findViewById(R.id.star);
 
         /*set userinfo*/
         String email;
@@ -69,6 +71,7 @@ public class MyPage extends Fragment {
             email = SaveSharedPreference.getEmail(context);
         mypagetv.setText(SaveSharedPreference.getNicname(context)+"\n"+email);
         Glide.with(this).load(SaveSharedPreference.getProfileimage(context)).into(mypageiv);
+        star.setText(Double.toString(SaveSharedPreference.getScore(context)));
 
         upload.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -13,6 +13,14 @@
             android:icon="@drawable/my_coupon"
             android:title="@string/get_coupon" />
         <item
+            android:id="@+id/upload_recipe"
+            android:icon="@drawable/upload_recipe"
+            android:title="내가 올린 레시피" />
+        <item
+            android:id="@+id/like_recipe"
+            android:icon="@drawable/favorite_full"
+            android:title="좋아요 누른 레시피" />
+        <item
             android:id="@+id/settings"
             android:icon="@drawable/settings"
             android:title="@string/settings" />

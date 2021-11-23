@@ -12,6 +12,7 @@ public class ChatData {
         public String msg;
         public String timestamp;
         public String type;
+        public String date;
     }
 
 }
