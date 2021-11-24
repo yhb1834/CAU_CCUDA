@@ -2,12 +2,15 @@ package com.example.ccuda.ui_Cart;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -15,6 +18,7 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.ccuda.R;
+import com.example.ccuda.ui_Home.Adapter;
 
 import java.util.ArrayList;
 
@@ -60,10 +64,32 @@ public class AllCartFragment extends CartFragment {
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("onResume");
-        adapter=new AllCartListAdapter();
-        adapter.notifyDataSetChanged();
+        load_MyCartList();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AllCartListAdapter adapterNew=new AllCartListAdapter();
+                for(CartItemModel e:cartList){
+                    adapterNew.addItem(e);
+                }
+
+                cartItemList.setAdapter(adapterNew);
+                cartItemList.invalidateViews();
+                cartItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        System.out.println("position: "+position);
+                        CartItemModel item=cartList.get(position);
+                        click_cart_item_in_all(getActivity(), item);
+                    }
+                });
+                adapter.notifyDataSetChanged();
+            }
+        }, 500);
+
     }
+
 
 
 

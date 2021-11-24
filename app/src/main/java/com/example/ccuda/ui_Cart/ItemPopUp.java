@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -90,13 +92,6 @@ public class ItemPopUp extends Activity {
         finish(); // 팝업 닫기
     }
 
-    /*
-    public void onClickDelete(View v){
-        //CartFragment fragment=new CartFragment();
-        //fragment.removeFromcart(prodId, prodConv);
-        //finish(); // 팝업 닫기
-    }
-    */
 
 
     @Override
@@ -123,4 +118,5 @@ public class ItemPopUp extends Activity {
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.add(cartRequest);
     }
+
 }

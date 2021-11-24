@@ -1,10 +1,12 @@
 package com.example.ccuda.ui_Cart;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -52,14 +54,14 @@ public class addToCart extends CartFragment {
     SearchView searchView;
     RecyclerView recyclerView;
     TextView textView;
-    ArrayList<ItemData> cuItem = HomeActivity.cuItem;
-    ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
-    ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
+    //ArrayList<ItemData> cuItem = HomeActivity.cuItem;
+    //ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
+    //ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
 
 
     CartItemAdapter adapter;
     ArrayList<CartItemModel> itemList=new ArrayList<>();
-    ArrayList<CartItemModel> cartList=new ArrayList<>();
+    //ArrayList<CartItemModel> cartList=new ArrayList<>();
     Adapter adapterCart=new Adapter();
     ImageView imageView1;
     ImageView imageView2;
@@ -70,7 +72,7 @@ public class addToCart extends CartFragment {
     int i;
     TextView emptyCartText;
     Button viewAll;
-    ArrayList<ItemParccelable> sendToFramgent=new ArrayList<>();
+    //ArrayList<ItemParccelable> sendToFramgent=new ArrayList<>();
     //ArrayList<> cartItemImgs=new ArrayList<>(); // 장바구니에 추가된 사진 list
 
 
@@ -130,7 +132,6 @@ public class addToCart extends CartFragment {
             public void onClick(View v) {
                 Bundle result=new Bundle();
                 result.putParcelableArrayList("itemlist", sendToFramgent);
-                //result.put
                 getParentFragmentManager().setFragmentResult("requestKey", result);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 AllCartFragment fragment=new AllCartFragment();
@@ -192,8 +193,6 @@ public class addToCart extends CartFragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
-        //itemList = new ArrayList<>(); //샘플테이터
-        //fillData();
         adapter = new CartItemAdapter(itemList);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -249,9 +248,7 @@ public class addToCart extends CartFragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(cartRequest);
         adapter.notifyDataSetChanged();
-        //adapterCart.notifyDataSetChanged();
 
-        //resetImageview();
         cartList.add(cartItemModel);
         ItemParccelable item=new ItemParccelable();
         item.setProdName(cartItemModel.getText1());
@@ -262,84 +259,29 @@ public class addToCart extends CartFragment {
     }
 
 
-    private void load_MyCartList(){
-        //cartList=new ArrayList<>();
-        Response.Listener<String> responsListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                cartList.clear();
-                try{
-                    cartList.clear();
-                    sendToFramgent.clear();
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jsonArray = jsonObject.getJSONArray("mycartlist");
-                    int length = jsonArray.length();
-                    for(int i=0; i<length; i++){
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        String item_id = object.getString("item_id");
-                        String storename = object.getString("storename");
-
-                        if(storename.equals("cu")){
-                            for(int j=0; j<cuItem.size(); j++){
-                                if(Integer.toString(cuItem.get(j).getItemid()).equals(item_id)){
-                                    cartList.add(new CartItemModel(cuItem.get(j).getImage(),cuItem.get(j).getItemname(),storename,cuItem.get(j).getItemid()));
-                                    ItemParccelable item=new ItemParccelable();
-                                    item.setProdName(cuItem.get(j).getItemname());
-                                    item.setConvName(storename);
-                                    item.setImgUrl(cuItem.get(j).getImage());
-                                    sendToFramgent.add(item);
-                                    break;
-                                }
-
-                            }
-                        }else if(storename.equals("gs25")){
-                            for(int j=0; j<gs25Item.size(); j++){
-                                if(Integer.toString(gs25Item.get(j).getItemid()).equals(item_id)){
-                                    cartList.add(new CartItemModel(gs25Item.get(j).getImage(),gs25Item.get(j).getItemname(),storename,gs25Item.get(j).getItemid()));
-                                    ItemParccelable item=new ItemParccelable();
-                                    item.setProdName(gs25Item.get(j).getItemname());
-                                    item.setConvName(storename);
-                                    item.setImgUrl(gs25Item.get(j).getImage());
-                                    sendToFramgent.add(item);
-                                    break;
-                                }
-                            }
-                        }else {
-                            for(int j=0; j<sevenItem.size(); j++){
-                                if(Integer.toString(sevenItem.get(j).getItemid()).equals(item_id)){
-                                    cartList.add(new CartItemModel(sevenItem.get(j).getImage(),sevenItem.get(j).getItemname(),storename,sevenItem.get(j).getItemid()));
-                                    ItemParccelable item=new ItemParccelable();
-                                    item.setProdName(sevenItem.get(j).getItemname());
-                                    item.setConvName(storename);
-                                    item.setImgUrl(sevenItem.get(j).getImage());
-                                    sendToFramgent.add(item);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-
-                //adapter.addItem("물건1", "", "gs");
-                //adapter.addItem("물건2", "", "gs");
-                //adapter.addItem("물건3", "", "gs");
-                //adapter.addItem("물건4", "", "gs");
-                //adapter.addItem("물건5", "", "gs");
-                //cartList.setAdapter(adapterCart);
-            }
-        };
-        CartRequest cartRequest = new CartRequest("mycartlist", SaveSharedPreference.getId(getActivity()), 0,"",responsListener);
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        queue.add(cartRequest);
-    }
 
     @Override
     public void onResume() {
         super.onResume();
-        resetImageview();
+        System.out.println("onResume at addToCart");
+        load_MyCartList();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(cartList.size()!=0){
+                    emptyCartText.setText("");
+                    emptyCartText.setTextSize(0);
+                    viewAll.setVisibility(View.VISIBLE);
+                }
+                if(cartList.size()==0){
+                    viewAll.setVisibility(View.INVISIBLE);
+                }
+                load_MyCartList();
+                resetImageview();
+            }
+        }, 500);
+
+        //resetImageview();
     }
 
     private void resetImageview(){
@@ -353,12 +295,12 @@ public class addToCart extends CartFragment {
             });
         }
 
-        //adapter.notifyDataSetChanged();
+
         if(cartList.size()<=5){
             for (i=0;i<cartList.size();i++){
                 CartItemModel item=cartList.get(cartList.size()-1-i);
                 Glide.with(getContext()).load(cartList.get(cartList.size()-1-i).getImageUrl())
-                        .into(imageViews[i]); //cartList.size()-1-i
+                        .into(imageViews[i]);
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -19,13 +19,21 @@ public class AllCartListAdapter extends BaseAdapter {
         return items.get(position);
     }
 
+    public CartItemModel getCartItemModel(int position){ return items.get(position); }
+
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    public int getItemIntId(int position){ return items.get(position).getItemid(); }
+
     public void addItem(CartItemModel item){
         items.add(item);
+    }
+
+    public void remove(CartItemModel item){
+        items.remove(item);
     }
 
     public void removeAll(){ items.clear(); }
