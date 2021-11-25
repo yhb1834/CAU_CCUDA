@@ -1,12 +1,15 @@
 package com.example.ccuda.ui_Recipe;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.text.method.CharacterPickerDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +36,22 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.FeedTemplate;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
+import com.kakao.util.KakaoParameterException;
+import com.kakao.util.helper.log.Logger;
+
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import kotlin.Unit;
 
 public class RecipeItemFragment extends Fragment { //implements OnBackPressedListener{
 
@@ -89,19 +108,39 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
         share.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                //shareKaKao();
+                /*try {
+                    KakaoLinkService kakaoLink = KakaoLinkService.getInstance(d);
+                    KakakakaoTalkLinkMessageBuilder = kakaoLink.createKakaoTalkLinkMessageBuilder();
+                    kakaoTalkLinkMessageBuilder.addText("TEST TEXT");
+                    kakaoTalkLinkMessageBuilder.addImage(imageSrc, 300, 200);
+                    kakaoTalkLinkMessageBuilder.addWebButton("GO WEBSITE", siteUrl);
+                    kakaoLink.sendMessage(kakaoTalkLinkMessageBuilder.build(), getActivity());
+                } catch (KakaoParameterException e) {
+                    Log.d(TAG, e.getMessage());
+                }*/
+
                 Intent msg = new Intent(Intent.ACTION_SEND);
 
                 msg.addCategory(Intent.CATEGORY_DEFAULT);
 
                 String isTitle = item.getTitle();
+                String isContent = item.getContent();
+                ArrayList<String> image = item.getImageurl();
+                System.out.println(image);
 
-                msg.putExtra(Intent.EXTRA_SUBJECT, isTitle);
-                msg.putExtra(Intent.EXTRA_TEXT, "내용");
+                msg.putExtra(Intent.EXTRA_SUBJECT, isTitle + "\n\n");
+                msg.putExtra(Intent.EXTRA_TEXT, isContent);
+                msg.setType("image/png");
+                msg.putExtra(Intent.EXTRA_STREAM, Uri.parse(String.valueOf(image)));
+                msg.setPackage("com.kakao.talk");
+                //msg.putExtra(Intent.EXTRA_STREAM, url);
+                //msg.setType("image/*");
+
                 msg.putExtra(Intent.EXTRA_TITLE, isTitle); //앱 공유할 때 나오는 제
 
                 msg.setType("text/plain");
                 startActivity(Intent.createChooser(msg, "공유하기"));
-
             }
         });
 
@@ -122,6 +161,49 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
         });
         return v;
     }
+
+
+    /*public void shareKaKao(){
+        String templateId = "피트키값";
+        ArrayList<String> image = item.getImageurl();
+
+        Map<String, String> templateArgs = new HashMap<String, String>();
+        //templateArgs.put("img", Url);
+        templateArgs.put("sub","텍스트");
+
+        KakaoLinkService.getInstance().sendCustom(getContext(), templateId, templateArgs, new ResponseCallback<KakaoLinkResponse>() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                Logger.e(errorResult.toString());
+            }
+
+            @Override
+            public void onSuccess(KakaoLinkResponse result) {
+                // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다.
+            }
+        });
+    }*/
+    /*public void shareKakao(View v){
+        try {
+            final KakaoLink kakaoLink = KakaoLink.getKakaoLink(this);
+            final KakaoTalkLinkMessageBuilder kakaoBuilder = kakaoLink.createKakaoTalkLinkMessageBuilder();
+
+            메시지 추가
+            kakaoBuilder.addText("카카오링크 테스트");
+
+            이미지 가로/세로 사이즈는 80px 보다 커야하며, 이미지 용량은 500kb 이하로 제한된다.
+            String url = "http://upload2.inven.co.kr/upload/2015/09/27/bbs/i12820605286.jpg";
+            kakaoBuilder.addImage(url, 1080, 1920);
+
+            앱 실행버튼 추가
+            kakaoBuilder.addAppButton("앱 실행");
+
+            메시지 발송
+            kakaoLink.sendMessage(kakaoBuilder, this);
+        } catch (KakaoParameterException e){
+            e.printStackTrace();
+        }
+    }*/
 
     //@Override
     /*public void onBackPressed() {
