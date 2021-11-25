@@ -1,15 +1,26 @@
 package com.example.ccuda.SideMenu;
-
+//https://asukim.tistory.com/34
+import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Checkable;
 import android.widget.ListView;
 
 import com.android.volley.RequestQueue;
@@ -21,11 +32,13 @@ import com.example.ccuda.data.ItemData;
 import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.ui_Home.Adapter;
 import com.example.ccuda.ui_Home.HomeActivity;
+import com.google.android.material.appbar.AppBarLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,8 +67,14 @@ public class UploadarticlesFragment extends Fragment {
     AdapterForUploadarticles adapter;
     ArrayAdapter<CouponData> arrayAdapter;
 
+    View viewForAppbar;
+    View viewForToolbar;
+    AppBarLayout mainAppbar;
+    Toolbar toolbar;
+
     public UploadarticlesFragment() {
         // Required empty public constructor
+        //getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
     }
 
     /**
@@ -84,6 +103,8 @@ public class UploadarticlesFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         load_couponlist(getContext());
+
+
     }
 
     @Override
@@ -96,11 +117,66 @@ public class UploadarticlesFragment extends Fragment {
         deleteButton=view.findViewById(R.id.delete_button);
         selectAllButton=view.findViewById(R.id.selectAll_button);
 
-        //for(int i=0;i<CouponArrayList.size();i++){
-        //    adapter.addItem(CouponArrayList.get(i));
+        viewForToolbar=getLayoutInflater().inflate(R.layout.toolbar_home, null, false);
+        toolbar=viewForToolbar.findViewById(R.id.main_toolbar);
 
-        //}
+        viewForAppbar=getLayoutInflater().inflate(R.layout.activity_home, null, false);
+        mainAppbar=viewForAppbar.findViewById(R.id.main_app_bar);
 
+        uploadCouponListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        //uploadCouponListView.setSelector(new PaintDrawable("#FFC107"));
+        //uploadCouponListView.setMultiChoiceModeListener(new MultiChoiceListenr);
+        uploadCouponListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                //getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
+                //toolbar.setVisibility(View.INVISIBLE);
+                //mainAppbar.setVisibility(View.INVISIBLE);
+                //mainAppbar.dispatchWindowVisibilityChanged(View.INVISIBLE);
+                mode.getMenuInflater().inflate(R.menu.menu_myupload, menu);
+
+
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.selectAll:
+                        final int checkCount=CouponArrayList.size();
+
+                        adapter.removeSelection();
+                        for(int i=0;i<checkCount;i++){
+                            uploadCouponListView.setItemChecked(i,true);
+                        }
+                        mode.setTitle(checkCount+" Selected");
+                        return true;
+
+                    case R.id.delete:
+                        AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+                }
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                final int checkedCount=uploadCouponListView.getCheckedItemCount();
+                //uploadCouponListView.setBackgroundColor("#FFC107");
+                mode.setTitle(checkedCount+" Selected");
+                adapter.toggleSelection(position);
+
+                //uploadCouponListView.getSelectedView().setBackgroundColor(Color.parseColor("#FFC107"));
+            }
+        });
 
 
         //uploadCouponListView.setAdapter(arrayAdapter);
@@ -187,16 +263,9 @@ public class UploadarticlesFragment extends Fragment {
                     System.out.println("coupon list: "+CouponArrayList);
                     adapter=new AdapterForUploadarticles(getActivity(),
                             R.layout.product_list,CouponArrayList); //android.R.layout.simple_list_item_multiple_choice
-                    //for(CouponData a:CouponArrayList){
-                    //    adapter.addItem(a);
-                    //    System.out.println("itemname: "+a.getItem_name());
-                    //}
 
-                    //arrayAdapter=new ArrayAdapter<CouponData>(getActivity(),
-                    //        android.R.layout.simple_list_item_multiple_choice, CouponArrayList);
-
-                    //uploadCouponListView.setAdapter(arrayAdapter);
                     uploadCouponListView.setAdapter(adapter);
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -206,4 +275,5 @@ public class UploadarticlesFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(couponpageRequest);
     }
+
 }

@@ -11,36 +11,39 @@ android:paddingTop="@dimen/activity_vertical_margin"
 app:layout_behavior="@string/appbar_scrolling_view_behavior"
 android:orientation="vertical">
 
-<ListView
-    android:id="@+id/upload_coupon_listView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:choiceMode="multipleChoice" />
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
-
-    <Button
-        android:id="@+id/selectAll_button"
-        android:layout_width="wrap_content"
+    <ListView
+        android:id="@+id/upload_coupon_listView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginHorizontal="10dp"
-        android:text="Select All"
-        android:visibility="invisible"/>
+        android:choiceMode="multipleChoice"
+        android:listSelector="@color/yellow" />
 
-    <Button
-        android:id="@+id/delete_button"
-        android:layout_width="wrap_content"
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginHorizontal="10dp"
-        android:text="Delete" />
+        android:orientation="horizontal">
 
-</LinearLayout>
+
+        <Button
+            android:id="@+id/selectAll_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            android:text="Select All"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            android:text="Delete" />
+
+    </LinearLayout>
 
 </LinearLayout>
