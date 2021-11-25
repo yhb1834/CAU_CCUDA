@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:layout_weight="1"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:background="?android:attr/activatedBackgroundIndicator">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_weight="0.5"
+        android:background="@drawable/corner_shape">
+
+        <ImageView
+            android:id="@+id/icon2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"></ImageView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="0dp">
+
+            <TextView
+                android:id="@+id/name2"
+                android:layout_width="240dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:text="test"
+                android:textColor="@color/black"
+                android:textSize="16dp"></TextView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/store2"
+                    android:layout_width="79dp"
+                    android:layout_height="55dp"
+                    android:gravity="center"
+                    android:text="test"></TextView>
+
+                <LinearLayout
+                    android:layout_width="179dp"
+                    android:layout_height="55dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/validity2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:padding="3dp"
+                            android:text="판매가격" />
+
+                        <TextView
+                            android:id="@+id/price12"
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="TextView" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/price2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="유효기간"
+                            android:padding="3dp"/>
+
+                        <TextView
+                            android:id="@+id/validity12"
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="TextView" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
+
