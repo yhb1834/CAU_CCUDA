@@ -82,6 +82,8 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
 
         }
 
+
+
         //다른 앱 이용해서 공유하기
         share = v.findViewById(R.id.share);
         share.setOnClickListener(new View.OnClickListener(){

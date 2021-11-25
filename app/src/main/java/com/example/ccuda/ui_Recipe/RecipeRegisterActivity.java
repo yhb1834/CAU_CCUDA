@@ -237,8 +237,12 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                                             }
                                             else {
                                                 String sNumber=parent.getItemAtPosition(position).toString();
-                                                Toast.makeText(getApplicationContext(), sNumber,Toast.LENGTH_SHORT);
+                                                Toast.makeText(getApplicationContext(), sNumber,Toast.LENGTH_SHORT).show();
                                             }
+                                            int item_id = getitem_id(convName,prodList.get(position));
+                                            System.out.println(item_id);
+                                            //추가하기
+
                                         }
 
                                         @Override
