@@ -38,7 +38,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment1_recipe_simple_item_layout, parent, false);
-        return new ViewHolder(view, onItemClickEventListener, onLikeClickEventListener);
+        return new ViewHolder(view, onItemClickEventListener, onItemLongClickListener, onLikeClickEventListener);
     }
 
     @Override
@@ -60,15 +60,22 @@ public class RecipeAdapter extends RecyclerView.Adapter<ViewHolder> {
     public interface OnItemClickEventListener {
         void onItemClick(View view, int position);
     }
+    public interface OnItemLongClickListener {
+        void onItemLongClick(View view, int position);
+    }
     public interface OnLikeClickEventListener{
         void onLikeClick(View view, int position);
     }
 
     private OnItemClickEventListener onItemClickEventListener;
+    private OnItemLongClickListener onItemLongClickListener;
     private OnLikeClickEventListener onLikeClickEventListener;
 
     public void setOnItemClickListener(OnItemClickEventListener listener) {
         onItemClickEventListener = listener;
+    }
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        onItemLongClickListener = listener;
     }
     public void setOnLikeClickEventListener(OnLikeClickEventListener listener){
         onLikeClickEventListener = listener;
@@ -81,7 +88,7 @@ class ViewHolder extends RecyclerView.ViewHolder {
     TextView title;
     ImageButton likebutton;
 
-    public ViewHolder(@NonNull View itemView, final RecipeAdapter.OnItemClickEventListener itemClickListener, final RecipeAdapter.OnLikeClickEventListener likeClickEventListener) {
+    public ViewHolder(@NonNull View itemView, final RecipeAdapter.OnItemClickEventListener itemClickListener, final RecipeAdapter.OnItemLongClickListener onItemLongClickListener, final RecipeAdapter.OnLikeClickEventListener likeClickEventListener) {
         super(itemView);
 
         image = (ImageView) itemView.findViewById(R.id.recipeImage1);
@@ -96,6 +103,18 @@ class ViewHolder extends RecyclerView.ViewHolder {
                 if (position != RecyclerView.NO_POSITION) {
                     itemClickListener.onItemClick(a_view, position);
                 }
+            }
+        });
+
+        itemView.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View v) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION)
+                {
+                    onItemLongClickListener.onItemLongClick(v,position);
+                }
+                return true;
             }
         });
 

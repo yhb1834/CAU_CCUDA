@@ -1,7 +1,10 @@
 package com.example.ccuda.SideMenu;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +20,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.ccuda.R;
 import com.example.ccuda.data.RecipeDTO;
@@ -102,6 +106,28 @@ public class UploadRecipeFragment extends Fragment implements SwipeRefreshLayout
                 transaction.replace(R.id.innerLayout, fragmentRecipeItem);
                 transaction.addToBackStack(null);
                 transaction.commit();
+            }
+        });
+
+        mRecipeAdapter.setOnItemLongClickListener(new RecipeAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View view, int position) {
+                final RecipeItem item = RecipeItems.get(position);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("레시피 삭제");
+                builder.setMessage("레시피를 삭제하시겠습니까?");
+                builder.setPositiveButton("삭제", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        //레시피 삭제
+
+                    }
+                });
+                builder.setNegativeButton("취소",null);
+                builder.show();
             }
         });
 
