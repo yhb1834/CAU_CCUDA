@@ -18,6 +18,7 @@ public class CouponData {
     private String content;
     private String imageurl;   // 물품 이미지
     private Bitmap couponimage; // 등록된 쿠폰 이미지 - 마이페이지 등에서 필요시 판매자 본인에게만 공개
+    private boolean isClicked;
 
     public String getCoupon_id(){
         return toString(coupon_id);
@@ -67,6 +68,7 @@ public class CouponData {
     public Bitmap getCouponimage(){
         return couponimage;
     }
+    public boolean getIsClicked() { return isClicked; }
 
     public void setCoupon_id(int coupon_id){
         this.coupon_id = coupon_id;
@@ -111,4 +113,5 @@ public class CouponData {
         this.imageurl = imageurl;
     }
     public void setCouponimage(Bitmap couponimage) { this.couponimage = couponimage; }
+    public void setIsClicked(boolean isClicked) { this.isClicked=isClicked; }
 }

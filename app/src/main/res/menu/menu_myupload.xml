@@ -4,9 +4,9 @@
 
     <item
         android:id="@+id/selectAll"
-        android:title="Select All" />
+        android:title="Select All"/>
 
     <item
         android:id="@+id/delete"
-        android:title="Delete" />
+        android:title="Delete"/>
 </menu>

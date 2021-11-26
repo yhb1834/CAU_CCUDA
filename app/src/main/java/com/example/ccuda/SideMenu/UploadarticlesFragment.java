@@ -9,7 +9,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +32,7 @@ import com.example.ccuda.R;
 import com.example.ccuda.data.CouponData;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.db.CouponpageRequest;
+import com.example.ccuda.ui_Cart.AllCartFragment;
 import com.example.ccuda.ui_Home.Adapter;
 import com.example.ccuda.ui_Home.HomeActivity;
 import com.google.android.material.appbar.AppBarLayout;
@@ -126,66 +129,18 @@ public class UploadarticlesFragment extends Fragment {
         uploadCouponListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         //uploadCouponListView.setSelector(new PaintDrawable("#FFC107"));
         //uploadCouponListView.setMultiChoiceModeListener(new MultiChoiceListenr);
-        uploadCouponListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                //getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
-                //toolbar.setVisibility(View.INVISIBLE);
-                //mainAppbar.setVisibility(View.INVISIBLE);
-                //mainAppbar.dispatchWindowVisibilityChanged(View.INVISIBLE);
-                mode.getMenuInflater().inflate(R.menu.menu_myupload, menu);
-
-
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.selectAll:
-                        final int checkCount=CouponArrayList.size();
-
-                        adapter.removeSelection();
-                        for(int i=0;i<checkCount;i++){
-                            uploadCouponListView.setItemChecked(i,true);
-                        }
-                        mode.setTitle(checkCount+" Selected");
-                        return true;
-
-                    case R.id.delete:
-                        AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
-                }
-                return false;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-
-            }
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                final int checkedCount=uploadCouponListView.getCheckedItemCount();
-                //uploadCouponListView.setBackgroundColor("#FFC107");
-                mode.setTitle(checkedCount+" Selected");
-                adapter.toggleSelection(position);
-
-                //uploadCouponListView.getSelectedView().setBackgroundColor(Color.parseColor("#FFC107"));
-            }
-        });
 
 
         //uploadCouponListView.setAdapter(arrayAdapter);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadCouponListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                uploadCouponListView.invalidate();
-                selectAllButton.setVisibility(View.VISIBLE);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                DeleteUploadarticlesFragment fragment=new DeleteUploadarticlesFragment();
+                transaction.replace(R.id.innerLayout, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
             }
         });
 

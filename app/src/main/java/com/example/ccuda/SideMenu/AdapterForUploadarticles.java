@@ -39,6 +39,7 @@ public class AdapterForUploadarticles extends ArrayAdapter<CouponData> {
     private TextView priceTextView;
     private TextView validityTextView;
     ArrayList<View> viewArrayList=new ArrayList<>();
+    ArrayList<Integer> selectedArrayIndex=new ArrayList<>();
 
 
     public AdapterForUploadarticles(@NonNull Context context, int resource, ArrayList myUploadProductList) {
@@ -143,6 +144,12 @@ public class AdapterForUploadarticles extends ArrayAdapter<CouponData> {
         else{
             selectView(position, !mSelectedItemIds.get(position));
         }
+        if(selectedArrayIndex.contains(new Integer(position))){
+            selectedArrayIndex.remove(new Integer(position));
+        }
+        else {
+            selectedArrayIndex.add(new Integer(position));
+        }
 
 
 
@@ -156,14 +163,18 @@ public class AdapterForUploadarticles extends ArrayAdapter<CouponData> {
 
     public void selectView(int position, boolean value){
         if(value){
-            viewArrayList.get(position).setBackgroundColor(Color.parseColor("#FFC107"));
-            Toast.makeText(getContext(), position+" "+value, Toast.LENGTH_SHORT).show();
+            //viewArrayList.get(position).setBackgroundColor(Color.parseColor("#FFC107"));
+            //viewArrayList.get(position).setBackgroundResource(R.drawable.corner_shape_yellow);
+            //Toast.makeText(getContext(), position+" "+value, Toast.LENGTH_SHORT).show();
             mSelectedItemIds.put(position, value);
+            viewArrayList.get(position).setBackgroundResource(R.drawable.corner_shape_yellow);
         }
         else {
-            viewArrayList.get(position).setBackgroundColor(Color.parseColor("#FFFFFFFF"));
-            Toast.makeText(getContext(), position+" "+value, Toast.LENGTH_SHORT).show();
+            //viewArrayList.get(position).setBackgroundColor(Color.parseColor("#FFFFFFFF"));
+            //viewArrayList.get(position).setBackgroundResource(R.drawable.corner_shape_yellow);
+            //Toast.makeText(getContext(), position+" "+value, Toast.LENGTH_SHORT).show();
             mSelectedItemIds.delete(position);
+            viewArrayList.get(position).setBackgroundResource(R.drawable.corner_shape);
         }
 
         notifyDataSetChanged();
