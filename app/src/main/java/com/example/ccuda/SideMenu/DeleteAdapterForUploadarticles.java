@@ -89,6 +89,8 @@ public class DeleteAdapterForUploadarticles extends ArrayAdapter<CouponData> {
         prodName.setText(myUploadProductList.get(position).getItem_name());
         prodDuration.setText(myUploadProductList.get(position).getExpiration_date());
         prodStore.setText(myUploadProductList.get(position).getStorename());
+        //myUploadProductList.get(position).setIsClicked(myUploadProductList.get(position).getIsClicked());
+        checkBox.setChecked(myUploadProductList.get(position).getIsClicked());
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,6 +107,8 @@ public class DeleteAdapterForUploadarticles extends ArrayAdapter<CouponData> {
         myUploadProductList.remove(object);
         notifyDataSetChanged();
     }
+
+
 
     public void setMyUploadProductList(ArrayList<CouponData> inputArrayList){
         myUploadProductList=inputArrayList;

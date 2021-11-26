@@ -141,7 +141,9 @@ public class DeleteUploadarticlesFragment extends Fragment {
                         leftCoupon.add(data);
                     }
                 }
-
+                System.out.println("남은거남은거남은거: "+leftCoupon);
+                adapter.setMyUploadProductList(leftCoupon);
+                adapter.notifyDataSetChanged();
             }
         });
 

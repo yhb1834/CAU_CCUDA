@@ -35,6 +35,8 @@ public class AllCartFragment extends CartFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        setNotification("test", "test");
         View view=inflater.inflate(R.layout.fragment_all_cartlist, container, false);
         cartItemList=view.findViewById(R.id.cartItemGrid);
         adapter=new AllCartListAdapter();
@@ -56,6 +58,7 @@ public class AllCartFragment extends CartFragment {
                 System.out.println("position: "+position);
                 CartItemModel item=new CartItemModel(itemList.get(position).getImgUrl(), itemList.get(position).getProdName(), itemList.get(position).getConvName(), itemList.get(position).getId());
                 click_cart_item_in_all(getActivity(), item);
+
             }
         });
         return view;

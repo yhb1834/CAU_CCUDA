@@ -148,6 +148,12 @@ public class UploadarticlesFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("onResume at UploadarticlesFragment");
+        load_couponlist(getContext());
+    }
 
 
 

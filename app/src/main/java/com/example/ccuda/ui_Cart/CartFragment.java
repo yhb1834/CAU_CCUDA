@@ -1,7 +1,13 @@
 package com.example.ccuda.ui_Cart;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +21,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.RequestQueue;
@@ -26,6 +34,7 @@ import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.CartRequest;
 import com.example.ccuda.ui_Home.HomeActivity;
+import com.example.ccuda.ui_Home.HomeFragment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -184,5 +193,34 @@ public class CartFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(cartRequest);
     }
+    static final String CHANNEL_ID="channelId";
+    static final int notificationId=0;
+    public void setNotification(String title, String content){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel notificationChannel = new NotificationChannel("channel_id", "channel_name", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.setDescription("channel description");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.GREEN);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setVibrationPattern(new long[]{100, 200, 100, 200});
+            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            notificationManager.createNotificationChannel(notificationChannel);
 
+            Intent intent=new Intent(getContext(), HomeFragment.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent=PendingIntent.getActivity(getActivity(),0,intent,0);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), String.valueOf(notificationChannel))
+                    .setSmallIcon(R.drawable.coupon)
+                    .setContentTitle(title)
+                    .setContentText(content)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+
+            NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(getContext());
+            notificationManagerCompat.notify(notificationId, builder.build());
+        }
+
+    }
 }
