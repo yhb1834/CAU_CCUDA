@@ -31,6 +31,8 @@ import com.example.ccuda.ui_Recipe.RecipeAdapter;
 import com.example.ccuda.ui_Recipe.RecipeFragment;
 import com.example.ccuda.ui_Recipe.RecipeItemFragment;
 import com.example.ccuda.ui_Recipe.RecipeRegisterActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -122,7 +124,7 @@ public class UploadRecipeFragment extends Fragment implements SwipeRefreshLayout
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        //레시피 삭제
+                        //deleteRecipe();
 
                     }
                 });
@@ -184,5 +186,37 @@ public class UploadRecipeFragment extends Fragment implements SwipeRefreshLayout
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
+    }
+
+    public void getfirebasekey(String data){
+        firebaseDatabase.getReference().child("Recipe").orderByChild("image1").equalTo(data).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot:snapshot.getChildren()) {
+                    String key = dataSnapshot.getKey();
+                    deleteRecipe(key);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    // 게시글 삭제
+    public void deleteRecipe(String key){
+        firebaseDatabase.getReference().child("Recipe").child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(getActivity(), "삭제 성공", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("error: "+e.getMessage());
+                Toast.makeText(getActivity(), "삭제 실패", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

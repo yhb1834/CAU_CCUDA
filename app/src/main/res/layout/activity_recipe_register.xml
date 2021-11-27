@@ -127,11 +127,12 @@
                     android:id="@+id/additem_r"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:text="관련 품목 추가" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/additemresults"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/corner_rec"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 

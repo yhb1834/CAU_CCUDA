@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -83,8 +84,18 @@ public class RecipeRegisterActivity extends AppCompatActivity {
     EditText edit_title;
     EditText edit_Content;
     Button btn_register;
+    Button additem_r;
     Spinner store_spinner;
     SearchableSpinner searchView;
+    int item_id;
+    String item_name;
+    String image;
+
+
+    private ArrayList<RegiItemsModel> mrgArrayList;
+    private RegiitemsAdapter mrgAdapter;
+    int dataCount = -1;
+
 
     ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
             new ActivityResultCallback<Uri>() {
@@ -114,7 +125,14 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         edit_title = findViewById(R.id.edit_title);
         edit_Content = findViewById(R.id.edit_Content);
         btn_register = findViewById(R.id.btn_register);
+        additem_r = findViewById(R.id.additem_r);
         store_spinner = findViewById(R.id.spinner_r);
+
+        RecyclerView mrgRecyclerView = findViewById(R.id.additemresults);
+
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
+        mrgRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mrgArrayList = new ArrayList<RegiItemsModel>();
 
         // 파이어베이스 인스턴스 생성
         storage = FirebaseStorage.getInstance();
@@ -233,15 +251,14 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                                         @Override
                                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                             if(position==0){
-                                                Toast.makeText(getApplicationContext(), prodList.get(position), Toast.LENGTH_SHORT).show();
+                                                //Toast.makeText(getApplicationContext(), prodList.get(position), Toast.LENGTH_SHORT).show();
                                             }
                                             else {
                                                 String sNumber=parent.getItemAtPosition(position).toString();
-                                                Toast.makeText(getApplicationContext(), sNumber,Toast.LENGTH_SHORT).show();
+                                                //Toast.makeText(getApplicationContext(), sNumber,Toast.LENGTH_SHORT).show();
                                             }
-                                            int item_id = getitem_id(convName,prodList.get(position));
-                                            System.out.println(item_id);
-                                            //추가하기
+                                            item_id = getitem_id(convName,prodList.get(position));
+                                            getName(convName, item_id);
 
                                         }
 
@@ -264,6 +281,26 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
         });
 
+        //아이템 추가 버튼
+        additem_r.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("클릭 시 편의점 이" + storename + "  " + item_id + item_name);
+                if(item_name != null){
+                    mrgArrayList.add(new RegiItemsModel(storename, item_id, item_name));
+                    //mrgAdapter.notifyDataSetChanged();
+
+                    mrgAdapter = new RegiitemsAdapter(mrgArrayList);
+                    mrgRecyclerView.setAdapter(mrgAdapter);
+
+                    mrgAdapter.notifyDataSetChanged();
+                }else {
+                    Toast.makeText(getApplicationContext(), "품목을 선택하세요", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
         // 레시피 등록 버튼
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -283,6 +320,34 @@ public class RecipeRegisterActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    void getName(String storename,int item_id){
+        if(storename.equals("cu")){
+            for(int j=0; j<cuItem.size(); j++ ){
+                if(cuItem.get(j).getItemid()==item_id){
+                    item_name = cuItem.get(j).getItemname();
+                    image = cuItem.get(j).getImage();
+                    break;
+                }
+            }
+        }else if(storename.equals("gs25")){
+            for(int j=0; j<gs25Item.size(); j++ ){
+                if(gs25Item.get(j).getItemid()==item_id){
+                    item_name = gs25Item.get(j).getItemname();
+                    image = gs25Item.get(j).getImage();
+                    break;
+                }
+            }
+        }else {
+            for(int j=0; j<sevenItem.size(); j++ ){
+                if(sevenItem.get(j).getItemid()==item_id){
+                    item_name = sevenItem.get(j).getItemname();
+                    image = sevenItem.get(j).getImage();
+                    break;
+                }
+            }
+        }
     }
 
     void showdialog(){
