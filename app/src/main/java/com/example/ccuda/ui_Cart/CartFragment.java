@@ -1,5 +1,6 @@
 package com.example.ccuda.ui_Cart;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -195,6 +196,7 @@ public class CartFragment extends Fragment {
     }
     static final String CHANNEL_ID="channelId";
     static final int notificationId=0;
+    /*
     public void setNotification(String title, String content){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -223,4 +225,38 @@ public class CartFragment extends Fragment {
         }
 
     }
+
+
+     */
+    public void setNotification(String title, String content) { //createNotificationChannel
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager=(NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel notificationChannel=
+                    new NotificationChannel(
+                            "alarm_channel_id",
+                            "알람 테스트",
+                            NotificationManager.IMPORTANCE_DEFAULT
+                    );
+            notificationChannel.setDescription("알람테스트");
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+        Intent intent=new Intent(getContext(), HomeFragment.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent=PendingIntent.getActivity(getActivity(),0,intent,0);
+        Notification notification=new NotificationCompat.Builder(getContext(),"alarm_channel_id")
+                .setColor(Color.parseColor("#FFC107"))
+                .setSmallIcon(R.drawable.coupon)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build();
+        final  NotificationManager nm=(NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.notify(0,notification);
+
+    }
+
 }

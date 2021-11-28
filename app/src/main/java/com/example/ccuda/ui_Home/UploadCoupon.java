@@ -42,6 +42,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
@@ -483,6 +484,7 @@ public class UploadCoupon extends Fragment {
         new Thread(new Runnable() {
             ArrayList<String> prodList=new ArrayList<>();
             ArrayList<String> prodPrice=new ArrayList<>();
+            ArrayList<String> prodImage=new ArrayList<>();
             Handler mHandler=new Handler();
             Elements elements=new Elements();
             @Override
@@ -492,18 +494,21 @@ public class UploadCoupon extends Fragment {
                         for(int i=0; i<cuItem.size(); i++){
                             prodList.add(cuItem.get(i).getItemname());
                             prodPrice.add(Integer.toString(cuItem.get(i).getItemprice2()));
+                            prodImage.add(cuItem.get(i).getImage());
                         }
                     }
                     else if(convName == "seven"){
                         for(int i=0; i<sevenItem.size(); i++){
                             prodList.add(sevenItem.get(i).getItemname());
                             prodPrice.add(Integer.toString(sevenItem.get(i).getItemprice2()));
+                            prodImage.add(sevenItem.get(i).getImage());
                         }
                     }
                     if(convName == "gs25"){
                         for(int i=0; i<gs25Item.size(); i++){
                             prodList.add(gs25Item.get(i).getItemname());
                             prodPrice.add(Integer.toString(gs25Item.get(i).getItemprice2()));
+                            prodImage.add(gs25Item.get(i).getImage());
                         }
                     }
                     //prodList = getProductName(convName, URL); //getProductList(convName, URL);
@@ -531,6 +536,8 @@ public class UploadCoupon extends Fragment {
                                     }
                                     limitPrice=prodPrice.get(position);
                                     editText.setHint(limitPrice+"원 보다 적게 입력해주세요.");
+                                    //uploadPhoto.setImageURI(Uri.parse(prodImage.get(position)));
+                                    Glide.with(getContext()).load(Uri.parse(prodImage.get(position))).into(uploadPhoto);
 
                                 }
 
