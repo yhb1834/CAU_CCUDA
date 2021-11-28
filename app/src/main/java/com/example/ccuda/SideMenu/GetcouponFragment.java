@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,8 @@ import com.android.volley.toolbox.Volley;
 import com.example.ccuda.R;
 import com.example.ccuda.data.CouponData;
 import com.example.ccuda.data.ItemData;
-import com.example.ccuda.db.CouponpageRequest;
+import com.example.ccuda.data.SaveSharedPreference;
+import com.example.ccuda.db.MypageRequest;
 import com.example.ccuda.ui_Home.HomeActivity;
 
 import org.json.JSONArray;
@@ -48,6 +47,7 @@ public class GetcouponFragment extends Fragment {
     ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
     ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
     AdapterForGetcoupon adapter=new AdapterForGetcoupon();
+    Context context;
 
     public GetcouponFragment() {
         // Required empty public constructor
@@ -88,7 +88,8 @@ public class GetcouponFragment extends Fragment {
         getCouponListView=view.findViewById(R.id.get_coupon_listView);
 
 
-        load_couponlist(getContext());
+        context = getActivity();
+        load_Mycouponlist();
 
 
         return view;
@@ -103,16 +104,14 @@ public class GetcouponFragment extends Fragment {
 
 
 
-
-    protected void load_couponlist(Context context){
+    private void load_Mycouponlist(){
         getCouponArrayList.clear();
-
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try{
                     JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jsonArray = jsonObject.getJSONArray("couponlist");
+                    JSONArray jsonArray = jsonObject.getJSONArray("mycouponlist");
                     int length = jsonArray.length();
 
                     for(int i=0; i<length; i++){
@@ -128,11 +127,8 @@ public class GetcouponFragment extends Fragment {
                         couponData.setStorename(storename);
                         couponData.setPlustype(object.getString("category"));
                         couponData.setSeller_id(Long.parseLong(object.getString("seller_id"))); // 판매자 확인용 id
-                        couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
                         couponData.setSeller_name(object.getString("seller_nicname")); // 판매자 닉네임
                         couponData.setSeller_score(object.getString("seller_score")); // 판매자 평점
-
-                        couponData.setIsClicked(false);
 
                         int item_id = Integer.parseInt(object.getString("item_id"));
                         if(storename.equals("cu")){
@@ -155,8 +151,8 @@ public class GetcouponFragment extends Fragment {
                                 }
                             }
                         }else {
-                            for(int j=0; j<sevenItem.size(); j++ ){
-                                if(sevenItem.get(j).getItemid()==item_id){
+                            for (int j = 0; j < sevenItem.size(); j++) {
+                                if (sevenItem.get(j).getItemid() == item_id) {
                                     couponData.setItem_name(sevenItem.get(j).getItemname());
                                     couponData.setCategory(sevenItem.get(j).getCategory());
                                     couponData.setPlustype(sevenItem.get(j).getPlustype());
@@ -166,21 +162,20 @@ public class GetcouponFragment extends Fragment {
                             }
                         }
                         getCouponArrayList.add(couponData);
-                        //adapter.addItem(couponData.getItem_name(), R.drawable.add, couponData.getStorename());
-
                     }
+
                     System.out.println("coupon list: "+getCouponArrayList);
                     adapter.setArrayList(getCouponArrayList);
 
                     getCouponListView.setAdapter(adapter);
-
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
         };
-        CouponpageRequest couponpageRequest = new CouponpageRequest("couponlist", "","","",responsListener);
+        MypageRequest mypageRequest = new MypageRequest("mycouponlist", SaveSharedPreference.getId(context), "",responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
-        queue.add(couponpageRequest);
+        queue.add(mypageRequest);
     }
+
 }
