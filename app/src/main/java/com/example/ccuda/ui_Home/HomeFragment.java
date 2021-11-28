@@ -242,12 +242,6 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                         couponData.setPlustype(object.getString("category"));
                         couponData.setSeller_id(Long.parseLong(object.getString("seller_id"))); // 판매자 확인용 id
                         couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
-                        String isdealdone = object.getString("isdeal");
-                        if(isdealdone.equals("0")){
-                            couponData.setIsdeal(false);
-                        }else{
-                            couponData.setIsdeal(true);
-                        }
                         couponData.setSeller_name(object.getString("seller_nicname")); // 판매자 닉네임
                         couponData.setSeller_score(object.getString("seller_score")); // 판매자 평점
 
@@ -292,11 +286,6 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                         adapter.addItem(a.getItem_name(), a.getImageurl(), a.getStorename(), a.getPrice(), a.getExpiration_date(), a.getCoupon_id(),Long.toString(a.getSeller_id()),a.getSeller_name(),a.getSeller_score());
                         System.out.println("itemname: "+a.getItem_name());
                     }
-                    Fragment fragment = new Fragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) CouponArrayList);
-                    fragment.setArguments(bundle);
-
                     //adapter.addItem("물건1", R.drawable.add, "gs");
                     //adapter.addItem("물건2", R.drawable.add, "gs");
                     //adapter.addItem("물건3", R.drawable.add, "gs");

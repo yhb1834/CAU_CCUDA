@@ -31,7 +31,9 @@ import com.android.volley.toolbox.Volley;
 import com.example.ccuda.R;
 import com.example.ccuda.data.CouponData;
 import com.example.ccuda.data.ItemData;
+import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.CouponpageRequest;
+import com.example.ccuda.db.MypageRequest;
 import com.example.ccuda.ui_Cart.AllCartFragment;
 import com.example.ccuda.ui_Home.Adapter;
 import com.example.ccuda.ui_Home.HomeActivity;
@@ -63,7 +65,7 @@ public class UploadarticlesFragment extends Fragment {
     private Button deleteButton;
     private Button selectAllButton;
 
-    private ArrayList<CouponData> CouponArrayList = new ArrayList<>();
+    private ArrayList<CouponData> CouponArrayList;
     ArrayList<ItemData> cuItem = HomeActivity.cuItem;
     ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
     ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
@@ -105,8 +107,6 @@ public class UploadarticlesFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        load_couponlist(getContext());
-
 
     }
 
@@ -130,6 +130,8 @@ public class UploadarticlesFragment extends Fragment {
         //uploadCouponListView.setSelector(new PaintDrawable("#FFC107"));
         //uploadCouponListView.setMultiChoiceModeListener(new MultiChoiceListenr);
 
+        CouponArrayList = new ArrayList<>();
+        load_couponlist(getContext());
 
         //uploadCouponListView.setAdapter(arrayAdapter);
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -160,13 +162,12 @@ public class UploadarticlesFragment extends Fragment {
 
     protected void load_couponlist(Context context){
         CouponArrayList.clear();
-
         Response.Listener<String> responsListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try{
                     JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jsonArray = jsonObject.getJSONArray("couponlist");
+                    JSONArray jsonArray = jsonObject.getJSONArray("mypostlist");
                     int length = jsonArray.length();
 
                     for(int i=0; i<length; i++){
@@ -183,6 +184,12 @@ public class UploadarticlesFragment extends Fragment {
                         couponData.setPlustype(object.getString("category"));
                         couponData.setSeller_id(Long.parseLong(object.getString("seller_id"))); // 판매자 확인용 id
                         couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
+                        String isdealdone = object.getString("isdeal");
+                        if(isdealdone.equals("0")){
+                            couponData.setIsdeal(false);
+                        }else{
+                            couponData.setIsdeal(true);
+                        }
                         couponData.setSeller_name(object.getString("seller_nicname")); // 판매자 닉네임
                         couponData.setSeller_score(object.getString("seller_score")); // 판매자 평점
 
@@ -232,9 +239,9 @@ public class UploadarticlesFragment extends Fragment {
                 }
             }
         };
-        CouponpageRequest couponpageRequest = new CouponpageRequest("couponlist", "","","",responsListener);
+        MypageRequest mypageRequest = new MypageRequest("mypostlist", SaveSharedPreference.getId(context),"",responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
-        queue.add(couponpageRequest);
+        queue.add(mypageRequest);
     }
 
 }

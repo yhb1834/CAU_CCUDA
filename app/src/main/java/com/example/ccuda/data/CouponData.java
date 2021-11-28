@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class CouponData implements Parcelable {
+public class CouponData {
     private int coupon_id;
     private long seller_id;
     private boolean isdeal;
@@ -22,38 +22,6 @@ public class CouponData implements Parcelable {
     private Bitmap couponimage; // 등록된 쿠폰 이미지 - 마이페이지 등에서 필요시 판매자 본인에게만 공개
     private boolean isClicked;
 
-    public CouponData(){}
-
-    protected CouponData(Parcel in) {
-        coupon_id = in.readInt();
-        seller_id = in.readLong();
-        isdeal = in.readByte() != 0;
-        post_date = in.readString();
-        seller_name = in.readString();
-        seller_score = in.readString();
-        item_name = in.readString();
-        category = in.readString();
-        plustype = in.readString();
-        storename = in.readString();
-        price = in.readInt();
-        expiration_date = in.readString();
-        content = in.readString();
-        imageurl = in.readString();
-        couponimage = in.readParcelable(Bitmap.class.getClassLoader());
-        isClicked = in.readByte() != 0;
-    }
-
-    public static final Creator<CouponData> CREATOR = new Creator<CouponData>() {
-        @Override
-        public CouponData createFromParcel(Parcel in) {
-            return new CouponData(in);
-        }
-
-        @Override
-        public CouponData[] newArray(int size) {
-            return new CouponData[size];
-        }
-    };
 
     public String getCoupon_id(){
         return toString(coupon_id);
@@ -150,28 +118,5 @@ public class CouponData implements Parcelable {
     public void setCouponimage(Bitmap couponimage) { this.couponimage = couponimage; }
     public void setIsClicked(boolean isClicked) { this.isClicked=isClicked; }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(coupon_id);
-        parcel.writeLong(seller_id);
-        parcel.writeByte((byte) (isdeal ? 1 : 0));
-        parcel.writeString(post_date);
-        parcel.writeString(seller_name);
-        parcel.writeString(seller_score);
-        parcel.writeString(item_name);
-        parcel.writeString(category);
-        parcel.writeString(plustype);
-        parcel.writeString(storename);
-        parcel.writeInt(price);
-        parcel.writeString(expiration_date);
-        parcel.writeString(content);
-        parcel.writeString(imageurl);
-        parcel.writeParcelable(couponimage, i);
-        parcel.writeByte((byte) (isClicked ? 1 : 0));
-    }
 }

@@ -31,7 +31,9 @@ import com.android.volley.toolbox.Volley;
 import com.example.ccuda.R;
 import com.example.ccuda.data.CouponData;
 import com.example.ccuda.data.ItemData;
+import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.CouponpageRequest;
+import com.example.ccuda.db.MypageRequest;
 import com.example.ccuda.ui_Home.Adapter;
 import com.example.ccuda.ui_Home.HomeActivity;
 import com.google.android.material.appbar.AppBarLayout;
@@ -63,6 +65,9 @@ public class DeleteUploadarticlesFragment extends Fragment {
     private Button selectAllButton;
 
     private ArrayList<CouponData> CouponArrayList;
+    ArrayList<ItemData> cuItem = HomeActivity.cuItem;
+    ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
+    ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
     DeleteAdapterForUploadarticles adapter;
     ArrayAdapter<CouponData> arrayAdapter;
 
@@ -101,7 +106,6 @@ public class DeleteUploadarticlesFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        load_couponlist(getContext());
 
 
     }
@@ -128,6 +132,7 @@ public class DeleteUploadarticlesFragment extends Fragment {
 
 
         CouponArrayList = new ArrayList<>();
+        load_couponlist(getContext());
 
         //uploadCouponListView.setAdapter(arrayAdapter);
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +160,87 @@ public class DeleteUploadarticlesFragment extends Fragment {
 
 
     protected void load_couponlist(Context context){
+        CouponArrayList.clear();
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("mypostlist");
+                    int length = jsonArray.length();
 
+                    for(int i=0; i<length; i++){
+                        CouponData couponData = new CouponData();
+                        JSONObject object = jsonArray.getJSONObject(i);
+
+                        couponData.setCoupon_id(Integer.parseInt(object.getString("coupon_id")));
+                        couponData.setPrice(Integer.parseInt(object.getString("price")));       //쿠폰 가격
+                        couponData.setExpiration_date(object.getString("expiration_date")); // 쿠폰 유효기간 "Y-m-d" 형식
+                        couponData.setContent(object.getString("content")); // 글 내용
+                        String storename = object.getString("storename");
+                        storename = storename.toLowerCase();
+                        couponData.setStorename(storename);
+                        couponData.setPlustype(object.getString("category"));
+                        couponData.setSeller_id(Long.parseLong(object.getString("seller_id"))); // 판매자 확인용 id
+                        couponData.setPost_date(object.getString("post_date")); // "Y-m-d H:i:s" 형식
+                        String isdealdone = object.getString("isdeal");
+                        if(isdealdone.equals("0")){
+                            couponData.setIsdeal(false);
+                        }else{
+                            couponData.setIsdeal(true);
+                        }
+                        couponData.setSeller_name(object.getString("seller_nicname")); // 판매자 닉네임
+                        couponData.setSeller_score(object.getString("seller_score")); // 판매자 평점
+
+                        int item_id = Integer.parseInt(object.getString("item_id"));
+                        if(storename.equals("cu")){
+                            for(int j=0; j<cuItem.size(); j++ ){
+                                if(cuItem.get(j).getItemid()==item_id){
+                                    couponData.setItem_name(cuItem.get(j).getItemname());
+                                    couponData.setCategory(cuItem.get(j).getCategory());
+                                    couponData.setImage(cuItem.get(j).getImage());
+                                    break;
+                                }
+                            }
+                        }else if(storename.equals("gs25")){
+                            for(int j=0; j<gs25Item.size(); j++ ){
+                                if(gs25Item.get(j).getItemid()==item_id){
+                                    couponData.setItem_name(gs25Item.get(j).getItemname());
+                                    couponData.setCategory(gs25Item.get(j).getCategory());
+                                    couponData.setPlustype(gs25Item.get(j).getPlustype());
+                                    couponData.setImage(gs25Item.get(j).getImage());
+                                    break;
+                                }
+                            }
+                        }else {
+                            for(int j=0; j<sevenItem.size(); j++ ){
+                                if(sevenItem.get(j).getItemid()==item_id){
+                                    couponData.setItem_name(sevenItem.get(j).getItemname());
+                                    couponData.setCategory(sevenItem.get(j).getCategory());
+                                    couponData.setPlustype(sevenItem.get(j).getPlustype());
+                                    couponData.setImage(sevenItem.get(j).getImage());
+                                    break;
+                                }
+                            }
+                        }
+                        CouponArrayList.add(couponData);
+                        //adapter.addItem(couponData.getItem_name(), R.drawable.add, couponData.getStorename());
+
+                    }
+                    System.out.println("coupon list: "+CouponArrayList);
+                    adapter=new DeleteAdapterForUploadarticles(getActivity(),
+                            R.layout.product_list,CouponArrayList); //android.R.layout.simple_list_item_multiple_choice
+
+                    uploadCouponListView.setAdapter(adapter);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        MypageRequest mypageRequest = new MypageRequest("mypostlist", SaveSharedPreference.getId(context),"",responsListener);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(mypageRequest);
     }
 
 }
