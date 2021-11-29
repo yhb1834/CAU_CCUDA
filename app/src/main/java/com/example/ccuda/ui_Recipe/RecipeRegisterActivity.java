@@ -154,7 +154,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         store_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String URL = "";
                 switch (position) {
                     case 0:
                         storename = "GS25";
@@ -550,8 +549,28 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         }
 
         firebaseDatabase.getReference().child("Recipe").push().setValue(recipeDTO);
+         /*
+         firebaseDatabase.getReference().child("Recipe").orderByChild("image1").equalTo(recipeDTO.getImage1()).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot:snapshot.getChildren()) {
+                    String key = dataSnapshot.getKey();
 
-        //getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new RecipeFragment()).commit();
+                    RecipeDTO recipeDTO = new RecipeDTO();
+                    for(int i=0;i<itemList.size(); i++){
+                        String[] item = itemList.get(i).split("/");
+                        recipeDTO.items.put(item[0],item[1]);
+                    }
+                    firebaseDatabase.getReference().child("Recipe").child(key).setValue(recipeDTO);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        */
+
 
     }
 }
