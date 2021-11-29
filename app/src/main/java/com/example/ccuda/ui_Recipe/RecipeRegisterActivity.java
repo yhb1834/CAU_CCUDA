@@ -285,9 +285,9 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         additem_r.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("클릭 시 편의점 이" + storename + "  " + item_id + item_name);
+                System.out.println("클릭 시 편의점 이" + store_spinner.getSelectedItem().toString() + "  " + item_id + searchView.getSelectedItem().toString());
                 if(item_name != null){
-                    mrgArrayList.add(new RegiItemsModel(storename, item_id, item_name));
+                    mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), item_id, searchView.getSelectedItem().toString()));
                     //mrgAdapter.notifyDataSetChanged();
 
                     mrgAdapter = new RegiitemsAdapter(mrgArrayList);
@@ -296,6 +296,10 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                     mrgAdapter.notifyDataSetChanged();
                 }else {
                     Toast.makeText(getApplicationContext(), "품목을 선택하세요", Toast.LENGTH_LONG).show();
+                }
+                System.out.println("내가 선택한 품목들");
+                for(RegiItemsModel e:mrgArrayList){
+                    System.out.print(e.getItemname()+" ");
                 }
 
             }
