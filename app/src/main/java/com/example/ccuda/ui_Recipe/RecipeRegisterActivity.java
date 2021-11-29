@@ -161,13 +161,13 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         storename = "";
                         break;
                     case 1:
-                        storename = "gs25";
+                        storename = "GS25";
                         break;
                     case 2:
-                        storename = "seven";
+                        storename = "SEVEN";
                         break;
                     case 3:
-                        storename = "cu";
+                        storename = "CU";
                         break;
                 }
                 runThread(storename);
@@ -186,19 +186,19 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            if(convName == "cu"){
+                            if(convName.equals("CU")){
                                 for(int i=0; i<cuItem.size(); i++){
                                     prodList.add(cuItem.get(i).getItemname());
                                     //prodPrice.add(Integer.toString(cuItem.get(i).getItemprice2()));
                                 }
                             }
-                            else if(convName == "seven"){
+                            else if(convName.equals("SEVEN")){
                                 for(int i=0; i<sevenItem.size(); i++){
                                     prodList.add(sevenItem.get(i).getItemname());
                                     //prodPrice.add(Integer.toString(sevenItem.get(i).getItemprice2()));
                                 }
                             }
-                            if(convName == "gs25"){
+                            else{
                                 for(int i=0; i<gs25Item.size(); i++){
                                     prodList.add(gs25Item.get(i).getItemname());
                                     //prodPrice.add(Integer.toString(gs25Item.get(i).getItemprice2()));
@@ -227,8 +227,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                                                 String sNumber=parent.getItemAtPosition(position).toString();
                                                 //Toast.makeText(getApplicationContext(), sNumber,Toast.LENGTH_SHORT).show();
                                             }
-                                            item_id = getitem_id(convName,prodList.get(position));
-                                            getName(convName, item_id);
 
                                         }
 
@@ -255,16 +253,17 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         additem_r.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("클릭 시 편의점 이" + store_spinner.getSelectedItem().toString() + "  " + item_id + searchView.getSelectedItem().toString());
+                item_name= (String) searchView.getSelectedItem();
+                //System.out.println("클릭 시 편의점 이" + store_spinner.getSelectedItem().toString() + "  " + item_id + searchView.getSelectedItem().toString());
                 if(item_name != null){
-                    mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), item_id, searchView.getSelectedItem().toString()));
+                    mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), searchView.getSelectedItem().toString()));
                     //mrgAdapter.notifyDataSetChanged();
 
                     mrgAdapter = new RegiitemsAdapter(mrgArrayList);
                     mrgRecyclerView.setAdapter(mrgAdapter);
 
                     // 아이템리스트 추가
-                    itemList.add(item_id+"/"+storename);
+                    itemList.add(getitem_id(storename,item_name)+"/"+storename);
 
                     mrgAdapter.notifyDataSetChanged();
                 }else {
@@ -297,35 +296,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         });
 
     }
-
-    void getName(String storename,int item_id){
-        if(storename.equals("cu")){
-            for(int j=0; j<cuItem.size(); j++ ){
-                if(cuItem.get(j).getItemid()==item_id){
-                    item_name = cuItem.get(j).getItemname();
-                    image = cuItem.get(j).getImage();
-                    break;
-                }
-            }
-        }else if(storename.equals("gs25")){
-            for(int j=0; j<gs25Item.size(); j++ ){
-                if(gs25Item.get(j).getItemid()==item_id){
-                    item_name = gs25Item.get(j).getItemname();
-                    image = gs25Item.get(j).getImage();
-                    break;
-                }
-            }
-        }else {
-            for(int j=0; j<sevenItem.size(); j++ ){
-                if(sevenItem.get(j).getItemid()==item_id){
-                    item_name = sevenItem.get(j).getItemname();
-                    image = sevenItem.get(j).getImage();
-                    break;
-                }
-            }
-        }
-    }
-
+    
     void showdialog(){
         AlertDialog.Builder msgBuilder = new AlertDialog.Builder(this)
                 .setTitle("레시피 등록")
@@ -388,19 +359,19 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         return result;
     }
 
-    protected int getitem_id(String storename,String itemname){
+    protected int getitem_id(String storename1,String itemname1){
         int itemid=0;
-        if(storename == "CU"){
+        if(storename1.equals("CU")){
             for(int i=0; i<cuItem.size(); i++){
-                if(cuItem.get(i).getItemname() == itemname){
+                if(cuItem.get(i).getItemname() == itemname1){
                     itemid = cuItem.get(i).getItemid();
                     break;
                 }
             }
         }
-        else if(storename == "GS25"){
+        else if(storename1.equals("GS25")){
             for(int i=0; i<gs25Item.size(); i++){
-                if(gs25Item.get(i).getItemname() == itemname){
+                if(gs25Item.get(i).getItemname() == itemname1){
                     itemid = gs25Item.get(i).getItemid();
                     break;
                 }
@@ -408,7 +379,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         }
         else{
             for(int i=0; i<sevenItem.size(); i++){
-                if(sevenItem.get(i).getItemname() == itemname){
+                if(sevenItem.get(i).getItemname() == itemname1){
                     itemid = sevenItem.get(i).getItemid();
                     break;
                 }
@@ -536,7 +507,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                             urlList.add(uri.toString());
                             filenameList.add(fileName);
                             if(index == uriList.size()-1){
-                                saverecipe(title, storename, content);
+                                saverecipe(title, content);
                             }
                         }
                     });
@@ -547,10 +518,9 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void saverecipe(String title, String storename,String content){
+    private void saverecipe(String title,String content){
         RecipeDTO recipeDTO = new RecipeDTO();
         recipeDTO.setTitle(title);
-        recipeDTO.setStorename(storename);
         recipeDTO.setContent(content);
         recipeDTO.setWriter_id(Long.toString(SaveSharedPreference.getId(this)));
         recipeDTO.setItemname(itemname);
