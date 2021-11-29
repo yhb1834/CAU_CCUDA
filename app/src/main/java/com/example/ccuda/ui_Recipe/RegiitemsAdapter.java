@@ -33,13 +33,13 @@ public class RegiitemsAdapter extends RecyclerView.Adapter<RegiitemsAdapter.Item
             super(itemView);
             this.name = itemView.findViewById(R.id.text_view1);
             this.convname = itemView.findViewById(R.id.text_view2);
-            this.image = (ImageView) itemView.findViewById(R.id.imageView);
+            this.image = (ImageView) itemView.findViewById(R.id.image_view);
         }
 
         public void onBind(RegiItemsModel rg){
             name.setText(rg.getItemname());
             convname.setText(rg.getConvName());
-            //Glide.with(itemView.getContext()).load(rg.getImageurl()).into(image);
+            Glide.with(itemView.getContext()).load(rg.getImageurl()).into(image);
             System.out.println(rg.getImageurl());
             //image.setImageResource(rg.getImageurl());
         }

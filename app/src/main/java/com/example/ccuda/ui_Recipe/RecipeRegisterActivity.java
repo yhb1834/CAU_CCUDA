@@ -251,7 +251,29 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                 item_name= (String) searchView.getSelectedItem();
                 //System.out.println("클릭 시 편의점 이" + store_spinner.getSelectedItem().toString() + "  " + item_id + searchView.getSelectedItem().toString());
                 if(item_name != null){
-                    mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), searchView.getSelectedItem().toString()));
+                    if (store_spinner.getSelectedItem().toString().equals("CU")){
+                        for(ItemData i:cuItem){
+                            if(i.getItemname().equals(searchView.getSelectedItem().toString())){
+                                mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
+                            }
+                        }
+                    }
+                    if (store_spinner.getSelectedItem().toString().equals("GS25")){
+                        for(ItemData i:gs25Item){
+                            if(i.getItemname().equals(searchView.getSelectedItem().toString())){
+                                mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
+                            }
+                        }
+                    }
+                    if (store_spinner.getSelectedItem().toString().equals("SEVEN11")){
+                        for(ItemData i:sevenItem){
+                            if(i.getItemname().equals(searchView.getSelectedItem().toString())){
+                                mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
+                            }
+                        }
+                    }
+
+                    //mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), searchView.getSelectedItem().toString()));
                     //mrgAdapter.notifyDataSetChanged();
 
                     mrgAdapter = new RegiitemsAdapter(mrgArrayList);
