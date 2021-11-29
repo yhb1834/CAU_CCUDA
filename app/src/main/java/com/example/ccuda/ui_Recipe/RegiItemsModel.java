@@ -50,5 +50,10 @@ public class RegiItemsModel {
         this.itemname = itemname;
         this.itemid = itemid;
     }
+    public RegiItemsModel(String convName, String imageurl, String itemname) {
+        this.convName = convName;
+        this.imageurl = imageurl;
+        this.itemname = itemname;
+    }
 
 }
