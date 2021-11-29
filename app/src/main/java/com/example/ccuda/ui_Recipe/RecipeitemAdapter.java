@@ -12,15 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 
 import java.util.ArrayList;
-
-public class RegiitemsAdapter extends RecyclerView.Adapter<RegiitemsAdapter.ItemViewHolder> {
+class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemAdapter.ItemViewHolder> {
     private ArrayList<RegiItemsModel> mList;
     private int position;
-    public RegiitemsAdapter(ArrayList<RegiItemsModel> list){
+    public RecipeItemAdapter(ArrayList<RegiItemsModel> list){
         this.mList = list;
     }
 
@@ -68,13 +66,11 @@ public class RegiitemsAdapter extends RecyclerView.Adapter<RegiitemsAdapter.Item
 
     public void showalert(View v){
         android.app.AlertDialog.Builder msgBuilder = new android.app.AlertDialog.Builder(v.getContext())
-                .setTitle("취소")
-                .setMessage("취소하시겠습니까?")
+                .setTitle("장바구니")
+                .setMessage("장바구니에 담으시겠습니까?")
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialogInterface, int i) {
-                        mList.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, mList.size());
+                        //장바구니에 추가
                     }
                 })
                 .setNegativeButton("아니요", new DialogInterface.OnClickListener() {

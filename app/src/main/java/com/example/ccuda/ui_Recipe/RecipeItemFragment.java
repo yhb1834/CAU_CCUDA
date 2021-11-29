@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.method.CharacterPickerDialog;
 import android.util.Log;
@@ -60,6 +62,9 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
     private RecipeItem item;
     private ImageButton like2;
 
+    private ArrayList<RegiItemsModel> mrgArrayList;
+    private RecipeItemAdapter mrgAdapter;
+
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference recipeRef;
     ImageButton share;
@@ -81,6 +86,23 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
             islike = item.getLike();
             String isTitle = item.getTitle();
             String content = item.getContent();
+
+            RecyclerView mrgRecyclerView = v.findViewById(R.id.ritemrecycler);
+
+            LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
+            mrgRecyclerView.setLayoutManager(mLinearLayoutManager);
+            mrgArrayList = new ArrayList<RegiItemsModel>();
+
+            //임의로 관련 품목 추가
+            for(int i=0; i<4; i++){
+                mrgArrayList.add(new RegiItemsModel(String.valueOf(i), String.valueOf(i)));
+
+            }
+            mrgAdapter = new RecipeItemAdapter(mrgArrayList);
+            mrgRecyclerView.setAdapter(mrgAdapter);
+            mrgAdapter.notifyDataSetChanged();
+            //
+
 
             //파이어베이스 데이터베이스 생성
             firebaseDatabase = FirebaseDatabase.getInstance();
