@@ -176,4 +176,44 @@ public class RecipeDTO {
         this.image10 = image10;
         this.filename10 = filename10;
     }
+
+    public String getFilename1() {
+        return filename1;
+    }
+
+    public String getFilename2() {
+        return filename2;
+    }
+
+    public String getFilename3() {
+        return filename3;
+    }
+
+    public String getFilename4() {
+        return filename4;
+    }
+
+    public String getFilename5() {
+        return filename5;
+    }
+
+    public String getFilename6() {
+        return filename6;
+    }
+
+    public String getFilename7() {
+        return filename7;
+    }
+
+    public String getFilename8() {
+        return filename8;
+    }
+
+    public String getFilename9() {
+        return filename9;
+    }
+
+    public String getFilename10() {
+        return filename10;
+    }
 }

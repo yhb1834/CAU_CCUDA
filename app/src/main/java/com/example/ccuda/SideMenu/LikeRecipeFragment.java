@@ -137,8 +137,9 @@ public class LikeRecipeFragment extends Fragment implements SwipeRefreshLayout.O
                     RecipeDTO recipeDTO = ds.getValue(RecipeDTO.class);
                     RecipeFragment recipeFragment = new RecipeFragment();
                     ArrayList<String> imageurl = recipeFragment.getimageurl(recipeDTO);
+                    ArrayList<String> filename = recipeFragment.getfilename(recipeDTO);
                     String[] itemname = recipeFragment.getitemname(recipeDTO.getItemname());
-                    RecipeItem recipeItem = new RecipeItem(imageurl.get(0), recipeDTO.getLike(), recipeDTO.getTitle(), itemname, imageurl, recipeDTO.getContent(), recipeDTO.getLikes());
+                    RecipeItem recipeItem = new RecipeItem(imageurl.get(0), recipeDTO.getLike(), recipeDTO.getTitle(), itemname, imageurl, filename,recipeDTO.getContent(), recipeDTO.getLikes());
                     RecipeItems.add(recipeItem);
                 }
 

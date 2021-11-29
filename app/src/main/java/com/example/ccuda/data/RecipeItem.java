@@ -8,22 +8,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RecipeItem implements Parcelable {
-    String resourceId;
+    String resourceId;   //이미지 첫장
     int like;
     Map<String, Boolean> likes = new HashMap<>();
     String title;
-    String[] itemname;    // 고른 상품명이름
-    ArrayList<String> imageurl;
+    String[] itemname;
+    ArrayList<String> imageurl; //이미지 1~10장
+    ArrayList<String> filename;
     String content;     // 글 내용
 
     public RecipeItem(){}
 
-    public RecipeItem(String resourceId, int like, String title, String[] itemname, ArrayList<String> imageurl, String content, Map<String,Boolean> likes) {
+    public RecipeItem(String resourceId, int like, String title, String[] itemname, ArrayList<String> imageurl,ArrayList<String> filename, String content, Map<String,Boolean> likes) {
         this.resourceId = resourceId;
         this.like = like;
         this.title = title;
         this.itemname = itemname;
         this.imageurl = imageurl;
+        this.filename = filename;
         this.content = content;
         this.likes = likes;
     }
@@ -52,6 +54,10 @@ public class RecipeItem implements Parcelable {
 
     public ArrayList<String> getImageurl() {
         return imageurl;
+    }
+
+    public ArrayList<String> getFilename() {
+        return filename;
     }
 
     public String getContent() {

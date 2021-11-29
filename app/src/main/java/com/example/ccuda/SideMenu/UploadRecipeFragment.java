@@ -39,6 +39,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -124,8 +126,10 @@ public class UploadRecipeFragment extends Fragment implements SwipeRefreshLayout
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        //deleteRecipe();
-
+                        for(int i=0; i<item.getFilename().size(); i++){
+                            onDeleteImage(item.getFilename().get(i));
+                        }
+                        getfirebasekey(item.getImage());
                     }
                 });
                 builder.setNegativeButton("취소",null);
@@ -157,7 +161,8 @@ public class UploadRecipeFragment extends Fragment implements SwipeRefreshLayout
                     RecipeFragment recipeFragment = new RecipeFragment();
                     ArrayList<String> imageurl = recipeFragment.getimageurl(recipeDTO);
                     String[] itemname = recipeFragment.getitemname(recipeDTO.getItemname());
-                    RecipeItem recipeItem = new RecipeItem(imageurl.get(0), recipeDTO.getLike(), recipeDTO.getTitle(), itemname, imageurl, recipeDTO.getContent(), recipeDTO.getLikes());
+                    ArrayList<String> filename = recipeFragment.getfilename(recipeDTO);
+                    RecipeItem recipeItem = new RecipeItem(imageurl.get(0), recipeDTO.getLike(), recipeDTO.getTitle(), itemname, imageurl, filename, recipeDTO.getContent(), recipeDTO.getLikes());
                     RecipeItems.add(recipeItem);
                 }
 
@@ -188,7 +193,15 @@ public class UploadRecipeFragment extends Fragment implements SwipeRefreshLayout
         }, 1000);
     }
 
-    public void getfirebasekey(String data){
+    // 이미지 storage삭제
+    private void onDeleteImage(String fileName)
+    {
+        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+        StorageReference desertRef = firebaseStorage.getReference("recipeImages/"+ fileName);
+        desertRef.delete();
+    }
+
+    private void getfirebasekey(String data){
         firebaseDatabase.getReference().child("Recipe").orderByChild("image1").equalTo(data).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -205,7 +218,7 @@ public class UploadRecipeFragment extends Fragment implements SwipeRefreshLayout
     }
 
     // 게시글 삭제
-    public void deleteRecipe(String key){
+    private void deleteRecipe(String key){
         firebaseDatabase.getReference().child("Recipe").child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

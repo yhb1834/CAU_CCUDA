@@ -61,14 +61,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
     private ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
     private ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
 
-    public ArrayList<String> cuReturn=new ArrayList<String>();
-    public ArrayList<String> gsReturn=new ArrayList<String>();
-    public ArrayList<String> sevenReturn=new ArrayList<String>();
-
-    ArrayList<String> cuImageReturn = new ArrayList<>();
-    ArrayList<String> gsImageReturn = new ArrayList<>();
-    ArrayList<String> sevenImageReturn = new ArrayList<>();
-
     DatabaseReference itemRef;
 
     ArrayList<Uri> uriList = new ArrayList<>();     // 이미지의 uri를 담을 ArrayList 객체
@@ -78,6 +70,8 @@ public class RecipeRegisterActivity extends AppCompatActivity {
     String itemname;
     String[] conv={"선택없음","GS25", "SEVEN11", "CU"};
     String storename;   // 고른 편의점명
+    String title;
+    String content;
 
     RecyclerView recyclerView;  // 이미지를 보여줄 리사이클러뷰
     MultiImageAdapter adapter;  // 리사이클러뷰에 적용시킬 어댑터
@@ -154,26 +148,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.imageRecyclerView);
         searchView= findViewById(R.id.item_spinner_r);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    cuReturn=getProductList("cu","https://pyony.com/brands/cu/");
-                    cuImageReturn=getProductPicture("cu","https://pyony.com/brands/cu/");
-                    //saveProductList(cuReturn,"cu");
-                    gsReturn=getProductList("gs25","https://pyony.com/brands/gs25/");
-                    gsImageReturn=getProductPicture("gs25","https://pyony.com/brands/gs25/");
-                    //saveProductList(gsReturn,"gs25");
-                    sevenReturn=getProductList("seven","https://pyony.com/brands/seven/");
-                    sevenImageReturn=getProductPicture("seven","https://pyony.com/brands/seven/");
-                    //saveProductList(sevenReturn,"seven");
-                    Thread.sleep(1000);
-                    //System.out.println("cuReturn: "+cuReturn);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }).start();
 
         //편의점 고르기
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, conv);
@@ -188,18 +162,15 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         break;
                     case 1:
                         storename = "gs25";
-                        URL="https://pyony.com/brands/gs25/";
                         break;
                     case 2:
                         storename = "seven";
-                        URL="https://pyony.com/brands/seven/";
                         break;
                     case 3:
                         storename = "cu";
-                        URL="https://pyony.com/brands/cu/";
                         break;
                 }
-                runThread(storename,URL);
+                runThread(storename);
             }
 
             @Override
@@ -207,10 +178,9 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
             }
 
-            public void runThread(String convName, String URL){
+            public void runThread(String convName){
                 new Thread(new Runnable() {
                     ArrayList<String> prodList=new ArrayList<>();
-                    ArrayList<String> prodPrice=new ArrayList<>();
                     Handler mHandler=new Handler();
                     Elements elements=new Elements();
                     @Override
@@ -293,6 +263,9 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                     mrgAdapter = new RegiitemsAdapter(mrgArrayList);
                     mrgRecyclerView.setAdapter(mrgAdapter);
 
+                    // 아이템리스트 추가
+                    itemList.add(item_id+"/"+storename);
+
                     mrgAdapter.notifyDataSetChanged();
                 }else {
                     Toast.makeText(getApplicationContext(), "품목을 선택하세요", Toast.LENGTH_LONG).show();
@@ -305,14 +278,13 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = edit_title.getText().toString();
-                String content = edit_Content.getText().toString();
+                title = edit_title.getText().toString();
+                content = edit_Content.getText().toString();
 
                 //TODO: need storename, itemList
                 if(storename.equals("")){
                     Toast.makeText(getApplicationContext(),"편의점을 선택해주세요",Toast.LENGTH_SHORT).show();
                 }else{
-                clickregister(title, storename, content);
                 showdialog();
                 //finish();
                 }
@@ -356,6 +328,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                 .setMessage("등록하시겠습니까?")
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialogInterface, int i) {
+                        clickregister(title, storename, content);
                         finish();
                     }
                 })
@@ -370,26 +343,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
     }
 
-    public ArrayList<String> getProductList(String convName, String url) throws IOException {
-        Document doc=Jsoup.connect(url).get();
-        Elements link=doc.select("a.page-link");
-        ArrayList<String> result=new ArrayList<String>();
-
-        String lastSize=link.get(link.size()-1).attr("href").replace("?page=","");
-        int lastPage=Integer.parseInt(lastSize);
-        for(int i=1;i<=lastPage;i++){
-            String URL=url+"?page="+Integer.toString(i);
-            Document docPage=Jsoup.connect(URL).get();
-            Elements elements=docPage.select("div.card-body.px-2.py-2");
-            for(Element element:elements){
-                String a=element.select("strong").text()+" "+element.select("span.badge.bg-"+convName).text()+" "+element.select("span.text-muted").text();
-                //System.out.println(a);
-                result.add(a);
-            }
-        }
-
-        return result;
-    }
 
     public ArrayList<String> getProductPicture(String convName, String url) throws IOException {
         Document doc=Jsoup.connect(url).get();
@@ -430,35 +383,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
         return result;
     }
-
-    // 크롤링한 데이터 arraylist를 JSONarray로 변환 후 저장
-    public void saveProductList(ArrayList<String> returnlist, String storename){
-
-        firebaseDatabase= FirebaseDatabase.getInstance();
-        itemRef= firebaseDatabase.getReference().child("item").child(storename);
-
-        for(int i=0; i< returnlist.size(); i++){
-            ItemData itemData = new ItemData();
-            itemData.setItemid(i);
-            itemData.setItemname(returnlist.get(i).split(" ")[0]);
-            itemData.setPlustype(returnlist.get(i).split(" ")[1]);
-            itemData.setStorename(storename);
-
-            if(storename=="cu"){
-                itemData.setImage(cuImageReturn.get(i));
-            }else if(storename == "gs25"){
-                itemData.setImage(gsImageReturn.get(i));
-            }else{
-                itemData.setImage(sevenImageReturn.get(i));
-            }
-            itemData.setCategory("");
-
-            itemRef.push().setValue(itemData);
-        }
-
-    }
-
-
 
     protected int getitem_id(String storename,String itemname){
         int itemid=0;

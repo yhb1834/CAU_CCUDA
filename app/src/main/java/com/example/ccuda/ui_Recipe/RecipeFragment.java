@@ -170,8 +170,9 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     //새 데이터(값 : ChatData객체) 가져오기
                     RecipeDTO recipeDTO = ds.getValue(RecipeDTO.class);
                     ArrayList<String> imageurl = getimageurl(recipeDTO);
+                    ArrayList<String> filename = getfilename(recipeDTO);
                     String[] itemname = getitemname(recipeDTO.getItemname());
-                    RecipeItem recipeItem = new RecipeItem(imageurl.get(0),recipeDTO.getLike(),recipeDTO.getTitle(),itemname,imageurl,recipeDTO.getContent(),recipeDTO.getLikes());
+                    RecipeItem recipeItem = new RecipeItem(imageurl.get(0),recipeDTO.getLike(),recipeDTO.getTitle(),itemname,imageurl,filename,recipeDTO.getContent(),recipeDTO.getLikes());
                     RecipeItems.add(recipeItem);
                 }
 
@@ -229,6 +230,43 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     }
 
+    public ArrayList<String> getfilename(RecipeDTO recipeDTO){
+        ArrayList<String> filename = new ArrayList<>();
+
+        if(recipeDTO.getFilename1() != null){
+            filename.add(recipeDTO.getFilename1());
+            if(recipeDTO.getFilename2() != null){
+                filename.add(recipeDTO.getFilename2());
+                if(recipeDTO.getFilename3() != null){
+                    filename.add(recipeDTO.getFilename3());
+                    if(recipeDTO.getFilename4() != null){
+                        filename.add(recipeDTO.getFilename4());
+                        if(recipeDTO.getFilename5() != null){
+                            filename.add(recipeDTO.getFilename5());
+                            if(recipeDTO.getFilename6() != null){
+                                filename.add(recipeDTO.getFilename6());
+                                if(recipeDTO.getFilename7() != null){
+                                    filename.add(recipeDTO.getFilename7());
+                                    if(recipeDTO.getFilename8() != null){
+                                        filename.add(recipeDTO.getFilename8());
+                                        if(recipeDTO.getFilename9() != null){
+                                            filename.add(recipeDTO.getFilename9());
+                                            if(recipeDTO.getFilename10() != null){
+                                                filename.add(recipeDTO.getFilename10());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return filename;
+
+    }
+
     //좋아요 데이터베이스 트랜잭션 저장
     public void likeClicked(DatabaseReference recipeRef, String data, Context context) {
         recipeRef.orderByChild("image1").equalTo(data).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -281,45 +319,4 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
         });
     }
 
-
-    /*삭제버튼 생성후 삽입*/
-    // 이미지 storage삭제
-    public void onDeleteImage(String fileName)
-    {
-        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
-        StorageReference desertRef = firebaseStorage.getReference("recipeImages/"+ fileName);
-        desertRef.delete();
-    }
-
-    public void getfirebasekey(String data){
-        firebaseDatabase.getReference().child("Recipe").orderByChild("image1").equalTo(data).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot:snapshot.getChildren()) {
-                    String key = dataSnapshot.getKey();
-                    deleteRecipe(key);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    // 게시글 삭제
-    public void deleteRecipe(String key){
-        firebaseDatabase.getReference().child("Recipe").child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(getActivity(), "삭제 성공", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                System.out.println("error: "+e.getMessage());
-                Toast.makeText(getActivity(), "삭제 실패", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 }
