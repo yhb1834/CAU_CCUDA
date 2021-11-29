@@ -302,28 +302,6 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
         queue.add(couponpageRequest);
     }
 
-    // 게시글 삭제
-    protected void deletepost(Context context, int coupon_id){
-        // 작성자: seller_id, 삭제할 쿠폰: coupon_id
-        Response.Listener<String> responsListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonObject = new JSONObject(response);
-                    String success = jsonObject.getString("success");
-                    if(success=="success"){
-                        //Log.d("success","delete success");
-                        Toast.makeText(context,"해당 판매글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        PostRequest postRequest = new PostRequest("deletepost",SaveSharedPreference.getId(context),"", "",0, 0, "", "", "", coupon_id, responsListener);
-        RequestQueue queue = Volley.newRequestQueue(context);
-        queue.add(postRequest);
-    }
     public void load_item(){
         firebaseDatabase= FirebaseDatabase.getInstance();
         itemRef= firebaseDatabase.getReference();

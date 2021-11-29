@@ -232,7 +232,15 @@ public class addToCart extends CartFragment {
                         // 성공
                         Log.d("success","query success");
                         Toast.makeText(getActivity(),"장바구니 추가", Toast.LENGTH_SHORT).show();
+                        adapter.notifyDataSetChanged();
 
+                        cartList.add(cartItemModel);
+                        ItemParccelable item=new ItemParccelable();
+                        item.setProdName(cartItemModel.getText1());
+                        item.setConvName(cartItemModel.getText2());
+                        item.setImgUrl(cartItemModel.getImageUrl());
+                        sendToFramgent.add(item);
+                        resetImageview();
                     }
                     else{
                         // 실패
@@ -247,15 +255,7 @@ public class addToCart extends CartFragment {
         CartRequest cartRequest = new CartRequest("addTocart", SaveSharedPreference.getId(getActivity()), item_id,storename, responsListener);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(cartRequest);
-        adapter.notifyDataSetChanged();
 
-        cartList.add(cartItemModel);
-        ItemParccelable item=new ItemParccelable();
-        item.setProdName(cartItemModel.getText1());
-        item.setConvName(cartItemModel.getText2());
-        item.setImgUrl(cartItemModel.getImageUrl());
-        sendToFramgent.add(item);
-        resetImageview();
     }
 
 
