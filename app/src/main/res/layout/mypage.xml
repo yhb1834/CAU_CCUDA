@@ -85,26 +85,31 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal" >
 
-                <TextView
-                    android:layout_width="200dip"
-                    android:layout_height="match_parent"
-                    android:background="#ff0000"
-                    android:gravity="center"
-                    android:text="#ff0000" />
-
-                <TextView
-                    android:layout_width="200dip"
-                    android:layout_height="match_parent"
-                    android:background="#00ff00"
-                    android:gravity="center"
-                    android:text="#00ff00" />
-
-                <TextView
-                    android:layout_width="200dip"
-                    android:layout_height="match_parent"
-                    android:background="#0000ff"
-                    android:gravity="center"
-                    android:text="#0000ff" />
+                <ImageView
+                    android:id="@+id/my_coupon_image1"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp">
+                </ImageView>
+                <ImageView
+                    android:id="@+id/my_coupon_image2"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp">
+                </ImageView>
+                <ImageView
+                    android:id="@+id/my_coupon_image3"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp">
+                </ImageView>
+                <ImageView
+                    android:id="@+id/my_coupon_image4"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp">
+                </ImageView>
+                <ImageView
+                    android:id="@+id/my_coupon_image5"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp">
+                </ImageView>
             </LinearLayout>
 
 
@@ -137,13 +142,13 @@
                 android:text="+"></Button>
 
         </LinearLayout>
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cartList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp">
 
-        </ListView>
+        </androidx.recyclerview.widget.RecyclerView>
 
 
     </LinearLayout>
