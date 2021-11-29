@@ -34,6 +34,7 @@ import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.db.MypageRequest;
+import com.example.ccuda.db.PostRequest;
 import com.example.ccuda.ui_Home.Adapter;
 import com.example.ccuda.ui_Home.HomeActivity;
 import com.google.android.material.appbar.AppBarLayout;
@@ -144,6 +145,9 @@ public class DeleteUploadarticlesFragment extends Fragment {
                     if(data.getIsClicked()==false){
                         leftCoupon.add(data);
                     }
+                    else{
+                        deletepost(getActivity(),Integer.parseInt(data.getCoupon_id()));
+                    }
                 }
                 System.out.println("남은거남은거남은거: "+leftCoupon);
                 adapter.setMyUploadProductList(leftCoupon);
@@ -241,6 +245,27 @@ public class DeleteUploadarticlesFragment extends Fragment {
         MypageRequest mypageRequest = new MypageRequest("mypostlist", SaveSharedPreference.getId(context),"",responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(mypageRequest);
+    }
+
+    protected void deletepost(Context context, int coupon_id){
+        Response.Listener<String> responsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    String success = jsonObject.getString("success");
+                    if(success=="success"){
+                        //Log.d("success","delete success");
+                        Toast.makeText(context,"해당 판매글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        PostRequest postRequest = new PostRequest("deletepost",SaveSharedPreference.getId(context),"", "",0, 0, "", "", "", coupon_id, responsListener);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(postRequest);
     }
 
 }

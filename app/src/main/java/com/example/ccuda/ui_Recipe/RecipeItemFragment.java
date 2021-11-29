@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
+import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.RecipeDTO;
 import com.example.ccuda.data.RecipeItem;
 import com.example.ccuda.data.SaveSharedPreference;
@@ -71,6 +72,10 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
     int likecheck, likecheck2;      //개별페이지 like버튼 재설정위한 변수
     int islike;
 
+    ArrayList<ItemData> cuItem = HomeActivity.cuItem;
+    ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
+    ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
+
     public RecipeItemFragment() {
         // Required empty public constructor
     }
@@ -80,33 +85,18 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment1_recipe_item, container, false);
+
+
+        //파이어베이스 데이터베이스 생성
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        recipeRef = firebaseDatabase.getReference().child("Recipe");
+
         item = getArguments().getParcelable(Global.KEY_DATA);
         if ( item != null) {
             String isImage = item.getImage();
             islike = item.getLike();
             String isTitle = item.getTitle();
             String content = item.getContent();
-
-            RecyclerView mrgRecyclerView = v.findViewById(R.id.ritemrecycler);
-
-            LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
-            mrgRecyclerView.setLayoutManager(mLinearLayoutManager);
-            mrgArrayList = new ArrayList<RegiItemsModel>();
-
-            //임의로 관련 품목 추가
-            for(int i=0; i<4; i++){
-                mrgArrayList.add(new RegiItemsModel(String.valueOf(i), String.valueOf(i)));
-
-            }
-            mrgAdapter = new RecipeItemAdapter(mrgArrayList);
-            mrgRecyclerView.setAdapter(mrgAdapter);
-            mrgAdapter.notifyDataSetChanged();
-            //
-
-
-            //파이어베이스 데이터베이스 생성
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            recipeRef = firebaseDatabase.getReference().child("Recipe");
 
             recipeImage11 = (ImageView) v.findViewById(R.id.recipeImage2);
             like11 = (TextView) v.findViewById(R.id.likenumber2);
@@ -119,6 +109,47 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
             like11.setText(String.valueOf(islike));
             recipeTitle11.setText(isTitle);
             recipecontent.setText(content);
+
+            RecyclerView mrgRecyclerView = v.findViewById(R.id.ritemrecycler);
+
+            LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
+            mrgRecyclerView.setLayoutManager(mLinearLayoutManager);
+            mrgArrayList = new ArrayList<RegiItemsModel>();
+
+            //상품 품목
+            String[] itemname = item.getItemname();
+            for(int i=0; i<itemname.length; i++){
+                if(itemname[i].equals(""))
+                    break;
+                String[] data=itemname[i].split("/");
+                if(data[1].equals("CU")){
+                    for(int j=0; j<cuItem.size(); j++){
+                        if(cuItem.get(j).getItemid() == Integer.parseInt(data[0])){
+                            mrgArrayList.add(new RegiItemsModel(cuItem.get(j).getStorename(), cuItem.get(j).getImage(),cuItem.get(j).getItemname(),cuItem.get(j).getItemid()));
+                            break;
+                        }
+                    }
+                }else if(data[1].equals("seven")){
+                    for(int j=0; j<sevenItem.size(); j++){
+                        if(sevenItem.get(j).getItemid() == Integer.parseInt(data[0])){
+                            mrgArrayList.add(new RegiItemsModel(sevenItem.get(j).getStorename(), sevenItem.get(j).getImage(),sevenItem.get(j).getItemname(),sevenItem.get(j).getItemid()));
+                            break;
+                        }
+                    }
+                }else{
+                    for(int j=0; j<gs25Item.size(); j++){
+                        if(gs25Item.get(j).getItemid() == Integer.parseInt(data[0])){
+                            mrgArrayList.add(new RegiItemsModel(gs25Item.get(j).getStorename(), gs25Item.get(j).getImage(),gs25Item.get(j).getItemname(),gs25Item.get(j).getItemid()));
+                            break;
+                        }
+                    }
+                }
+            }
+
+            mrgAdapter = new RecipeItemAdapter(mrgArrayList);
+            mrgRecyclerView.setAdapter(mrgAdapter);
+            mrgAdapter.notifyDataSetChanged();
+
 
 
         }

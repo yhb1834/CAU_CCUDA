@@ -4,6 +4,7 @@ public class RegiItemsModel {
     private String convName;
     private String imageurl;
     private String itemname;
+    private int itemid;
 
     public RegiItemsModel(String storename, String item_name) {
         this.convName = storename;
@@ -35,10 +36,19 @@ public class RegiItemsModel {
         this.itemname = itemname;
     }
 
-    public RegiItemsModel(String convName, String imageurl, String itemname) {
+    public int getItemid() {
+        return itemid;
+    }
+
+    public void setItemid(int itemid) {
+        this.itemid = itemid;
+    }
+
+    public RegiItemsModel(String convName, String imageurl, String itemname, int itemid) {
         this.convName = convName;
         this.imageurl = imageurl;
         this.itemname = itemname;
+        this.itemid = itemid;
     }
 
 }
