@@ -66,7 +66,7 @@ public class UploadRecipeFragment extends Fragment implements SwipeRefreshLayout
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment1_recipe, container, false);
+        View view = inflater.inflate(R.layout.fragment1_recipe2, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.RecipeRecyclerView);
         context = getActivity();
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh2);//새로고침
@@ -143,6 +143,14 @@ public class UploadRecipeFragment extends Fragment implements SwipeRefreshLayout
             public void onLikeClick(View view, int position) {
                 final RecipeItem item = RecipeItems.get(position);
                 new RecipeFragment().likeClicked(recipeRef, item.getImageurl().get(0), context);
+            }
+        });
+
+        FloatingActionButton fabup = (FloatingActionButton) view.findViewById(R.id.scrolltop2);
+        fabup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mRecyclerView.smoothScrollToPosition(mRecipeAdapter.getItemCount()-1);
             }
         });
 

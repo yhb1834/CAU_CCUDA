@@ -25,9 +25,6 @@ import com.example.ccuda.ui_Recipe.Global;
 import com.example.ccuda.ui_Recipe.RecipeAdapter;
 import com.example.ccuda.ui_Recipe.RecipeFragment;
 import com.example.ccuda.ui_Recipe.RecipeItemFragment;
-import com.example.ccuda.ui_Recipe.RecipeRegisterActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -62,7 +59,7 @@ public class LikeRecipeFragment extends Fragment implements SwipeRefreshLayout.O
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment1_recipe, container, false);
+        View view = inflater.inflate(R.layout.fragment1_recipe2, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.RecipeRecyclerView);
         context = getActivity();
 
@@ -120,6 +117,13 @@ public class LikeRecipeFragment extends Fragment implements SwipeRefreshLayout.O
             }
         });
 
+        FloatingActionButton fabup = (FloatingActionButton) view.findViewById(R.id.scrolltop2);
+        fabup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mRecyclerView.smoothScrollToPosition(mRecipeAdapter.getItemCount()-1);
+            }
+        });
 
         return view;
     }
