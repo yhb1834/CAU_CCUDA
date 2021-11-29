@@ -2,23 +2,33 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ccuda">
+
     <!-- 인터넷 사용 권한 설정 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
     <application
         android:name=".login_ui.GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ccuda_logo"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ccuda_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
+        <service
+            android:name=".CartItemMessagingService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".ui_Recipe.RecipeRegisterActivity"
             android:exported="false" />
@@ -33,11 +43,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-
-
         <activity
             android:name=".login_ui.LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -49,29 +57,28 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <!-- "kakao{YOUR_NATIVE_APP_KEY}://kakaolink" 형식의 앱 실행 스킴을 설정하는데 사용 -->
-                <data android:host="@string/kakaolink_host"
+                <data
+                    android:host="@string/kakaolink_host"
                     android:scheme="@string/kakao_scheme" />
             </intent-filter>
         </activity>
-
-
-        <activity android:name=".ui_Home.HomeActivity">
-        </activity>
-
+        <activity android:name=".ui_Home.HomeActivity"></activity>
         <activity android:name=".login_ui.SignupActivity" />
         <activity android:name=".login_ui.FindpasswordActivity" />
         <activity android:name=".login_ui.RecreatepasswordActivity" />
         <activity android:name=".ui_Chat.ChatRoomActivity" />
-        <activity android:name=".ui_Cart.ItemPopUp" android:theme="@android:style/Theme.Dialog"/>
+        <activity
+            android:name=".ui_Cart.ItemPopUp"
+            android:theme="@android:style/Theme.Dialog" />
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="@string/kakao_app_key" />
-
-        <!-- FCM서비스 추가 -->
+            android:value="@string/kakao_app_key" /> <!-- FCM서비스 추가 -->
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
@@ -79,10 +86,10 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
+        <service android:name=".CartItemMessagingService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
-
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
 
 </manifest>

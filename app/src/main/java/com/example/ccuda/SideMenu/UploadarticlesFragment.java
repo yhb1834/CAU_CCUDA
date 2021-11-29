@@ -154,7 +154,7 @@ public class UploadarticlesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         System.out.println("onResume at UploadarticlesFragment");
-        load_couponlist(getContext());
+        //load_couponlist(getContext());
     }
 
 
@@ -228,7 +228,10 @@ public class UploadarticlesFragment extends Fragment {
                         //adapter.addItem(couponData.getItem_name(), R.drawable.add, couponData.getStorename());
 
                     }
-                    System.out.println("coupon list: "+CouponArrayList);
+                    for(CouponData a:CouponArrayList){
+                        System.out.println(a.getItem_name());
+                    }
+                    //System.out.println("coupon list: "+CouponArrayList);
                     adapter=new AdapterForUploadarticles(getActivity(),
                             R.layout.product_list,CouponArrayList); //android.R.layout.simple_list_item_multiple_choice
 

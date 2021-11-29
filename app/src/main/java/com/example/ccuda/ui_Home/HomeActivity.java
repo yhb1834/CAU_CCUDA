@@ -38,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.ccuda.BuildConfig;
+import com.example.ccuda.CartItemMessagingService;
 import com.example.ccuda.MyPage;
 import com.example.ccuda.R;
 import com.example.ccuda.SideMenu.AppSettingsFragment;
@@ -307,6 +308,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        Intent intent=new Intent(HomeActivity.this, CartItemMessagingService.class);
+        startService(intent);
 
     }
 
