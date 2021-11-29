@@ -68,7 +68,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
     ArrayList<String> itemList = new ArrayList<>(); // 고른 상품명 담을 객체
     ArrayList<String> filenameList = new ArrayList<>();
     String itemname;
-    String[] conv={"선택없음","GS25", "SEVEN11", "CU"};
+    String[] conv={"GS25", "SEVEN11", "CU"};
     String storename;   // 고른 편의점명
     String title;
     String content;
@@ -158,15 +158,12 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                 String URL = "";
                 switch (position) {
                     case 0:
-                        storename = "";
-                        break;
-                    case 1:
                         storename = "GS25";
                         break;
-                    case 2:
+                    case 1:
                         storename = "SEVEN";
                         break;
-                    case 3:
+                    case 2:
                         storename = "CU";
                         break;
                 }
@@ -296,7 +293,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         });
 
     }
-    
+
     void showdialog(){
         AlertDialog.Builder msgBuilder = new AlertDialog.Builder(this)
                 .setTitle("레시피 등록")
