@@ -39,8 +39,8 @@ public class RegiitemsAdapter extends RecyclerView.Adapter<RegiitemsAdapter.Item
         public void onBind(RegiItemsModel rg){
             name.setText(rg.getItemname());
             convname.setText(rg.getConvName());
-            //Glide.with(itemView.getContext()).load(rg.getImageurl()).into(image);
-            System.out.println(rg.getImageurl());
+            Glide.with(itemView.getContext()).load(rg.getImageurl()).into(image);
+            //System.out.println(rg.getImageurl());
             //image.setImageResource(rg.getImageurl());
         }
     }
