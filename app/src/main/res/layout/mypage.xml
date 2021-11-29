@@ -43,11 +43,6 @@
                 android:drawableLeft="@drawable/ic_baseline_star_24"
                 android:drawablePadding="2dp">
             </TextView>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="쁠원에 오신 걸 환영합니다!">
-            </TextView>
         </LinearLayout>
     </LinearLayout>
 
@@ -87,28 +82,28 @@
 
                 <ImageView
                     android:id="@+id/my_coupon_image1"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp">
+                    android:layout_width="120dp"
+                    android:layout_height="120dp">
                 </ImageView>
                 <ImageView
                     android:id="@+id/my_coupon_image2"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp">
+                    android:layout_width="120dp"
+                    android:layout_height="120dp">
                 </ImageView>
                 <ImageView
                     android:id="@+id/my_coupon_image3"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp">
+                    android:layout_width="120dp"
+                    android:layout_height="120dp">
                 </ImageView>
                 <ImageView
                     android:id="@+id/my_coupon_image4"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp">
+                    android:layout_width="120dp"
+                    android:layout_height="120dp">
                 </ImageView>
                 <ImageView
                     android:id="@+id/my_coupon_image5"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp">
+                    android:layout_width="120dp"
+                    android:layout_height="120dp">
                 </ImageView>
             </LinearLayout>
 
