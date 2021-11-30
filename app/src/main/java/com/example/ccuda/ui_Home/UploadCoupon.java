@@ -48,8 +48,12 @@ import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.BitmapConverter;
 import com.example.ccuda.db.PostRequest;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import org.json.JSONObject;
@@ -95,12 +99,12 @@ public class UploadCoupon extends Fragment {
     EditText editText2;
     Button uploadButton;
 
-    Bitmap finalImage; // 내가 올릴 품목 사진
     String finalConv; // 파는 품목이 어떤 편의점 물건인지
     String finalProduct; // 내가 올릴 품목 이름
     String finalPrice; // 내가 올린 판매 금액
     String finalDate;
-
+    Uri data;   //이미지
+    String fileName="";
 
     private static final int PICK_FROM_ALBUM=1;
 
@@ -118,7 +122,7 @@ public class UploadCoupon extends Fragment {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        Uri data=result.getData().getData();
+                        data=result.getData().getData();
                         uploadPhoto.setImageURI(data);
                         //System.out.println(data);
                     }
@@ -287,36 +291,52 @@ public class UploadCoupon extends Fragment {
                         Toast.makeText(getContext(),"유효기간이 지난 쿠폰입니다.", Toast.LENGTH_SHORT).show();
                     }
                     else{
+                        SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
+                        fileName=sdf.format(new Date())+".png";
+                        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+                        final StorageReference imgRef= firebaseStorage.getReference("couponImages/"+fileName);
 
-                        BitmapDrawable drawable=(BitmapDrawable)uploadPhoto.getDrawable();
-                        finalImage= drawable.getBitmap();
-
-                        int item_id = getitem_id(finalConv,finalProduct);
-                        Response.Listener<String> responsListener = new Response.Listener<String>() {
+                        UploadTask uploadTask= imgRef.putFile(data);
+                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
-                            public void onResponse(String response) {
-                                try{
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    boolean success = jsonObject.getBoolean("success");
-                                    if(success){
-                                        // 포스팅 성공
-                                        Log.d("success","posting success");
-                                        //Toast.makeText(context,"판매글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                                        //System.out.println("picture: "+finalImage);
-                                        Toast.makeText(getContext(), finalConv+" "+finalProduct+" "+finalPrice, Toast.LENGTH_SHORT).show();
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        //파라미터로 firebase의 저장소에 저장되어 있는
+                                        //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
+
+                                        int item_id = getitem_id(finalConv,finalProduct);
+                                        Response.Listener<String> responsListener = new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try{
+                                                    JSONObject jsonObject = new JSONObject(response);
+                                                    boolean success = jsonObject.getBoolean("success");
+                                                    if(success){
+                                                        // 포스팅 성공
+                                                        Log.d("success","posting success");
+                                                        //Toast.makeText(context,"판매글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                                                        //System.out.println("picture: "+finalImage);
+                                                        Toast.makeText(getContext(), finalConv+" "+finalProduct+" "+finalPrice, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    else {
+                                                        Log.d("success", "query fail");
+                                                    }
+                                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new HomeFragment()).commit();
+                                                }catch (Exception e){
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        };
+                                        PostRequest postRequest = new PostRequest("posting", SaveSharedPreference.getId(getActivity()), finalConv,"",item_id, Integer.parseInt(finalPrice), finalDate, "", uri.toString(),fileName, 0, responsListener);
+                                        RequestQueue queue = Volley.newRequestQueue(getActivity());
+                                        queue.add(postRequest);
+
                                     }
-                                    else {
-                                        Log.d("success", "query fail");
-                                    }
-                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new HomeFragment()).commit();
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                }
+                                });
                             }
-                        };
-                        PostRequest postRequest = new PostRequest("posting", SaveSharedPreference.getId(getActivity()), finalConv,"",item_id, Integer.parseInt(finalPrice), finalDate, "", BitmapConverter.BitmapToString(finalImage), 0, responsListener);
-                        RequestQueue queue = Volley.newRequestQueue(getActivity());
-                        queue.add(postRequest);
+                        });
                     }
                 }
             }

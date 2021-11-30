@@ -38,6 +38,8 @@ import com.example.ccuda.db.PostRequest;
 import com.example.ccuda.ui_Home.Adapter;
 import com.example.ccuda.ui_Home.HomeActivity;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -256,14 +258,17 @@ public class DeleteUploadarticlesFragment extends Fragment {
                     String success = jsonObject.getString("success");
                     if(success=="success"){
                         //Log.d("success","delete success");
-                        Toast.makeText(context,"해당 판매글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                        String filename = jsonObject.getString("filename");
+                        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+                        StorageReference desertRef = firebaseStorage.getReference("couponImages/"+ filename);
+                        desertRef.delete();
                     }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
         };
-        PostRequest postRequest = new PostRequest("deletepost",SaveSharedPreference.getId(context),"", "",0, 0, "", "", "", coupon_id, responsListener);
+        PostRequest postRequest = new PostRequest("deletepost",SaveSharedPreference.getId(context),"", "",0, 0, "", "", "","", coupon_id, responsListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(postRequest);
     }

@@ -54,9 +54,9 @@ public class ServiceThread extends Thread{
             queue.add(notificationRequest);
 
             try{
-                Thread.sleep(1000);
+                Thread.sleep(10000);
             }catch (Exception e){
-                
+
             }
         }
 

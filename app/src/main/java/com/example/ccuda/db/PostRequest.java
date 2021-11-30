@@ -13,7 +13,7 @@ public class PostRequest extends StringRequest {
     private Map<String, String> parameters;
 
     public PostRequest(String option, long seller_id, String storename,String category,int item_id, int price, String expiration_date,
-                       String content, String coupon_image, int coupon_id, Response.Listener<String> listener){
+                       String content, String coupon_image, String filename,int coupon_id, Response.Listener<String> listener){
         super(Request.Method.POST, URL, listener, null);
 
         parameters = new HashMap<>();
@@ -26,6 +26,7 @@ public class PostRequest extends StringRequest {
         parameters.put("expiration_date", expiration_date);
         parameters.put("content", content);
         parameters.put("coupon_image", coupon_image);
+        parameters.put("filename",filename);
         parameters.put("coupon_id", coupon_id+"");
     }
     @Override

@@ -261,6 +261,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         for(ItemData i:cuItem){
                             if(i.getItemname().equals(searchView.getSelectedItem().toString())){
                                 mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
+                                itemList.add(i.getItemid()+"/"+i.getStorename()+"/"+i.getItemname()+"/"+i.getImage());
                             }
                         }
                     }
@@ -268,6 +269,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         for(ItemData i:gs25Item){
                             if(i.getItemname().equals(searchView.getSelectedItem().toString())){
                                 mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
+                                itemList.add(i.getItemid()+"/"+i.getStorename()+"/"+i.getItemname()+"/"+i.getImage());
                             }
                         }
                     }
@@ -275,6 +277,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         for(ItemData i:sevenItem){
                             if(i.getItemname().equals(searchView.getSelectedItem().toString())){
                                 mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
+                                itemList.add(i.getItemid()+"/"+i.getStorename()+"/"+i.getItemname()+"/"+i.getImage());
                             }
                         }
                     }
@@ -284,9 +287,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
                     mrgAdapter = new RegiitemsAdapter(mrgArrayList);
                     mrgRecyclerView.setAdapter(mrgAdapter);
-
-                    // 아이템리스트 추가
-                    itemList.add(getitem_id(storename,item_name)+"/"+storename+"/"+item_name);
 
                     mrgAdapter.notifyDataSetChanged();
                 }else {

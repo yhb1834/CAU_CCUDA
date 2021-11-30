@@ -42,7 +42,8 @@ public class AdapterForGetcoupon extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView itemImage;
         TextView prodName;
-        TextView prodDuration;
+        TextView prodVali;
+        TextView prodPrice;
         TextView prodStore;
 
         final  Context context= parent.getContext();
@@ -53,13 +54,15 @@ public class AdapterForGetcoupon extends BaseAdapter {
 
         itemImage=(ImageView) convertView.findViewById(R.id.icon);
         prodName=(TextView) convertView.findViewById(R.id.name);
-        prodDuration=(TextView) convertView.findViewById(R.id.price1);
-        prodStore=(TextView) convertView.findViewById(R.id.validity1);
+        prodPrice=(TextView) convertView.findViewById(R.id.price1);
+        prodVali=(TextView) convertView.findViewById(R.id.validity1);
+        prodStore=(TextView) convertView.findViewById(R.id.store);
 
         Glide.with(context).load(listViewItemList.get(position).getImageurl())
                 .into(itemImage);
         prodName.setText(listViewItemList.get(position).getItem_name());
-        prodDuration.setText(listViewItemList.get(position).getExpiration_date());
+        prodPrice.setText("  "+listViewItemList.get(position).getPrice() + " 원");
+        prodVali.setText(listViewItemList.get(position).getExpiration_date());
         prodStore.setText(listViewItemList.get(position).getStorename());
 
         return convertView;

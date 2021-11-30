@@ -116,7 +116,7 @@ public class ProductItemFragment extends Fragment {
 
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        /*
+
         firebaseDatabase.getReference().child("Recipe").orderByChild("items/"+productname).equalTo(store).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -125,17 +125,8 @@ public class ProductItemFragment extends Fragment {
                     //새 데이터(값 : ChatData객체) 가져오기
                     RecipeDTO recipeDTO = ds.getValue(RecipeDTO.class);
                     String[] item = recipeDTO.getItemname().split("/");
-                    if(item[0].equals("CU")){
-
-                    }else if(item[0].equals("SEVEN")){
-
-                    }else{
-
-                    }
-                    mrgArrayList.add(new RegiItemsModel(item[1], "",item[2],Integer.parseInt(item[0])));
+                    mrgArrayList.add(new RegiItemsModel(item[1], item[3],item[2],Integer.parseInt(item[0])));
                 }
-
-                mrgArrayList.add(new RegiItemsModel("편의점명", "","상품명",0));
                 mrgAdapter = new RecipeitemAdapter(mrgArrayList);
                 recyclerView.setAdapter(mrgAdapter);
                 mrgAdapter.notifyDataSetChanged();
@@ -146,13 +137,13 @@ public class ProductItemFragment extends Fragment {
 
             }
         });
-        */
+
         //임시
-        mrgArrayList.add(new RegiItemsModel("편의점", "","상품명",0));
-        mrgArrayList.add(new RegiItemsModel("편의점명", "","상품명",0));
-        mrgAdapter = new RecipeitemAdapter(mrgArrayList);
-        recyclerView.setAdapter(mrgAdapter);
-        mrgAdapter.notifyDataSetChanged();
+        //mrgArrayList.add(new RegiItemsModel("편의점", "","상품명",0));
+        //mrgArrayList.add(new RegiItemsModel("편의점명", "","상품명",0));
+        //mrgAdapter = new RecipeitemAdapter(mrgArrayList);
+        //recyclerView.setAdapter(mrgAdapter);
+        //mrgAdapter.notifyDataSetChanged();
 
         return view;
     }
