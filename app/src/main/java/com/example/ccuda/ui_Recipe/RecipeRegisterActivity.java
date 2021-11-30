@@ -33,6 +33,7 @@ import com.example.ccuda.data.ItemData;
 import com.example.ccuda.data.RecipeDTO;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.ui_Home.HomeActivity;
+import com.example.ccuda.ui_Home.ProductItemFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -255,29 +256,30 @@ public class RecipeRegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 item_name= (String) searchView.getSelectedItem();
+                ProductItemFragment fragment = new ProductItemFragment();
                 //System.out.println("클릭 시 편의점 이" + store_spinner.getSelectedItem().toString() + "  " + item_id + searchView.getSelectedItem().toString());
                 if(item_name != null){
                     if (store_spinner.getSelectedItem().toString().equals("CU")){
                         for(ItemData i:cuItem){
-                            if(i.getItemname().equals(searchView.getSelectedItem().toString())){
+                            if(i.getItemname().equals(searchView.getSelectedItem().toString()) && !fragment.checkisthere(i.getItemname(), mrgArrayList)){
                                 mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
-                                itemList.add(i.getItemid()+"/"+i.getStorename()+"/"+i.getItemname()+"/"+i.getImage());
+                                itemList.add(i.getItemid()+" - "+i.getStorename()+" - "+i.getItemname()+" - "+i.getImage());
                             }
                         }
                     }
                     if (store_spinner.getSelectedItem().toString().equals("GS25")){
                         for(ItemData i:gs25Item){
-                            if(i.getItemname().equals(searchView.getSelectedItem().toString())){
+                            if(i.getItemname().equals(searchView.getSelectedItem().toString()) && !fragment.checkisthere(i.getItemname(), mrgArrayList)){
                                 mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
-                                itemList.add(i.getItemid()+"/"+i.getStorename()+"/"+i.getItemname()+"/"+i.getImage());
+                                itemList.add(i.getItemid()+" - "+i.getStorename()+" - "+i.getItemname()+" - "+i.getImage());
                             }
                         }
                     }
                     if (store_spinner.getSelectedItem().toString().equals("SEVEN11")){
                         for(ItemData i:sevenItem){
-                            if(i.getItemname().equals(searchView.getSelectedItem().toString())){
+                            if(i.getItemname().equals(searchView.getSelectedItem().toString()) && !fragment.checkisthere(i.getItemname(), mrgArrayList)){
                                 mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
-                                itemList.add(i.getItemid()+"/"+i.getStorename()+"/"+i.getItemname()+"/"+i.getImage());
+                                itemList.add(i.getItemid()+" - "+i.getStorename()+" - "+i.getItemname()+" - "+i.getImage());
                             }
                         }
                     }
@@ -586,7 +588,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                     RecipeDTO recipeDTO = dataSnapshot.getValue(RecipeDTO.class);
                     for(int i=0;i<itemList.size(); i++){
                         if(!itemList.get(i).equals("")){
-                            String[] item = itemList.get(i).split("/");
+                            String[] item = itemList.get(i).split("/+");
                             recipeDTO.getItems().put(item[2],item[1]);
                             firebaseDatabase.getReference().child("Recipe").child(key).setValue(recipeDTO);
                         }

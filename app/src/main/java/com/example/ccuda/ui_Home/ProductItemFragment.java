@@ -30,6 +30,7 @@ import com.example.ccuda.ui_Recipe.RecipeitemAdapter;
 import com.example.ccuda.ui_Recipe.RegiItemsModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -54,6 +55,7 @@ public class ProductItemFragment extends Fragment {
     String star;
 
     private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference itemref;
 
     //관련상품리스트
     private ArrayList<RegiItemsModel> mrgArrayList;
@@ -116,16 +118,22 @@ public class ProductItemFragment extends Fragment {
 
 
         firebaseDatabase = FirebaseDatabase.getInstance();
+        itemref = firebaseDatabase.getReference().child("Recipe");
 
-        firebaseDatabase.getReference().child("Recipe").orderByChild("items/"+productname).equalTo(store).addValueEventListener(new ValueEventListener() {
+        itemref.orderByChild("items/"+productname).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mrgArrayList.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     //새 데이터(값 : ChatData객체) 가져오기
                     RecipeDTO recipeDTO = ds.getValue(RecipeDTO.class);
-                    String[] item = recipeDTO.getItemname().split("/");
-                    mrgArrayList.add(new RegiItemsModel(item[1], item[3],item[2],Integer.parseInt(item[0])));
+                    String[] items = recipeDTO.getItemname().split(", ");
+                    for(int j=0; j<items.length; j++){
+                        String[] item = items[j].split(" - ");
+                        if(!item[2].equals(productname) && !checkisthere(item[2], mrgArrayList)) {
+                            mrgArrayList.add(new RegiItemsModel(item[1], item[3], item[2], Integer.parseInt(item[0])));
+                        }
+                    }
                 }
                 mrgAdapter = new RecipeitemAdapter(mrgArrayList);
                 recyclerView.setAdapter(mrgAdapter);
@@ -204,5 +212,12 @@ public class ProductItemFragment extends Fragment {
     }
 
      */
+    public boolean checkisthere(String itemname, ArrayList<RegiItemsModel> mrgArrayList){
+        for(int i=0; i<mrgArrayList.size(); i++){
+            if(mrgArrayList.get(i).getItemname().equals(itemname))
+                return true;
+        }
+        return false;
+    }
 }
 

@@ -92,7 +92,7 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
             for(int i=0; i<itemname.length; i++){
                 if(itemname[i].equals(""))
                     break;
-                String[] data=itemname[i].split("/");
+                String[] data=itemname[i].split(" - ");
                 if(data[1].equals("CU")){
                     for(int j=0; j<cuItem.size(); j++){
                         if(cuItem.get(j).getItemid() == Integer.parseInt(data[0])){
