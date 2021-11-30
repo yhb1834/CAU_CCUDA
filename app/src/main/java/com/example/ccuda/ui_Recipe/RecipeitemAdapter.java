@@ -3,7 +3,6 @@ package com.example.ccuda.ui_Recipe;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,19 +19,16 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
-import com.example.ccuda.data.PeopleItem;
-import com.example.ccuda.data.RecipeItem;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.db.CartRequest;
-import com.example.ccuda.ui_Chat.ChatRoomActivity;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemAdapter.ItemViewHolder> {
+public class RecipeitemAdapter extends RecyclerView.Adapter<RecipeitemAdapter.ItemViewHolder> {
     private ArrayList<RegiItemsModel> mList;
     private int position;
-    public RecipeItemAdapter(ArrayList<RegiItemsModel> list){
+    public RecipeitemAdapter(ArrayList<RegiItemsModel> list){
         this.mList = list;
     }
 

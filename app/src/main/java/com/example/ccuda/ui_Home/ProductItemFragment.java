@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,41 +17,47 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
-import com.example.ccuda.data.ChatData;
 import com.example.ccuda.data.CouponData;
 import com.example.ccuda.data.ItemData;
-import com.example.ccuda.data.PeopleItem;
+import com.example.ccuda.data.RecipeDTO;
+import com.example.ccuda.data.RecipeItem;
 import com.example.ccuda.data.SaveSharedPreference;
-import com.example.ccuda.db.ChatRequest;
-import com.example.ccuda.db.CouponpageRequest;
 import com.example.ccuda.ui_Chat.ChatRoomActivity;
+import com.example.ccuda.ui_Recipe.RecipeFragment;
+import com.example.ccuda.ui_Recipe.RecipeitemAdapter;
+import com.example.ccuda.ui_Recipe.RegiItemsModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class ProductItemFragment extends Fragment {
+    private ArrayList<ItemData> cuItem = HomeActivity.cuItem;
+    private ArrayList<ItemData> gs25Item = HomeActivity.gs25Item;
+    private ArrayList<ItemData> sevenItem = HomeActivity.sevenItem;
+
     private CouponData data;
     public ArrayList<ItemData> currentItem = new ArrayList<>();
     TextView Productname, Store, Price, Date, Seller, Star, Otheritems;
     ImageView Photo;
     Button btn_message;
     Context context;
+    RecyclerView recyclerView;
 
     String seller_id;
     String coupon_id;
     String seller_nicname;
     String star;
+
+    private FirebaseDatabase firebaseDatabase;
+
+    //관련상품리스트
+    private ArrayList<RegiItemsModel> mrgArrayList;
+    private RecipeitemAdapter mrgAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,7 +85,7 @@ public class ProductItemFragment extends Fragment {
         Seller = (TextView) view.findViewById(R.id.sellerID2);
         Star = (TextView) view.findViewById(R.id.star2);
         btn_message = view.findViewById(R.id.btn_message);
-
+        recyclerView = view.findViewById(R.id.reco_recyclerview);
 
         Glide.with(this).load(photo).into(Photo);
         Productname.setText(productname);
@@ -103,6 +108,51 @@ public class ProductItemFragment extends Fragment {
                 }
             }
         });
+
+        //관련상품목록
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLinearLayoutManager);
+        mrgArrayList = new ArrayList<RegiItemsModel>();
+
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        /*
+        firebaseDatabase.getReference().child("Recipe").orderByChild("items/"+productname).equalTo(store).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mrgArrayList.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    //새 데이터(값 : ChatData객체) 가져오기
+                    RecipeDTO recipeDTO = ds.getValue(RecipeDTO.class);
+                    String[] item = recipeDTO.getItemname().split("/");
+                    if(item[0].equals("CU")){
+
+                    }else if(item[0].equals("SEVEN")){
+
+                    }else{
+
+                    }
+                    mrgArrayList.add(new RegiItemsModel(item[1], "",item[2],Integer.parseInt(item[0])));
+                }
+
+                mrgArrayList.add(new RegiItemsModel("편의점명", "","상품명",0));
+                mrgAdapter = new RecipeitemAdapter(mrgArrayList);
+                recyclerView.setAdapter(mrgAdapter);
+                mrgAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        */
+        //임시
+        mrgArrayList.add(new RegiItemsModel("편의점", "","상품명",0));
+        mrgArrayList.add(new RegiItemsModel("편의점명", "","상품명",0));
+        mrgAdapter = new RecipeitemAdapter(mrgArrayList);
+        recyclerView.setAdapter(mrgAdapter);
+        mrgAdapter.notifyDataSetChanged();
 
         return view;
     }

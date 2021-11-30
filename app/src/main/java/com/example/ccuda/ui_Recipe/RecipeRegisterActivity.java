@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,8 +34,11 @@ import com.example.ccuda.data.RecipeDTO;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.ui_Home.HomeActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -50,6 +54,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
+
 public class RecipeRegisterActivity extends AppCompatActivity {
     private static final String TAG = "MultiImageActivity";
     private FirebaseStorage storage;
@@ -280,7 +286,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                     mrgRecyclerView.setAdapter(mrgAdapter);
 
                     // 아이템리스트 추가
-                    itemList.add(getitem_id(storename,item_name)+"/"+storename);
+                    itemList.add(getitem_id(storename,item_name)+"/"+storename+"/"+item_name);
 
                     mrgAdapter.notifyDataSetChanged();
                 }else {
@@ -571,19 +577,20 @@ public class RecipeRegisterActivity extends AppCompatActivity {
         }
 
         firebaseDatabase.getReference().child("Recipe").push().setValue(recipeDTO);
-         /*
+
          firebaseDatabase.getReference().child("Recipe").orderByChild("image1").equalTo(recipeDTO.getImage1()).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()) {
                     String key = dataSnapshot.getKey();
-
-                    RecipeDTO recipeDTO = new RecipeDTO();
+                    RecipeDTO recipeDTO = dataSnapshot.getValue(RecipeDTO.class);
                     for(int i=0;i<itemList.size(); i++){
-                        String[] item = itemList.get(i).split("/");
-                        recipeDTO.items.put(item[0],item[1]);
+                        if(!itemList.get(i).equals("")){
+                            String[] item = itemList.get(i).split("/");
+                            recipeDTO.getItems().put(item[2],item[1]);
+                            firebaseDatabase.getReference().child("Recipe").child(key).setValue(recipeDTO);
+                        }
                     }
-                    firebaseDatabase.getReference().child("Recipe").child(key).setValue(recipeDTO);
                 }
             }
             @Override
@@ -591,7 +598,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
             }
         });
-        */
+
 
 
     }

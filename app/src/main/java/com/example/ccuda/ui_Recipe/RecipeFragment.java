@@ -109,6 +109,13 @@ public class RecipeFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
+        mRecipeAdapter.setOnItemLongClickListener(new RecipeAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
+
         //좋아요 클릭
         mRecipeAdapter.setOnLikeClickEventListener(new RecipeAdapter.OnLikeClickEventListener() {
             @Override

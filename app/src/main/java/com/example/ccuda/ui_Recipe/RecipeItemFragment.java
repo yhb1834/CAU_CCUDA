@@ -1,60 +1,31 @@
 package com.example.ccuda.ui_Recipe;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.method.CharacterPickerDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ccuda.R;
 import com.example.ccuda.data.ItemData;
-import com.example.ccuda.data.RecipeDTO;
 import com.example.ccuda.data.RecipeItem;
 import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.ui_Home.HomeActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.kakao.kakaolink.v2.KakaoLinkResponse;
-import com.kakao.kakaolink.v2.KakaoLinkService;
-import com.kakao.message.template.FeedTemplate;
-import com.kakao.network.ErrorResult;
-import com.kakao.network.callback.ResponseCallback;
-import com.kakao.util.KakaoParameterException;
-import com.kakao.util.helper.log.Logger;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import kotlin.Unit;
 
 public class RecipeItemFragment extends Fragment { //implements OnBackPressedListener{
 
@@ -64,7 +35,7 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
     private ImageButton like2;
 
     private ArrayList<RegiItemsModel> mrgArrayList;
-    private RecipeItemAdapter mrgAdapter;
+    private RecipeitemAdapter mrgAdapter;
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference recipeRef;
@@ -146,7 +117,7 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
                 }
             }
 
-            mrgAdapter = new RecipeItemAdapter(mrgArrayList);
+            mrgAdapter = new RecipeitemAdapter(mrgArrayList);
             mrgRecyclerView.setAdapter(mrgAdapter);
             mrgAdapter.notifyDataSetChanged();
 

@@ -1,6 +1,8 @@
 package com.example.ccuda.SideMenu;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -105,6 +107,13 @@ public class LikeRecipeFragment extends Fragment implements SwipeRefreshLayout.O
                 transaction.replace(R.id.innerLayout, fragmentRecipeItem);
                 transaction.addToBackStack(null);
                 transaction.commit();
+            }
+        });
+
+        mRecipeAdapter.setOnItemLongClickListener(new RecipeAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View view, int position) {
+
             }
         });
 
