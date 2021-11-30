@@ -23,6 +23,8 @@ public class CartItemMessagingService extends Service {
     NotificationManager notificationManager;
     Notification notification;
     ServiceThread thread;
+    public static Context context;
+
     public CartItemMessagingService() {
     }
 
@@ -35,6 +37,7 @@ public class CartItemMessagingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        context = getApplicationContext();
     }
 
     @Override
