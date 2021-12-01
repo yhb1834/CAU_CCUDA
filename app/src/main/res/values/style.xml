@@ -3,4 +3,7 @@
     <style name="EditTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/cursor</item>
     </style>
+    <style name="ProgressTheme" parent="Theme.MaterialComponents">
+        <item name="colorAccent">@color/yellow</item>
+    </style>
 </resources>

@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -72,6 +73,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
     FirebaseDatabase firebaseDatabase;
     DatabaseReference itemRef;
     ListView listView;
+    ProgressBar progressBar;
 
     SwipeRefreshLayout mSwipeRefreshLayout;//새로고침
 
@@ -136,7 +138,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v=inflater.inflate(R.layout.fragment1_home, container, false);
+        View v = inflater.inflate(R.layout.fragment1_home,container,false);
         listView=(ListView) v.findViewById(R.id.listView);
 
         /*mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefresh);//새로고침
@@ -292,6 +294,8 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                     //adapter.addItem("물건4", R.drawable.add, "gs");
                     //adapter.addItem("물건5", R.drawable.add, "gs");
                     listView.setAdapter(adapter);
+
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -370,6 +374,7 @@ public class HomeFragment extends Fragment  implements SwipeRefreshLayout.OnRefr
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 500);
+
     }
 
 }

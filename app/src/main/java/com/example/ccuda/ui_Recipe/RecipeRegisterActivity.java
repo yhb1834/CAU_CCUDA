@@ -328,8 +328,8 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                 .setMessage("등록하시겠습니까?")
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialogInterface, int i) {
+                        setContentView(R.layout.progress_cyclic);
                         clickregister(title, storename, content);
-                        finish();
                     }
                 })
                 .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -588,12 +588,14 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                     RecipeDTO recipeDTO = dataSnapshot.getValue(RecipeDTO.class);
                     for(int i=0;i<itemList.size(); i++){
                         if(!itemList.get(i).equals("")){
-                            String[] item = itemList.get(i).split("/+");
+                            String[] item = itemList.get(i).split(" - ");
                             recipeDTO.getItems().put(item[2],item[1]);
                             firebaseDatabase.getReference().child("Recipe").child(key).setValue(recipeDTO);
                         }
                     }
                 }
+
+                finish();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

@@ -7,6 +7,6 @@
     tools:context=".ui_Home.HomeFragment">
 
         <include layout="@layout/posthome"></include>
-
+z
 
 </FrameLayout>

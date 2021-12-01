@@ -243,7 +243,7 @@ public class UploadCoupon extends Fragment {
         uploadButton=v.findViewById(R.id.uploadbutton);
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 finalConv= (String) spinner1.getSelectedItem();
                 finalProduct= (String) searchView.getSelectedItem();
                 finalPrice=editText.getText().toString();
@@ -291,6 +291,7 @@ public class UploadCoupon extends Fragment {
                         Toast.makeText(getContext(),"유효기간이 지난 쿠폰입니다.", Toast.LENGTH_SHORT).show();
                     }
                     else{
+                        uploadButton.setEnabled(true);
                         SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
                         fileName=sdf.format(new Date())+".png";
                         FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
