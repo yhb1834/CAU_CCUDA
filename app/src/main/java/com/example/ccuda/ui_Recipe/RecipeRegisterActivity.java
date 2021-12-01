@@ -263,7 +263,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         for(ItemData i:cuItem){
                             if(i.getItemname().equals(searchView.getSelectedItem().toString()) && !fragment.checkisthere(i.getItemname(), mrgArrayList)){
                                 mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
-                                itemList.add(i.getItemid()+" - "+i.getStorename()+" - "+i.getItemname()+" - "+i.getImage());
                             }
                         }
                     }
@@ -271,7 +270,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         for(ItemData i:gs25Item){
                             if(i.getItemname().equals(searchView.getSelectedItem().toString()) && !fragment.checkisthere(i.getItemname(), mrgArrayList)){
                                 mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
-                                itemList.add(i.getItemid()+" - "+i.getStorename()+" - "+i.getItemname()+" - "+i.getImage());
                             }
                         }
                     }
@@ -279,7 +277,6 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                         for(ItemData i:sevenItem){
                             if(i.getItemname().equals(searchView.getSelectedItem().toString()) && !fragment.checkisthere(i.getItemname(), mrgArrayList)){
                                 mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
-                                itemList.add(i.getItemid()+" - "+i.getStorename()+" - "+i.getItemname()+" - "+i.getImage());
                             }
                         }
                     }
@@ -489,6 +486,10 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
     private void clickregister(String title, String storename,String content){
         itemname = "";
+        for(int i=0; i<mrgArrayList.size(); i++){
+            RegiItemsModel model = mrgArrayList.get(i);
+            itemList.add(model.getItemid()+" - "+model.getConvName()+" - "+model.getItemname()+" - "+model.getImageurl());
+        }
         SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
         String fileName1=sdf.format(new Date())+"";
         for(int i =0; i<itemList.size(); i++){
