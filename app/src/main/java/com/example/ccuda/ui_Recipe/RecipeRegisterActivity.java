@@ -262,21 +262,21 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                     if (store_spinner.getSelectedItem().toString().equals("CU")){
                         for(ItemData i:cuItem){
                             if(i.getItemname().equals(searchView.getSelectedItem().toString()) && !fragment.checkisthere(i.getItemname(), mrgArrayList)){
-                                mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
+                                mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString(),i.getItemid()));
                             }
                         }
                     }
                     if (store_spinner.getSelectedItem().toString().equals("GS25")){
                         for(ItemData i:gs25Item){
                             if(i.getItemname().equals(searchView.getSelectedItem().toString()) && !fragment.checkisthere(i.getItemname(), mrgArrayList)){
-                                mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
+                                mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString(),i.getItemid()));
                             }
                         }
                     }
                     if (store_spinner.getSelectedItem().toString().equals("SEVEN11")){
                         for(ItemData i:sevenItem){
                             if(i.getItemname().equals(searchView.getSelectedItem().toString()) && !fragment.checkisthere(i.getItemname(), mrgArrayList)){
-                                mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString()));
+                                mrgArrayList.add(new RegiItemsModel(store_spinner.getSelectedItem().toString(), i.getImage(),searchView.getSelectedItem().toString(),i.getItemid()));
                             }
                         }
                     }
@@ -581,7 +581,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
 
         firebaseDatabase.getReference().child("Recipe").push().setValue(recipeDTO);
 
-         firebaseDatabase.getReference().child("Recipe").orderByChild("image1").equalTo(recipeDTO.getImage1()).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseDatabase.getReference().child("Recipe").orderByChild("image1").equalTo(recipeDTO.getImage1()).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()) {
