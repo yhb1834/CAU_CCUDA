@@ -93,7 +93,7 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
                 if(itemname[i].equals(""))
                     break;
                 String[] data=itemname[i].split(" - ");
-                if(data[1].equals("CU")){
+                if(data[1].equals("cu")){
                     for(int j=0; j<cuItem.size(); j++){
                         if(cuItem.get(j).getItemid() == Integer.parseInt(data[0])){
                             mrgArrayList.add(new RegiItemsModel(cuItem.get(j).getStorename(), cuItem.get(j).getImage(),cuItem.get(j).getItemname(),cuItem.get(j).getItemid()));
