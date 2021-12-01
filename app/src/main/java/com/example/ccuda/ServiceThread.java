@@ -35,6 +35,7 @@ public class ServiceThread extends Thread{
                 @Override
                 public void onResponse(String response) {
                     try{
+                        //System.out.println(response);
                         JSONObject jsonObject = new JSONObject(response);
                         boolean success = jsonObject.getBoolean("success");
                         if(success){

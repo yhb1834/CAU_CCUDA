@@ -91,7 +91,7 @@ public class CartItemMessagingService extends Service {
     class myServiceHandler extends Handler{
         @Override
         public void handleMessage(@NonNull Message msg) {
-            setNotification("title","content");
+            setNotification("장바구니에 넣어두신 물건이 들어왔어요!","확인해보세요");
         }
     }
 }
