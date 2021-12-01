@@ -120,7 +120,7 @@ public class ProductItemFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
         itemref = firebaseDatabase.getReference().child("Recipe");
 
-        itemref.orderByChild("items/"+productname).equalTo(store).addValueEventListener(new ValueEventListener() {
+        itemref.orderByChild("items/"+productname).equalTo(true).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mrgArrayList.clear();

@@ -589,7 +589,7 @@ public class RecipeRegisterActivity extends AppCompatActivity {
                     for(int i=0;i<itemList.size(); i++){
                         if(!itemList.get(i).equals("")){
                             String[] item = itemList.get(i).split(" - ");
-                            recipeDTO.getItems().put(item[2],item[1]);
+                            recipeDTO.getItems().put(item[2],true);
                             firebaseDatabase.getReference().child("Recipe").child(key).setValue(recipeDTO);
                         }
                     }

@@ -11,7 +11,7 @@ public class RecipeDTO {
     private String itemname;
     private int like;
     private Map<String, Boolean> likes = new HashMap<>();
-    private Map<String, String> items = new HashMap<>();
+    private Map<String, Boolean> items = new HashMap<>();
 
     public int getLike() {
         return like;
@@ -65,11 +65,11 @@ public class RecipeDTO {
         this.content = content;
     }
 
-    public Map<String, String> getItems() {
+    public Map<String, Boolean> getItems() {
         return items;
     }
 
-    public void setItems(Map<String, String> items) {
+    public void setItems(Map<String, Boolean> items) {
         this.items = items;
     }
 
