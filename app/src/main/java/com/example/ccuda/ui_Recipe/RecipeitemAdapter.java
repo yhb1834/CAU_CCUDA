@@ -82,7 +82,10 @@ public class RecipeitemAdapter extends RecyclerView.Adapter<RecipeitemAdapter.It
                 .setMessage("장바구니에 담으시겠습니까?")
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialogInterface, int i) {
-
+                        String Convname = regiItemsModel.getConvName().toLowerCase();
+                        if(Convname.equals("seven11")){
+                            Convname = "seven";
+                        }
                         Response.Listener<String> responsListener = new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -105,7 +108,7 @@ public class RecipeitemAdapter extends RecyclerView.Adapter<RecipeitemAdapter.It
                                 }
                             }
                         };
-                        CartRequest cartRequest = new CartRequest("addTocart", SaveSharedPreference.getId(v.getContext()), regiItemsModel.getItemid(), regiItemsModel.getConvName(), responsListener);
+                        CartRequest cartRequest = new CartRequest("addTocart", SaveSharedPreference.getId(v.getContext()), regiItemsModel.getItemid(), Convname, responsListener);
                         RequestQueue queue = Volley.newRequestQueue(v.getContext());
                         queue.add(cartRequest);
                     }
