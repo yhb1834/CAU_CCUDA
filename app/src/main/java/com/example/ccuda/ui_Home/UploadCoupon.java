@@ -106,30 +106,6 @@ public class UploadCoupon extends Fragment {
     Uri data;   //이미지
     String fileName="";
 
-    private static final int PICK_FROM_ALBUM=1;
-
-    ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
-            new ActivityResultCallback<Uri>() {
-                @Override
-                public void onActivityResult(Uri uri) {
-                    // Handle the returned Uri
-                }
-            });
-
-
-    ActivityResultLauncher<Intent> launcher=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        data=result.getData().getData();
-                        uploadPhoto.setImageURI(data);
-                        //System.out.println(data);
-                    }
-                }
-            });
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -205,39 +181,6 @@ public class UploadCoupon extends Fragment {
 
 
         uploadPhoto=(ImageView) v.findViewById(R.id.upload_photo);
-        uploadPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogInterface.OnClickListener cameraListener=new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        doTakePhoto();
-                    }
-                };
-
-                DialogInterface.OnClickListener albumListener=new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        doTakeAlbum();
-
-                    }
-                };
-
-                DialogInterface.OnClickListener cancelListener=new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                };
-
-                new AlertDialog.Builder(getContext())
-                        .setTitle("업로드 할 이미지 선택")
-                        .setPositiveButton("사진촬영", cameraListener)
-                        .setNeutralButton("앨범선택", albumListener)
-                        .setNegativeButton("취소", cancelListener)
-                        .show();
-            }
-        });
 
 
         uploadButton=v.findViewById(R.id.uploadbutton);
@@ -291,55 +234,33 @@ public class UploadCoupon extends Fragment {
                         Toast.makeText(getContext(),"유효기간이 지난 쿠폰입니다.", Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        uploadButton.setEnabled(true);
-                        SimpleDateFormat sdf= new SimpleDateFormat("yyyMMddhhmmss"); //20191024111224
-                        fileName=sdf.format(new Date())+".png";
-                        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
-                        final StorageReference imgRef= firebaseStorage.getReference("couponImages/"+fileName);
-                        //System.out.println(data);
-                        data= Uri.parse(getitem_picture(finalConv, finalProduct));
-                        System.out.println(data);
-                        UploadTask uploadTask= imgRef.putFile(data);
-                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        int item_id = getitem_id(finalConv,finalProduct);
+                        Response.Listener<String> responsListener = new Response.Listener<String>() {
                             @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        //파라미터로 firebase의 저장소에 저장되어 있는
-                                        //이미지에 대한 다운로드 주소(URL)을 문자열로 얻어오기
-
-                                        int item_id = getitem_id(finalConv,finalProduct);
-                                        Response.Listener<String> responsListener = new Response.Listener<String>() {
-                                            @Override
-                                            public void onResponse(String response) {
-                                                try{
-                                                    JSONObject jsonObject = new JSONObject(response);
-                                                    boolean success = jsonObject.getBoolean("success");
-                                                    if(success){
-                                                        // 포스팅 성공
-                                                        Log.d("success","posting success");
-                                                        //Toast.makeText(context,"판매글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
-                                                        //System.out.println("picture: "+finalImage);
-                                                        Toast.makeText(getContext(), finalConv+" "+finalProduct+" "+finalPrice, Toast.LENGTH_SHORT).show();
-                                                    }
-                                                    else {
-                                                        Log.d("success", "query fail");
-                                                    }
-                                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new HomeFragment()).commit();
-                                                }catch (Exception e){
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        };
-                                        PostRequest postRequest = new PostRequest("posting", SaveSharedPreference.getId(getActivity()), finalConv,"",item_id, Integer.parseInt(finalPrice), finalDate, "", uri.toString(),fileName, 0, responsListener);
-                                        RequestQueue queue = Volley.newRequestQueue(getActivity());
-                                        queue.add(postRequest);
-
+                            public void onResponse(String response) {
+                                try{
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    boolean success = jsonObject.getBoolean("success");
+                                    if(success){
+                                        // 포스팅 성공
+                                        Log.d("success","posting success");
+                                        //Toast.makeText(context,"판매글이 성공적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                                        //System.out.println("picture: "+finalImage);
+                                        Toast.makeText(getContext(), finalConv+" "+finalProduct+" "+finalPrice, Toast.LENGTH_SHORT).show();
                                     }
-                                });
+                                    else {
+                                        Log.d("success", "query fail");
+                                    }
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.innerLayout, new HomeFragment()).commit();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
                             }
-                        });
+                        };
+                        PostRequest postRequest = new PostRequest("posting", SaveSharedPreference.getId(getActivity()), finalConv,"",item_id, Integer.parseInt(finalPrice), finalDate, "", "","", 0, responsListener);
+                        RequestQueue queue = Volley.newRequestQueue(getActivity());
+                        queue.add(postRequest);
+
                     }
                 }
             }
@@ -479,29 +400,6 @@ public class UploadCoupon extends Fragment {
         return price;
     }
 
-    public void doTakePhoto(){
-        Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        String url="tmp_"+String.valueOf(System.currentTimeMillis())+".jpg";
-
-        //mImageCaptureUri= FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID+".fileprovider", new File(getContext().getFilesDir(),url));
-
-//        mImageCaptureUri= FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID+".fileprovider", new File(getContext().getFilesDir(),url));
-
-
-        //intent.putExtra(MediaStore.EXTRA_OUTPUT,mImageCaptureUri);
-        startActivity(intent);
-    }
-
-    public void doTakeAlbum(){
-        Intent intent=new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-        mGetContent.launch("image/*");
-
-        launcher.launch(intent);
-
-
-    }
 
     public void runThread(String convName, String URL){
         new Thread(new Runnable() {
