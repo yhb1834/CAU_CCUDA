@@ -296,7 +296,9 @@ public class UploadCoupon extends Fragment {
                         fileName=sdf.format(new Date())+".png";
                         FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
                         final StorageReference imgRef= firebaseStorage.getReference("couponImages/"+fileName);
-
+                        //System.out.println(data);
+                        data= Uri.parse(getitem_picture(finalConv, finalProduct));
+                        System.out.println(data);
                         UploadTask uploadTask= imgRef.putFile(data);
                         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
@@ -606,5 +608,34 @@ public class UploadCoupon extends Fragment {
             }
         }
         return itemid;
+    }
+
+    protected String getitem_picture(String storename,String itemname){
+        String uri=new String();
+        if(storename == "CU"){
+            for(int i=0; i<cuItem.size(); i++){
+                if(cuItem.get(i).getItemname() == itemname){
+                    uri = cuItem.get(i).getImage();
+                    break;
+                }
+            }
+        }
+        else if(storename == "GS25"){
+            for(int i=0; i<gs25Item.size(); i++){
+                if(gs25Item.get(i).getItemname() == itemname){
+                    uri = gs25Item.get(i).getImage();
+                    break;
+                }
+            }
+        }
+        else{
+            for(int i=0; i<sevenItem.size(); i++){
+                if(sevenItem.get(i).getItemname() == itemname){
+                    uri = sevenItem.get(i).getImage();
+                    break;
+                }
+            }
+        }
+        return uri;
     }
 }
