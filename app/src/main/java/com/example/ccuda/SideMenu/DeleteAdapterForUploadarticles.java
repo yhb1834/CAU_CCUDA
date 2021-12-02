@@ -69,7 +69,11 @@ public class DeleteAdapterForUploadarticles extends ArrayAdapter<CouponData> {
         TextView prodName;
         TextView prodDuration;
         TextView prodStore;
+        TextView price;
         CheckBox checkBox;
+
+        TextView empty1;
+        TextView empty2;
         boolean isChecked;
 
         final  Context context= parent.getContext();
@@ -80,15 +84,22 @@ public class DeleteAdapterForUploadarticles extends ArrayAdapter<CouponData> {
 
         itemImage=(ImageView) convertView.findViewById(R.id.icon2);
         prodName=(TextView) convertView.findViewById(R.id.name2);
-        prodDuration=(TextView) convertView.findViewById(R.id.price12);
-        prodStore=(TextView) convertView.findViewById(R.id.validity12);
+        prodDuration=(TextView) convertView.findViewById(R.id.validity12);
+        prodStore=(TextView) convertView.findViewById(R.id.store2);
+        price=(TextView) convertView.findViewById(R.id.price12) ;
         checkBox=(CheckBox) convertView.findViewById(R.id.product_list_checkbox);
+        empty1=(TextView) convertView.findViewById(R.id.validity2);
+        empty2=(TextView) convertView.findViewById(R.id.price12);
+
+        empty1.setText("");
+        empty2.setText("");
 
         Glide.with(context).load(myUploadProductList.get(position).getImageurl())
                 .into(itemImage);
         prodName.setText(myUploadProductList.get(position).getItem_name());
         prodDuration.setText(myUploadProductList.get(position).getExpiration_date());
         prodStore.setText(myUploadProductList.get(position).getStorename());
+        //price.setText(myUploadProductList.get(position).getPrice());
         //myUploadProductList.get(position).setIsClicked(myUploadProductList.get(position).getIsClicked());
         checkBox.setChecked(myUploadProductList.get(position).getIsClicked());
         checkBox.setOnClickListener(new View.OnClickListener() {
