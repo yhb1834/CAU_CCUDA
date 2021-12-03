@@ -92,7 +92,6 @@ public class DeleteAdapterForUploadarticles extends ArrayAdapter<CouponData> {
         empty2=(TextView) convertView.findViewById(R.id.price12);
 
         empty1.setText("");
-        empty2.setText("");
 
         Glide.with(context).load(myUploadProductList.get(position).getImageurl())
                 .into(itemImage);
