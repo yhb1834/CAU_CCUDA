@@ -1,9 +1,11 @@
 package com.example.ccuda.SideMenu;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import com.example.ccuda.data.SaveSharedPreference;
 import com.example.ccuda.R;
 import com.example.ccuda.db.ChatRequest;
 import com.example.ccuda.db.ReportRequest;
+import com.example.ccuda.ui_Home.HomeActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -80,15 +83,17 @@ public class NotifyFragment extends Fragment {
     private TextView myID;
     private Button btn_report;
     Context context;
+    TextView MultiLine2;
     ArrayAdapter<String> arrayAdapter;
-
+    String notify;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment2_notify, container, false);
         myID = v.findViewById(R.id.notify_myID);
-        //btn_report = v.findViewById(R.id.btn_report);
+        btn_report = v.findViewById(R.id.btn_report);
+        MultiLine2 = v.findViewById(R.id.MultiLine2);
 
         context = getActivity();
         myID.setText(SaveSharedPreference.getNicname(context));
@@ -96,9 +101,9 @@ public class NotifyFragment extends Fragment {
         getcheaterlist();
 
         arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, cheaterlist);
-        Spinner btn_report = (Spinner) v.findViewById(R.id.item_spinner_r);
-        btn_report.setAdapter(arrayAdapter);
-        btn_report.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        Spinner btn_spinner = (Spinner) v.findViewById(R.id.item_spinner_r);
+        btn_spinner.setAdapter(arrayAdapter);
+        btn_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 /*String cheater_name = "";
@@ -108,7 +113,7 @@ public class NotifyFragment extends Fragment {
                     clickreport(cheater_name, content);*/
                 //String notify;
                 //notify = cheaterlist.get(position);
-                String notify =  btn_report.getSelectedItem().toString();
+               notify =  btn_spinner.getSelectedItem().toString();
             }
 
             @Override
@@ -117,16 +122,16 @@ public class NotifyFragment extends Fragment {
             }
         });
 
-        /*btn_report.setOnClickListener(new View.OnClickListener() {
+        btn_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String cheater_name = "";
-                String content = "";
+                String cheater_name = notify;
+                String content = MultiLine2.getText().toString();
                 // TODO: get cheater_name, content
                 if(!content.equals(""))
                     clickreport(cheater_name, content);
             }
-        });*/
+        });
 
         return v;
     }
@@ -138,7 +143,9 @@ public class NotifyFragment extends Fragment {
                 try {
                     Toast.makeText(context,"신고접수 완료",Toast.LENGTH_SHORT).show();
                     // TODO: 신고접수완료 후 동작
-
+                    Intent intent = new Intent(getActivity(), HomeActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

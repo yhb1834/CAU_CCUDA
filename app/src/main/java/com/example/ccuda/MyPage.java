@@ -137,21 +137,21 @@ public class MyPage extends Fragment {
                             for(int j=0; j<cuItem.size(); j++){
                                 if(Integer.toString(cuItem.get(j).getItemid()).equals(item_id)){
                                     //adapter.addItem(cuItem.get(j).getItemname(),cuItem.get(j).getImage(),storename);
-                                    arr.add(new CartItemModel(cuItem.get(i).getImage(), cuItem.get(i).getItemname(), cuItem.get(i).getStorename(), cuItem.get(i).getItemid()));
+                                    arr.add(new CartItemModel(cuItem.get(j).getImage(), cuItem.get(j).getItemname(), cuItem.get(j).getStorename(), cuItem.get(j).getItemid()));
                                 }
                             }
                         }else if(storename.equals("gs25")){
                             for(int j=0; j<gs25Item.size(); j++){
                                 if(Integer.toString(gs25Item.get(j).getItemid()).equals(item_id)){
                                     //adapter.addItem(gs25Item.get(j).getItemname(),gs25Item.get(j).getImage(),storename);
-                                    arr.add(new CartItemModel(gs25Item.get(i).getImage(), gs25Item.get(i).getItemname(), gs25Item.get(i).getStorename(), gs25Item.get(i).getItemid()));
+                                    arr.add(new CartItemModel(gs25Item.get(j).getImage(), gs25Item.get(j).getItemname(), gs25Item.get(j).getStorename(), gs25Item.get(j).getItemid()));
                                 }
                             }
                         }else {
                             for(int j=0; j<sevenItem.size(); j++){
                                 if(Integer.toString(sevenItem.get(j).getItemid()).equals(item_id)){
                                     //adapter.addItem(sevenItem.get(j).getItemname(),sevenItem.get(j).getImage(),storename);
-                                    arr.add(new CartItemModel(sevenItem.get(i).getImage(), sevenItem.get(i).getItemname(), sevenItem.get(i).getStorename(), sevenItem.get(i).getItemid()));
+                                    arr.add(new CartItemModel(sevenItem.get(j).getImage(), sevenItem.get(j).getItemname(), sevenItem.get(j).getStorename(), sevenItem.get(j).getItemid()));
                                 }
                             }
                         }
