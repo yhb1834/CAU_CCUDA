@@ -157,7 +157,7 @@ public class RecipeItemFragment extends Fragment { //implements OnBackPressedLis
                 msg.putExtra(Intent.EXTRA_TEXT, isContent);
                 msg.setType("image/png");
                 msg.putExtra(Intent.EXTRA_STREAM, Uri.parse(String.valueOf(image)));
-                msg.setPackage("com.kakao.talk");
+                //msg.setPackage("com.kakao.talk");
                 //msg.putExtra(Intent.EXTRA_STREAM, url);
                 //msg.setType("image/*");
 
