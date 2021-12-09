@@ -22,5 +22,6 @@ create `kakao_app_key.xml` on the ../res/values which contains:
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="kakao_app_key">your kakao_native_key</string>
+    <string name="kakao_scheme">your kakao key</string>
 </resources>
 ```
