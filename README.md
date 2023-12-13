@@ -26,6 +26,4 @@ create `kakao_app_key.xml` on the ../res/values which contains:
 </resources>
 ```
 
-
-## 사용자 매뉴얼
-[사용자 매뉴얼](https://github.com/yhb1834/CAU_CCUDA/사용자메뉴얼.pdf)
+## 사용자 메뉴얼
